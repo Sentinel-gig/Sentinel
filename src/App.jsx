@@ -222,11 +222,8 @@ function Nav({ page, setPage }) {
       display: "flex", alignItems: "center", justifyContent: "space-between", height: "60px",
     }}>
       <button onClick={() => setPage("home")} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px" }}>
-        <div style={{ width: "30px", height: "30px", background: `linear-gradient(135deg, ${C.accent}, #1D4ED8)`, borderRadius: "5px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 1.5L13 4.5V9C13 11.8 10.8 14.2 8 15C5.2 14.2 3 11.8 3 9V4.5L8 1.5Z" stroke="white" strokeWidth="1.2" fill="none"/>
-            <circle cx="8" cy="9" r="1.8" fill="white"/>
-          </svg>
+        <div style={{ width: "30px", height: "30px", background: "transparent" }>
+          <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAMgAyADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD8Q6KKK9A5wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKK7/9nT9lj9oz9rjx2Php+zR8GPEHjXW/L8yay0HT2m+zx5x5kz/cgjzxvkZVzxmgDgKK+67f/g2k/wCC2tzAtxH+xO4V1yBJ8RPDiN+KtqII+hFP/wCIZ3/gtx/0ZT/5kjw3/wDLGp54dx2Z8I0V93f8Qzv/AAW4/wCjKf8AzJHhv/5Y0f8AEM7/AMFuP+jKf/MkeG//AJY0c8O4WZ8I0V91XX/BtL/wW0tLd7mX9ieQqi5YRfEPw47EeyrqJJPsBXyX8ff2b/j1+yz8QZ/hV+0X8I9e8GeIbdBI2ma/pz27yRkkCWMsNssZIOJELKcHBNNSi9mFmjiaKKKYgooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+yX/glF+wB8M/+Cc/7GPhP4JeDfDtrDr1xpdvf+O9ZSECfVdXkiDTySP1KIxMcanhI0Udck/xtV/dxWFduyRpTCiiiuY0CiiigAr5T/wCCxX/BN/4a/wDBSb9jLxL8NNd8OWzeM9E0y51L4da95I+0afqaRlkiD9RDOUWKVOhVg2N0aFfqyimm07oNz+Eeiiiu85wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOcKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK/u4r+Eev7uK56/Q0p9QooornNAooooAKKKKAP4R6KKK9A5wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOcKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK/u4r+Eev7uK56/Q0p9QooornNAooooAKKKKAP4R6KKK9A5wr6z+Af/AAQu/wCCsv7TPgu1+Inwj/Yr8Rz6NfRCWxvdd1Cx0YXMRGVkjXUbiBpEI5DqCpByCRX0t/wao/sAfDP9r39s7xH8bfjL4dtda0H4P6XZ39lo17CJIJ9Xu5ZFs5JUPDpEtvcSBTx5ixk8KQf6b6xqVeV2RcY3Vz+TX/iGd/4Lcf8ARlP/AJkjw3/8saP+IZ3/AILcf9GU/wDmSPDf/wAsa/rKorP28yuRH8mv/EM7/wAFuP8Aoyn/AMyR4b/+WNH/ABDO/wDBbj/oyn/zJHhv/wCWNf1lUUe3mHIj+PD9o7/giP8A8FUv2TvA118S/jj+xt4isNBsYjLqGq6PfWWsRWcQGTJMdOnn8lB3d8KO5r5Wr+7d0SRDHIoZWGGUjIIr+Xn/AIOgv+CcXw4/YZ/bP0b4n/BDw9b6L4O+Lmm3WpwaFZxCO307VLaRFvY4EHCQsJ7eUIMBWmdVAVVA0p1eZ2ZMoWVz8zqKKK2ICiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/wCDKD/m5f8A7kz/ANztfu5X4R/8GUH/ADcv/wByZ/7na/dyuOr/ABGbQ+EKKKKzKCiiigAr8I/+D1//AJto/wC5z/8AcFX7uV+Ef/B6/wD820f9zn/7gq0pfxETP4T8I6KKK7DEKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOc/dz/gyg/wCbl/8AuTP/AHO1+7lfhH/wZQf83L/9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/4PX/+baP+5z/9wVfu5X4R/wDB6/8A820f9zn/AO4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/wDBlB/zcv8A9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/AOD1/wD5to/7nP8A9wVfu5X4R/8AB6//AM20f9zn/wC4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/8ABlB/zcv/ANyZ/wC52v3crjq/xGbQ+EKKKKzKCiiigAr8I/8Ag9f/AObaP+5z/wDcFX7uV+Ef/B6//wA20f8Ac5/+4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/wCDKD/m5f8A7kz/ANztfu5X4R/8GUH/ADcv/wByZ/7na/dyuOr/ABGbQ+EKKKKzKCiiigAr8I/+D1//AJto/wC5z/8AcFX7uV+Ef/B6/wD820f9zn/7gq0pfxETP4T8I6KKK7DEKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOc/dz/gyg/wCbl/8AuTP/AHO1+7lfhH/wZQf83L/9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/4PX/+baP+5z/9wVfu5X4R/wDB6/8A820f9zn/AO4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/wDBlB/zcv8A9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/AOD1/wD5to/7nP8A9wVfu5X4R/8AB6//AM20f9zn/wC4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/8ABlB/zcv/ANyZ/wC52v3crjq/xGbQ+EKKKKzKCiiigAr8I/8Ag9f/AObaP+5z/wDcFX7uV+Ef/B6//wA20f8Ac5/+4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/sM/4I7/8ABSD4af8ABSb9jPw38TNB8R2reMtE0y2034i6B5w+0afqaRhXlKdRDOUaWJ+hViudyOFwrp2TNKZ9WUUUVzGgUUUUAFFFfNf/AAVg/wCCgHwz/wCCc/7GHiz41+MvEdtBr9zpVxYeA9GaUefquryRFYEjTqURmEkjDhI0Y9cAtJt2QH8bdFFFd5zn7uf8GUH/ADcv/wByZ/7na/dyv5eP+DXz/go78N/2Gf2zta+F/wAcPENtovg74uaba6ZNrt5KI7fTtUtpHayknc8JCwnuIi5wFaZGYhVYj+oZHSRBJG4ZWGVYHII9a5KyambQ+EWiiisigooooAK/CP8A4PX/APm2j/uc/wD3BV+7lfzH/wDB1Z/wUA+Gf7X/AO2f4d+CnwZ8R22t6B8INKvLC81mylEkFxq91LG14kTrw6Rrb28ZYceYkgGQATrRTcyZ/CflvRRRXWYhRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAV2vwD/aP+PX7LPxBg+Kv7Onxc17wZ4ht0Ma6poGovbyPGSCYpAp2yxkgZjcMpwMg1xVFAH3Va/8HLP/AAW0s7dLWL9tiQrGuFMvw98OOxHuzacST7k1J/xExf8ABbj/AKPW/wDMb+G//ldXwjRU8kOw7s+7v+ImL/gtx/0et/5jfw3/APK6j/iJi/4Lcf8AR63/AJjfw3/8rq+EaKOSHYLs+67j/g5b/wCC2t1A9vJ+2w4V1wTH8PPDiN+DLpwI+oNfKX7RP7Uv7Rf7W3jtviZ+0t8Z/EHjXW/L8uK917UXm+zx5z5cKH5IY887I1Vc84rgaKajFbILthRRRTEFfVP7OH/Bbf8A4Ko/sm+BrX4afA39snxFYaDYxCLT9K1ixstYhs4gMCOEahBP5KDsibVHYV8rUUmk9w2Pu7/iJi/4Lcf9Hrf+Y38N/wDyuo/4iYv+C3H/AEet/wCY38N//K6vhGilyQ7Duz7u/wCImL/gtx/0et/5jfw3/wDK6j/iJi/4Lcf9Hrf+Y38N/wDyur4Roo5Idguz6y+Pv/Bc/wD4KyftNeC7r4d/F39tTxHPo19EYr6x0KwsdGW5iIw0cjadbwNIhHBRiVIOCCK+TaKKaSWwrthRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA/9k=" alt="Sentinel" style={{ width: "32px", height: "32px", borderRadius: "6px", objectFit: "cover" }} />
         </div>
         <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "17px", fontWeight: 600, color: C.text, letterSpacing: "0.04em" }}>SecuredSystems<span style={{ color: C.accentBright, fontFamily: "'IBM Plex Mono', monospace", fontSize: "13px" }}>.in</span></span>
       </button>
@@ -583,13 +580,7 @@ function SentinelPage() {
         <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "16px", color: C.muted, maxWidth: "480px", margin: "0 auto 40px", lineHeight: 1.75 }}>
           No button to press. No check-in to remember. Sentinel watches quietly — and acts when it matters.
         </p>
-        <a href="https://forms.gle/TjvLfByxoPgep1w97" target="_blank" rel="noopener noreferrer" style={{
-          background: `linear-gradient(135deg, ${C.accent}, #1D4ED8)`,
-          border: "none", borderRadius: "5px", cursor: "pointer",
-          fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500,
-          letterSpacing: "0.03em", padding: "11px 24px", fontSize: "13px",
-          color: C.white, textDecoration: "none", display: "inline-block",
-        }}>Join the Pilot →</a>
+        <Btn onClick={() => document.getElementById("pilot-modal").style.display = "flex"}>Join the Pilot →</Btn>
       </div>
 
       {/* Metrics */}
@@ -1124,6 +1115,101 @@ function AboutPage({ setPage }) {
   );
 }
 
+// ─── PILOT MODAL ──────────────────────────────────────────────────────────────
+function PilotModal() {
+  const [form, setForm] = useState({ name: "", phone: "", city: "", platform: "", submitted: false });
+  const cities = ["Mumbai", "Delhi", "Bangalore", "Kanpur", "Other"];
+  const platforms = ["Swiggy", "Zomato", "Blinkit", "Zepto", "Ola", "Uber", "Other"];
+
+  const handleSubmit = async () => {
+    if (!form.name || !form.phone || !form.city || !form.platform) {
+      alert("Please fill all fields");
+      return;
+    }
+    // Save to storage
+    try {
+      const existing = await window.storage?.get("pilot_signups").catch(() => null);
+      const signups = existing ? JSON.parse(existing.value) : [];
+      signups.push({ ...form, timestamp: new Date().toISOString() });
+      await window.storage?.set("pilot_signups", JSON.stringify(signups)).catch(() => null);
+      // Also save to localStorage as backup
+      const ls = JSON.parse(localStorage.getItem("pilot_signups") || "[]");
+      ls.push({ ...form, timestamp: new Date().toISOString() });
+      localStorage.setItem("pilot_signups", JSON.stringify(ls));
+    } catch(e) {}
+    setForm({ ...form, submitted: true });
+  };
+
+  const close = () => {
+    document.getElementById("pilot-modal").style.display = "none";
+    setForm({ name: "", phone: "", city: "", platform: "", submitted: false });
+  };
+
+  return (
+    <div id="pilot-modal" style={{
+      display: "none", position: "fixed", inset: 0, zIndex: 999,
+      background: "rgba(0,0,0,0.8)", backdropFilter: "blur(8px)",
+      alignItems: "center", justifyContent: "center", padding: "20px",
+    }} onClick={e => { if (e.target.id === "pilot-modal") close(); }}>
+      <div style={{
+        background: C.surface, border: `1px solid ${C.borderHi}`,
+        borderRadius: "12px", padding: "40px", maxWidth: "480px", width: "100%",
+        position: "relative",
+      }}>
+        <button onClick={close} style={{
+          position: "absolute", top: "16px", right: "20px",
+          background: "none", border: "none", cursor: "pointer",
+          color: C.muted, fontSize: "20px", lineHeight: 1,
+        }}>×</button>
+
+        {!form.submitted ? (
+          <>
+            <div style={{ marginBottom: "6px" }}><Tag>// Join the Pilot</Tag></div>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "28px", fontWeight: 700, color: C.text, marginBottom: "8px" }}>
+              Be Part of Sentinel
+            </h2>
+            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: C.muted, marginBottom: "28px", lineHeight: 1.6 }}>
+              We're onboarding gig workers in Mumbai, Delhi, Bangalore & Kanpur. No app to manage. Just protection.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+              <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Your full name" label="Full Name" />
+              <Input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="+91 XXXXX XXXXX" label="Phone Number" />
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                <label style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>City</label>
+                <select value={form.city} onChange={e => setForm({ ...form, city: e.target.value })}
+                  style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: "6px", padding: "10px 14px", color: form.city ? C.text : C.dim, fontSize: "13px", outline: "none" }}>
+                  <option value="">Select city</option>
+                  {cities.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                <label style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>Platform you work on</label>
+                <select value={form.platform} onChange={e => setForm({ ...form, platform: e.target.value })}
+                  style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: "6px", padding: "10px 14px", color: form.platform ? C.text : C.dim, fontSize: "13px", outline: "none" }}>
+                  <option value="">Select platform</option>
+                  {platforms.map(p => <option key={p} value={p}>{p}</option>)}
+                </select>
+              </div>
+              <div style={{ marginTop: "6px" }}>
+                <Btn onClick={handleSubmit} style={{ width: "100%" }}>Submit →</Btn>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{ textAlign: "center", padding: "20px 0" }}>
+            <div style={{ fontSize: "40px", marginBottom: "16px" }}>✓</div>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "26px", fontWeight: 700, color: C.text, marginBottom: "10px" }}>You're on the list</h2>
+            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "14px", color: C.muted, lineHeight: 1.7, marginBottom: "24px" }}>
+              We'll reach out on your number when Sentinel launches in {form.city}. Welcome to the mesh.
+            </p>
+            <Btn onClick={close} variant="ghost">Close</Btn>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState("home");
@@ -1165,6 +1251,7 @@ export default function App() {
       {page === "home" && <HomePage stats={stats} cases={cases} news={news} blogs={blogs} setPage={setPage} setActiveBlog={setActiveBlog} />}
       {page === "blogs" && <BlogsPage blogs={blogs} setPage={setPage} setActiveBlog={setActiveBlog} />}
       {page === "blog" && activeBlog && <BlogPage blog={activeBlog} setPage={setPage} />}
+      <PilotModal />
       {page === "sentinel" && <SentinelPage />}
       {page === "about" && <AboutPage setPage={setPage} />}
       {page === "admin" && <AdminPage stats={stats} setStats={setStats} cases={cases} setCases={setCases} news={news} setNews={setNews} blogs={blogs} setBlogs={setBlogs} />}
