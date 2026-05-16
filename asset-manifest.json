@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/Sentinel/static/js/main.cf4468dd.js",
+    "index.html": "/Sentinel/index.html",
+    "main.cf4468dd.js.map": "/Sentinel/static/js/main.cf4468dd.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.cf4468dd.js"
+  ]
+}
