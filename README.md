@@ -124,3 +124,4 @@ All content (blogs, stats, cases, news) is stored in `localStorage` — it persi
 ## Need a database?
 
 Right now blog/stats/news content is stored in localStorage (browser only). To make content editable from anywhere and shared across devices, the next step is adding Supabase (free tier). Ask and I'll build that integration.
+ 
