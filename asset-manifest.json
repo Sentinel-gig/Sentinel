@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/Sentinel/static/js/main.605f0d7e.js",
-    "index.html": "/Sentinel/index.html",
-    "main.605f0d7e.js.map": "/Sentinel/static/js/main.605f0d7e.js.map"
+    "main.js": "/static/js/main.605f0d7e.js",
+    "index.html": "/index.html",
+    "main.605f0d7e.js.map": "/static/js/main.605f0d7e.js.map"
   },
   "entrypoints": [
     "static/js/main.605f0d7e.js"
