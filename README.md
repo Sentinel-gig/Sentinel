@@ -1,127 +1,119 @@
-# SecuredSystems.in — Hosting Guide
+# SecuredSystems.in
 
-## What's in this folder
+**The awareness and investor platform for Sentinel — India's first passive safety intelligence system for gig workers.**
+
+---
+
+## What This Is
+
+This is the public-facing website for Secured Systems, the parent company behind Sentinel. The site serves three audiences simultaneously: the general public and press who need to understand the scale of the gig worker safety crisis in India, investors who are evaluating the opportunity, and gig workers who want to join the pilot.
+
+The site is built as a single-page React application, deployed on GitHub Pages, with a Supabase backend for dynamic content management and a password-protected admin CMS for the founding team.
+
+---
+
+## The Problem We Are Solving
+
+India has 12 million gig workers. Every day, they deliver food, drive strangers across cities, and move goods across supply chains that the country depends on. They do this with no safety net, no emergency protocol, and no platform accountability.
+
+According to NDTV, over 90 percent of India's gig workforce operates without comprehensive health or accident insurance. Platforms have real-time GPS data on every worker. They use it to optimise delivery times. They do not use it to check if anyone is alive.
+
+Sentinel exists because no one else was going to build this.
+
+---
+
+## What Sentinel Does
+
+Sentinel is a passive safety intelligence system. It runs silently in the background of a worker's phone. No buttons to press. No check-ins to remember. The system monitors motion, location, and behavioural signals continuously. When something looks wrong, it alerts the nearest verified gig worker in the peer mesh. Real people, close by, who understand the job.
+
+**Current Pilot Status:**
+- 200 downloads
+- 4 cities: Mumbai, Delhi, Bangalore, Kanpur
+- 100 workers onboarded
+- 50 real-time alerts triggered
+- Theoretical response time under 10 minutes
+- Founded 2025
+
+---
+
+## Product Roadmap
+
+**Phase 1 — Now:** Sentinel App. Passive safety intelligence, peer mesh, incident logging.
+
+**Phase 2 — 2026:** Watch Interface. Hardware wearable layer with biometric alerts and direct peer pings.
+
+**Phase 3 — 2027:** B2C Platform. Direct-to-worker safety subscription with insurance integration.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, inline styles, no CSS framework |
+| Hosting | GitHub Pages via gh-pages |
+| Database | Supabase (PostgreSQL) |
+| CMS | Password-protected admin panel, built-in |
+| AI Engine | Claude Sonnet via Anthropic API (blog content strategy) |
+| Pilot Signups | Supabase + Google Sheets backup |
+
+---
+
+## Project Structure
 
 ```
 securedsystems-prod/
-├── api/
-│   └── ai-suggest.js      ← Vercel serverless function (AI blog engine backend)
 ├── public/
-│   └── index.html         ← HTML shell
+│   ├── index.html
+│   ├── CNAME              ← sentinelco.in
+│   └── 404.html           ← handles /sentinel redirect
 ├── src/
-│   ├── index.js           ← React entry point
-│   └── App.jsx            ← Full site (all pages + components)
+│   └── App.jsx            ← entire application, single file
+├── api/
+│   └── ai-suggest.js      ← Vercel serverless (AI blog engine)
 ├── package.json
-├── vercel.json            ← Vercel build + routing config
-└── README.md              ← This file
+└── vercel.json
 ```
 
 ---
 
-## Step 1 — Install Node.js
-
-Download from https://nodejs.org (use the LTS version).
-
----
-
-## Step 2 — Set up the project locally
-
-Open a terminal, navigate to this folder, and run:
+## Deploying
 
 ```bash
+# Install dependencies
 npm install
+
+# Local development
 npm start
-```
 
-This opens the site at http://localhost:3000. Verify everything looks right.
-
----
-
-## Step 3 — Push to GitHub
-
-1. Go to https://github.com/new and create a new repo called `securedsystems`
-2. In your terminal:
-
-```bash
-git init
-git add .
-git commit -m "initial deploy"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/securedsystems.git
-git push -u origin main
+# Deploy to GitHub Pages
+set DISABLE_ESLINT_PLUGIN=true && npm run deploy
 ```
 
 ---
 
-## Step 4 — Deploy on Vercel
+## Admin CMS
 
-1. Go to https://vercel.com and sign in with GitHub
-2. Click **Add New → Project**
-3. Import your `securedsystems` repo
-4. Vercel auto-detects it's a React app — just click **Deploy**
+Access via the Admin button in the nav. Password protected.
 
----
+Manage: blogs, awareness stats, documented cases, press coverage.
 
-## Step 5 — Add your Anthropic API key (IMPORTANT)
-
-The AI blog engine in the admin panel needs this or it won't work.
-
-1. Get your API key from https://console.anthropic.com
-2. In Vercel: go to your project → **Settings → Environment Variables**
-3. Add:
-   - **Name:** `ANTHROPIC_API_KEY`
-   - **Value:** `sk-ant-...` (your actual key)
-4. Click Save, then **Redeploy** the project
+All content syncs to Supabase in real time. Changes reflect across all devices immediately on page refresh.
 
 ---
 
-## Step 6 — Add your custom domain
+## Founders
 
-1. In Vercel: go to your project → **Settings → Domains**
-2. Type `securedsystems.in` and click Add
-3. Vercel will give you DNS records (usually an A record and CNAME)
-4. Log in to wherever you bought the domain (GoDaddy, Namecheap, etc.)
-5. Go to DNS settings and add those records
-6. Wait 5–30 minutes for DNS to propagate
+**Arav** — Co-Founder and CEO. BCA student, AI/ML practitioner, FMCG operator.
 
-Your site will be live at https://securedsystems.in ✓
+**Ashutosh Trivedi** — Co-Founder and CTO. Technology lead and strategy architect.
+
+**Contact:** business@sentinelco.in
 
 ---
 
-## How the AI blog engine works in production
+## Raise
 
-```
-Browser (Admin panel)
-  → POST /api/ai-suggest  { prompt: "raw blog idea" }
-  → Vercel serverless function (api/ai-suggest.js)
-  → Anthropic API  (API key stays server-side, never exposed)
-  → Returns JSON  { refined_title, hook, awareness_angles, ... }
-  → Admin panel renders suggestions
-```
+Pre-seed open. ₹25 to 30 lakhs for 10 to 12 percent equity.
 
----
-
-## Admin panel
-
-Password: `arav@2134`
-
-Access via the **Admin ↗** button in the nav.
-
-All content (blogs, stats, cases, news) is stored in `localStorage` — it persists in the browser automatically. Nothing is stored in a database, so content is per-browser. If you want true multi-device CMS later, we can add a database (Supabase is free and simple).
-
----
-
-## Costs
-
-| Service | Cost |
-|---------|------|
-| Vercel hosting | Free (Hobby plan) |
-| Anthropic API | Pay per use (~₹0.50–2 per blog suggestion) |
-| Domain `securedsystems.in` | ~₹700–900/year |
-
----
-
-## Need a database?
-
-Right now blog/stats/news content is stored in localStorage (browser only). To make content editable from anywhere and shared across devices, the next step is adding Supabase (free tier). Ask and I'll build that integration.
- 
+Investor inquiries: business@sentinelco.in
