@@ -506,7 +506,7 @@ function HomePage({ stats, cases, news, blogs, setPage, setActiveBlog }) {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 4vw, 44px)", fontWeight: 700, color: C.text, marginBottom: "40px", lineHeight: 1.15 }}>
           The Numbers That<br /><span style={{ color: C.accentBright }}>Don't Lie</span>
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1px", background: C.border, border: `1px solid ${C.border}`, borderRadius: "10px", overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: "1px", background: C.border, border: `1px solid ${C.border}`, borderRadius: "10px", overflow: "hidden" }}>
           {stats.map(s => (
             <div key={s.id} style={{
               background: C.surface, padding: "32px 28px",
