@@ -238,7 +238,7 @@ function Nav({ page, setPage }) {
             paddingBottom: "2px", transition: "color 0.15s",
           }}>{label}</button>
         ))}
-        <Btn small onClick={() => setPage("admin")}>Admin ↗</Btn>
+        <Btn small onClick={() => window.open('/admin', '_blank')}>Admin ↗</Btn>
       </div>
     </nav>
   );
@@ -1254,7 +1254,6 @@ export default function App() {
       <PilotModal />
       {page === "sentinel" && <SentinelPage />}
       {page === "about" && <AboutPage setPage={setPage} />}
-      {page === "admin" && <AdminPage stats={stats} setStats={setStats} cases={cases} setCases={setCases} news={news} setNews={setNews} blogs={blogs} setBlogs={setBlogs} />}
     </div>
   );
 }
