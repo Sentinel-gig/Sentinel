@@ -353,6 +353,7 @@ function Nav({ page, setPage, isDark, toggleTheme }) {
               paddingBottom: "2px", transition: "color 0.15s",
             }}>{label}</button>
           ))}
+          <Btn small onClick={() => setPage("admin")}>Admin ↗</Btn>
           {/* Theme toggle */}
           <button onClick={toggleTheme} style={{
             background: "none", border: `1px solid ${C.border}`, borderRadius: "20px",
@@ -994,6 +995,635 @@ function PilotModal() {
 }
 
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
+// ─── ADMIN PORTAL ────────────────────────────────────────────────────────────
+const ADMIN_SB_URL = 'https://blurdndipqtyxeiljkel.supabase.co';
+const ADMIN_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdXJkbmRpcHF0eXhlaWxqa2VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyNjEwNzIsImV4cCI6MjA2MTgzNzA3Mn0.FBMKfUvGIiSDI2G0VZwWIj97UBbT2bHhYzFaIjfVX7U';
+
+async function adminFetch(table, opts = {}) {
+  const { filter = {}, limit = 80, count = false, head = false } = opts;
+  let url = `${ADMIN_SB_URL}/rest/v1/${table}?`;
+  if (count) url += 'select=id&';
+  else url += 'select=*&';
+  Object.entries(filter).forEach(([k, v]) => { url += `${k}=eq.${encodeURIComponent(v)}&`; });
+  if (limit) url += `limit=${limit}&`;
+  url += 'order=created_at.desc';
+  const res = await fetch(url, {
+    headers: {
+      apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}`,
+      ...(count ? { Prefer: 'count=exact' } : {}),
+    },
+  });
+  if (count) return parseInt(res.headers.get('content-range')?.split('/')[1] || '0');
+  return res.json();
+}
+
+async function adminFetchIn(table, field, ids, opts = {}) {
+  const { limit = 80 } = opts;
+  const url = `${ADMIN_SB_URL}/rest/v1/${table}?select=*&${field}=in.(${ids.join(',')})&limit=${limit}&order=created_at.desc`;
+  const res = await fetch(url, { headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}` } });
+  return res.json();
+}
+
+async function adminUpdate(table, id, data) {
+  await fetch(`${ADMIN_SB_URL}/rest/v1/${table}?id=eq.${id}`, {
+    method: 'PATCH',
+    headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+    body: JSON.stringify(data),
+  });
+}
+
+// Admin helpers
+const adminFmt = ts => ts ? new Date(ts).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+const adminFmtCoords = (lat, lng) => lat ? `${Number(lat).toFixed(4)}, ${Number(lng).toFixed(4)}` : '—';
+const scColor = s => s >= 80 ? '#22c55e' : s >= 60 ? '#f59e0b' : '#ef4444';
+
+const AD = {
+  bg: '#080d18', surface: '#0e1420', card: '#121a28',
+  border: 'rgba(255,255,255,0.07)', text1: '#f0f4ff',
+  text2: '#8892a4', text3: '#4a5568',
+  amber: '#f59e0b', green: '#22c55e', red: '#ef4444', blue: '#4f8ef7',
+};
+
+function Badge({ type }) {
+  const map = {
+    SAFE:     { bg: 'rgba(34,197,94,.12)',   color: '#22c55e', border: 'rgba(34,197,94,.2)'   },
+    MODERATE: { bg: 'rgba(245,158,11,.12)',  color: '#f59e0b', border: 'rgba(245,158,11,.2)'  },
+    RISKY:    { bg: 'rgba(239,68,68,.12)',   color: '#ef4444', border: 'rgba(239,68,68,.2)'   },
+    CRITICAL: { bg: 'rgba(239,68,68,.12)',   color: '#ef4444', border: 'rgba(239,68,68,.2)'   },
+    HIGH:     { bg: 'rgba(239,68,68,.12)',   color: '#ef4444', border: 'rgba(239,68,68,.2)'   },
+    active:   { bg: 'rgba(239,68,68,.12)',   color: '#ef4444', border: 'rgba(239,68,68,.2)'   },
+    approved: { bg: 'rgba(34,197,94,.12)',   color: '#22c55e', border: 'rgba(34,197,94,.2)'   },
+    pending:  { bg: 'rgba(245,158,11,.12)',  color: '#f59e0b', border: 'rgba(245,158,11,.2)'  },
+    ON:       { bg: 'rgba(34,197,94,.12)',   color: '#22c55e', border: 'rgba(34,197,94,.2)'   },
+    OFF:      { bg: 'rgba(74,85,104,.2)',    color: '#8892a4', border: 'rgba(255,255,255,.07)' },
+    default:  { bg: 'rgba(74,85,104,.2)',    color: '#8892a4', border: 'rgba(255,255,255,.07)' },
+  };
+  const s = map[type] || map.default;
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: '20px',
+      fontSize: '9px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap',
+      background: s.bg, color: s.color, border: `1px solid ${s.border}`,
+    }}>{type || '—'}</span>
+  );
+}
+
+function AdminTable({ headers, children, loading }) {
+  return (
+    <div style={{ background: AD.card, border: `1px solid ${AD.border}`, borderRadius: '14px', overflow: 'hidden', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '500px' }}>
+        <thead>
+          <tr>
+            {headers.map(h => (
+              <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontSize: '8px', fontWeight: 700, letterSpacing: '2px', color: AD.text3, borderBottom: `1px solid ${AD.border}`, background: AD.surface, whiteSpace: 'nowrap' }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
+            <tr><td colSpan={headers.length} style={{ textAlign: 'center', padding: '28px', color: AD.text2, fontSize: '12px' }}>Loading...</td></tr>
+          ) : children}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function AdminTd({ children, mono, muted, bold }) {
+  return (
+    <td style={{
+      padding: '12px 14px', fontSize: mono ? '11px' : '12px', borderBottom: `1px solid ${AD.border}`, verticalAlign: 'middle',
+      fontFamily: mono ? "'JetBrains Mono', monospace" : 'inherit',
+      color: muted ? AD.text2 : 'inherit', fontWeight: bold ? 700 : 400,
+    }}>{children}</td>
+  );
+}
+
+function StatCard({ label, value, sub, color }) {
+  return (
+    <div style={{ padding: '16px', background: AD.card, border: `1px solid ${AD.border}`, borderRadius: '14px' }}>
+      <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '1.5px', color: AD.text2, marginBottom: '6px' }}>{label}</div>
+      <div style={{ fontSize: '26px', fontWeight: 800, lineHeight: 1, color: color || AD.text1 }}>{value ?? '—'}</div>
+      <div style={{ fontSize: '10px', color: AD.text2, marginTop: '4px' }}>{sub}</div>
+    </div>
+  );
+}
+
+function SecHeader({ title, onRefresh }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', marginTop: '20px' }}>
+      <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: AD.text2 }}>{title}</div>
+      {onRefresh && (
+        <button onClick={onRefresh} style={{ padding: '5px 12px', borderRadius: '7px', cursor: 'pointer', fontSize: '10px', fontWeight: 700, fontFamily: 'inherit', background: 'transparent', border: `1px solid ${AD.border}`, color: AD.text2 }}>↻</button>
+      )}
+    </div>
+  );
+}
+
+// ── Overview Tab ─────────────────────────────────────────────────────────────
+function OverviewTab({ eid }) {
+  const [stats, setStats] = useState({ workers: '—', active: '—', sos: '—', incidents: '—', surveys: '—', risky: '—' });
+  const [sosList, setSosList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const ago24h = new Date(Date.now() - 86400000).toISOString();
+      const ago7d  = new Date(Date.now() - 7 * 86400000).toISOString();
+      const [workers, active, sosT, incs, surveys, risky, sosFeed] = await Promise.all([
+        adminFetch('workers',      { filter: { employer_id: eid }, count: true }),
+        adminFetch('workers',      { filter: { employer_id: eid, shift_active: true }, count: true }),
+        fetch(`${ADMIN_SB_URL}/rest/v1/sos_events?select=id&created_at=gte.${ago24h}`, { headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}`, Prefer: 'count=exact' } }).then(r => parseInt(r.headers.get('content-range')?.split('/')[1] || '0')),
+        adminFetch('incidents',    { count: true }),
+        adminFetch('surveys',      { filter: { status: 'pending' }, count: true }),
+        fetch(`${ADMIN_SB_URL}/rest/v1/driver_scores?select=id&rating=eq.RISKY&created_at=gte.${ago7d}`, { headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}`, Prefer: 'count=exact' } }).then(r => parseInt(r.headers.get('content-range')?.split('/')[1] || '0')),
+        adminFetch('sos_events',   { limit: 6 }),
+      ]);
+      setStats({ workers, active, sos: sosT, incidents: incs, surveys, risky });
+      setSosList(Array.isArray(sosFeed) ? sosFeed : []);
+      setLoading(false);
+    })();
+  }, [eid]);
+
+  return (
+    <div>
+      <div style={{ display: 'grid', gap: '10px', marginBottom: '20px', gridTemplateColumns: 'repeat(2,1fr)' }}>
+        <StatCard label="WORKERS"      value={stats.workers}   sub="Your fleet"  color={AD.blue}  />
+        <StatCard label="ON SHIFT"     value={stats.active}    sub="Right now"   color={AD.green} />
+        <StatCard label="SOS TODAY"    value={stats.sos}       sub="Last 24h"    color={AD.red}   />
+        <StatCard label="INCIDENTS"    value={stats.incidents} sub="Total"       color={AD.amber} />
+        <StatCard label="SURVEYS"      value={stats.surveys}   sub="Pending"     color={AD.amber} />
+        <StatCard label="RISKY DRIVERS" value={stats.risky}   sub="Last 7 days" color={AD.red}   />
+      </div>
+      <SecHeader title="RECENT SOS" />
+      <AdminTable headers={['WORKER','TYPE','COORDINATES','STATUS','TIME']} loading={loading}>
+        {!sosList.length
+          ? <tr><td colSpan={5} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No SOS events yet</td></tr>
+          : sosList.map((e, i) => (
+            <tr key={i}>
+              <AdminTd bold>{e.worker_name || '—'}</AdminTd>
+              <AdminTd mono muted>{e.type || '—'}</AdminTd>
+              <AdminTd mono>{adminFmtCoords(e.lat, e.lng)}</AdminTd>
+              <AdminTd><Badge type={e.status} /></AdminTd>
+              <AdminTd muted>{adminFmt(e.created_at)}</AdminTd>
+            </tr>
+          ))}
+      </AdminTable>
+    </div>
+  );
+}
+
+// ── Drivers Tab ──────────────────────────────────────────────────────────────
+function DriversTab({ eid, onOpenPanel }) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const load = async () => {
+    setLoading(true);
+    const d = await adminFetch('workers', { filter: { employer_id: eid }, limit: 100 });
+    setData(Array.isArray(d) ? d : []);
+    setLoading(false);
+  };
+  useEffect(() => { load(); }, [eid]);
+  return (
+    <div>
+      <SecHeader title="YOUR FLEET" onRefresh={load} />
+      <AdminTable headers={['NAME','PHONE','CITY','PLATFORM','SHIFT','LAST SEEN','']} loading={loading}>
+        {!data.length
+          ? <tr><td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No workers yet</td></tr>
+          : data.map((w, i) => (
+            <tr key={i} style={{ cursor: 'pointer' }}>
+              <AdminTd bold>{w.name || '—'}</AdminTd>
+              <AdminTd mono>{w.phone || '—'}</AdminTd>
+              <AdminTd>{w.city || '—'}</AdminTd>
+              <AdminTd muted>{w.platform || '—'}</AdminTd>
+              <AdminTd><Badge type={w.shift_active ? 'ON' : 'OFF'} /></AdminTd>
+              <AdminTd muted>{adminFmt(w.last_seen)}</AdminTd>
+              <td style={{ padding: '12px 14px', borderBottom: `1px solid ${AD.border}` }}>
+                <button onClick={() => onOpenPanel(w)} style={{ padding: '5px 12px', borderRadius: '7px', cursor: 'pointer', fontSize: '10px', fontWeight: 700, fontFamily: 'inherit', background: AD.surface, color: AD.text1, border: `1px solid ${AD.border}` }}>View</button>
+              </td>
+            </tr>
+          ))}
+      </AdminTable>
+    </div>
+  );
+}
+
+// ── Tracking Tab ─────────────────────────────────────────────────────────────
+function TrackingTab({ eid }) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const load = async () => {
+    setLoading(true);
+    const workers = await adminFetch('workers', { filter: { employer_id: eid }, count: false });
+    const ids = Array.isArray(workers) ? workers.map(w => w.id) : [];
+    if (!ids.length) { setData([]); setLoading(false); return; }
+    const d = await adminFetchIn('driver_tracking', 'worker_id', ids);
+    setData(Array.isArray(d) ? d : []);
+    setLoading(false);
+  };
+  useEffect(() => { load(); }, [eid]);
+  const zColor = z => z === 'CRITICAL' || z === 'HIGH' ? AD.red : z === 'MODERATE' ? AD.amber : AD.green;
+  return (
+    <div>
+      <SecHeader title="LIVE LOCATION FEED" onRefresh={load} />
+      <AdminTable headers={['WORKER','SPEED','LOCATION','RISK ZONE','EVENT','TIME']} loading={loading}>
+        {!data.length
+          ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No tracking data yet</td></tr>
+          : data.map((t, i) => (
+            <tr key={i}>
+              <AdminTd bold>{t.worker_name || '—'}</AdminTd>
+              <AdminTd><span style={{ fontWeight: 700, color: t.speed > 80 ? AD.red : t.speed > 50 ? AD.amber : AD.text1 }}>{t.speed != null ? `${t.speed} km/h` : '—'}</span></AdminTd>
+              <AdminTd mono>{adminFmtCoords(t.lat, t.lng)}</AdminTd>
+              <AdminTd>{t.risk_zone ? <Badge type={t.risk_zone} /> : '—'}</AdminTd>
+              <AdminTd mono muted>{t.event_type || '—'}</AdminTd>
+              <AdminTd muted>{adminFmt(t.created_at)}</AdminTd>
+            </tr>
+          ))}
+      </AdminTable>
+    </div>
+  );
+}
+
+// ── Scores Tab ───────────────────────────────────────────────────────────────
+function ScoresTab({ eid }) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const load = async () => {
+    setLoading(true);
+    const workers = await adminFetch('workers', { filter: { employer_id: eid } });
+    const ids = Array.isArray(workers) ? workers.map(w => w.id) : [];
+    if (!ids.length) { setData([]); setLoading(false); return; }
+    const d = await adminFetchIn('driver_scores', 'worker_id', ids, { limit: 40 });
+    setData(Array.isArray(d) ? d : []);
+    setLoading(false);
+  };
+  useEffect(() => { load(); }, [eid]);
+  return (
+    <div>
+      <SecHeader title="SHIFT SCORES" onRefresh={load} />
+      <AdminTable headers={['DRIVER','SCORE','RATING','DIST','AVG SPD','BRAKES','RISK ZONES','SHIFT END']} loading={loading}>
+        {!data.length
+          ? <tr><td colSpan={8} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No scores yet</td></tr>
+          : data.map((s, i) => {
+            const sc = s.score ?? 0;
+            return (
+              <tr key={i}>
+                <AdminTd bold>{s.worker_name || '—'}</AdminTd>
+                <AdminTd><span style={{ fontSize: '18px', fontWeight: 800, color: scColor(sc) }}>{sc}</span><span style={{ color: AD.text3, fontSize: '10px' }}>/100</span></AdminTd>
+                <AdminTd>{s.rating ? <Badge type={s.rating} /> : '—'}</AdminTd>
+                <AdminTd>{s.total_distance != null ? `${s.total_distance.toFixed(1)} km` : '—'}</AdminTd>
+                <AdminTd>{s.avg_speed != null ? `${s.avg_speed.toFixed(0)} km/h` : '—'}</AdminTd>
+                <AdminTd><span style={{ color: (s.harsh_brakes || 0) > 3 ? AD.red : AD.text1 }}>{s.harsh_brakes ?? 0}</span></AdminTd>
+                <AdminTd>{s.risk_zone_crossings ?? 0}</AdminTd>
+                <AdminTd muted>{adminFmt(s.shift_end)}</AdminTd>
+              </tr>
+            );
+          })}
+      </AdminTable>
+    </div>
+  );
+}
+
+// ── SOS Tab ──────────────────────────────────────────────────────────────────
+function SOSTab() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const load = async () => {
+    setLoading(true);
+    const d = await adminFetch('sos_events', { limit: 40 });
+    setData(Array.isArray(d) ? d : []);
+    setLoading(false);
+  };
+  useEffect(() => { load(); }, []);
+  return (
+    <div>
+      <SecHeader title="SOS EVENTS" onRefresh={load} />
+      <AdminTable headers={['WORKER','PHONE','TYPE','LOCATION','STATUS','TIME']} loading={loading}>
+        {!data.length
+          ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No SOS events yet</td></tr>
+          : data.map((e, i) => (
+            <tr key={i}>
+              <AdminTd bold>{e.worker_name || '—'}</AdminTd>
+              <AdminTd mono>{e.worker_phone || '—'}</AdminTd>
+              <AdminTd muted>{e.type || '—'}</AdminTd>
+              <AdminTd mono>{adminFmtCoords(e.lat, e.lng)}</AdminTd>
+              <AdminTd><Badge type={e.status} /></AdminTd>
+              <AdminTd muted>{adminFmt(e.created_at)}</AdminTd>
+            </tr>
+          ))}
+      </AdminTable>
+    </div>
+  );
+}
+
+// ── Surveys Tab ──────────────────────────────────────────────────────────────
+function SurveysTab() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const load = async () => {
+    setLoading(true);
+    const d = await adminFetch('surveys', { limit: 40 });
+    setData(Array.isArray(d) ? d : []);
+    setLoading(false);
+  };
+  useEffect(() => { load(); }, []);
+  const update = async (id, status) => {
+    await adminUpdate('surveys', id, { status });
+    load();
+  };
+  return (
+    <div>
+      <SecHeader title="COMMUNITY SURVEYS" onRefresh={load} />
+      <AdminTable headers={['TYPE','LOCATION','CITY','BY','STATUS','TIME','ACTION']} loading={loading}>
+        {!data.length
+          ? <tr><td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No surveys yet</td></tr>
+          : data.map((s, i) => (
+            <tr key={i}>
+              <AdminTd bold>{s.type || '—'}</AdminTd>
+              <AdminTd muted>{s.location || '—'}</AdminTd>
+              <AdminTd>{s.city || '—'}</AdminTd>
+              <AdminTd muted>{s.reported_by_name || '—'}</AdminTd>
+              <AdminTd><Badge type={s.status} /></AdminTd>
+              <AdminTd muted>{adminFmt(s.created_at)}</AdminTd>
+              <td style={{ padding: '12px 14px', borderBottom: `1px solid ${AD.border}` }}>
+                {s.status === 'pending' ? (
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    <button onClick={() => update(s.id, 'approved')} style={{ padding: '5px 12px', borderRadius: '7px', cursor: 'pointer', fontSize: '10px', fontWeight: 700, fontFamily: 'inherit', background: 'rgba(34,197,94,.15)', color: AD.green, border: '1px solid rgba(34,197,94,.3)' }}>✓</button>
+                    <button onClick={() => update(s.id, 'rejected')} style={{ padding: '5px 12px', borderRadius: '7px', cursor: 'pointer', fontSize: '10px', fontWeight: 700, fontFamily: 'inherit', background: 'rgba(239,68,68,.1)', color: AD.red, border: '1px solid rgba(239,68,68,.25)' }}>✕</button>
+                  </div>
+                ) : '—'}
+              </td>
+            </tr>
+          ))}
+      </AdminTable>
+    </div>
+  );
+}
+
+// ── Incidents Tab ─────────────────────────────────────────────────────────────
+function IncidentsTab() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const load = async () => {
+    setLoading(true);
+    const d = await adminFetch('incidents', { limit: 40 });
+    setData(Array.isArray(d) ? d : []);
+    setLoading(false);
+  };
+  useEffect(() => { load(); }, []);
+  return (
+    <div>
+      <SecHeader title="REPORTED INCIDENTS" onRefresh={load} />
+      <AdminTable headers={['WORKER','TYPE','SEVERITY','CITY','DESCRIPTION','TIME']} loading={loading}>
+        {!data.length
+          ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No incidents yet</td></tr>
+          : data.map((inc, i) => (
+            <tr key={i}>
+              <AdminTd bold>{inc.worker_name || '—'}</AdminTd>
+              <AdminTd>{inc.type || '—'}</AdminTd>
+              <AdminTd>{inc.severity ? <Badge type={inc.severity === 'high' ? 'CRITICAL' : inc.severity === 'medium' ? 'MODERATE' : 'SAFE'} /> : '—'}</AdminTd>
+              <AdminTd>{inc.city || '—'}</AdminTd>
+              <td style={{ padding: '12px 14px', fontSize: '12px', borderBottom: `1px solid ${AD.border}`, maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: AD.text2 }}>{inc.description || '—'}</td>
+              <AdminTd muted>{adminFmt(inc.created_at)}</AdminTd>
+            </tr>
+          ))}
+      </AdminTable>
+    </div>
+  );
+}
+
+// ── Worker Detail Panel ───────────────────────────────────────────────────────
+function WorkerPanel({ worker, onClose }) {
+  const [scores, setScores] = useState([]);
+  useEffect(() => {
+    if (!worker) return;
+    adminFetch('driver_scores', { filter: { worker_id: worker.id }, limit: 5 }).then(d => setScores(Array.isArray(d) ? d : []));
+  }, [worker]);
+  if (!worker) return null;
+  const latest = scores[0];
+  const sc = latest?.score ?? null;
+  const col = sc != null ? scColor(sc) : AD.text2;
+  const r = 28, circ = 2 * Math.PI * r;
+  const fill = sc != null ? (sc / 100) * circ : 0;
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 300, background: AD.surface, overflowY: 'auto',
+      transform: 'translateX(0)', transition: 'transform 0.25s ease',
+    }}>
+      <div style={{ position: 'sticky', top: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: AD.surface, borderBottom: `1px solid ${AD.border}` }}>
+        <div style={{ fontSize: '15px', fontWeight: 700 }}>{worker.name || 'Driver Profile'}</div>
+        <button onClick={onClose} style={{ width: '28px', height: '28px', borderRadius: '7px', background: AD.card, border: `1px solid ${AD.border}`, color: AD.text2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px' }}>✕</button>
+      </div>
+      <div style={{ padding: '20px' }}>
+        {sc != null && (
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: AD.text3, marginBottom: '8px' }}>LATEST SHIFT SCORE</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px', background: AD.card, borderRadius: '12px', marginBottom: '14px' }}>
+              <div style={{ position: 'relative', width: '72px', height: '72px', flexShrink: 0 }}>
+                <svg width="72" height="72" viewBox="0 0 72 72">
+                  <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(255,255,255,.05)" strokeWidth="7"/>
+                  <circle cx="36" cy="36" r={r} fill="none" stroke={col} strokeWidth="7" strokeDasharray={`${fill} ${circ}`} strokeLinecap="round" transform="rotate(-90 36 36)"/>
+                </svg>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '20px', fontWeight: 800, color: col }}>{sc}</span>
+                  <span style={{ fontSize: '8px', color: AD.text2 }}>/100</span>
+                </div>
+              </div>
+              <div style={{ flex: 1 }}>
+                {[['Rating', latest?.rating ? <Badge type={latest.rating} /> : '—'], ['Distance', `${latest?.total_distance?.toFixed(1) || 0} km`], ['Avg speed', `${latest?.avg_speed?.toFixed(0) || 0} km/h`], ['Harsh brakes', latest?.harsh_brakes || 0], ['Risk crossings', latest?.risk_zone_crossings || 0]].map(([label, val]) => (
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '3px 0' }}>
+                    <span style={{ color: AD.text2 }}>{label}</span>
+                    <span style={{ fontWeight: 600 }}>{val}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        <div style={{ marginBottom: '20px' }}>
+          <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: AD.text3, marginBottom: '8px' }}>WORKER DETAILS</div>
+          {[['Phone', worker.phone], ['City', worker.city], ['Platform', worker.platform], ['Vehicle', worker.vehicle_type], ['Shift', worker.shift_active ? <Badge type="ON" /> : <Badge type="OFF" />], ['Speed', worker.current_speed != null ? `${worker.current_speed} km/h` : '—'], ['Location', adminFmtCoords(worker.current_lat, worker.current_lng)], ['Last seen', adminFmt(worker.last_seen)], ['Joined', adminFmt(worker.created_at)]].map(([k, v]) => (
+            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: `1px solid ${AD.border}` }}>
+              <span style={{ fontSize: '11px', color: AD.text2 }}>{k}</span>
+              <span style={{ fontSize: '11px', fontWeight: 600, textAlign: 'right' }}>{v || '—'}</span>
+            </div>
+          ))}
+        </div>
+        {scores.length > 1 && (
+          <div>
+            <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: AD.text3, marginBottom: '8px' }}>SHIFT HISTORY (LAST {scores.length})</div>
+            {scores.map((s, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: `1px solid ${AD.border}` }}>
+                <span style={{ fontSize: '10px', color: AD.text2 }}>{adminFmt(s.shift_end)}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ color: scColor(s.score), fontWeight: 800 }}>{s.score}</span>
+                  {s.rating && <Badge type={s.rating} />}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Admin Auth Screen ─────────────────────────────────────────────────────────
+function AdminAuth({ onLogin }) {
+  const [code, setCode] = useState('');
+  const [pass, setPass] = useState('');
+  const [err, setErr]   = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const doLogin = async () => {
+    setErr(''); 
+    if (!code || !pass) { setErr('Enter employer code and password.'); return; }
+    setLoading(true);
+    try {
+      const res = await fetch(`${ADMIN_SB_URL}/rest/v1/admin_accounts?employer_id=eq.${encodeURIComponent(code.trim().toLowerCase())}&password_hash=eq.${encodeURIComponent(pass)}&select=*`, {
+        headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}` },
+      });
+      const data = await res.json();
+      if (!data?.length) { setErr('Incorrect employer code or password.'); setLoading(false); return; }
+      await adminUpdate('admin_accounts', data[0].id, { last_login: new Date().toISOString() });
+      sessionStorage.setItem('sentinel_admin', JSON.stringify(data[0]));
+      onLogin(data[0]);
+    } catch {
+      setErr('Connection error. Try again.');
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: AD.bg, zIndex: 999, padding: '20px', fontFamily: "'Inter', sans-serif" }}>
+      <div style={{ width: '100%', maxWidth: '380px', padding: '36px 32px', background: AD.surface, border: `1px solid ${AD.border}`, borderRadius: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
+          <svg width="40" height="40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect x="9" y="7" width="8" height="23" rx="2.5" fill="white"/><rect x="21" y="15" width="8" height="15" rx="2.5" fill="white"/></svg>
+          <div>
+            <div style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.3px' }}>Sentinel</div>
+            <div style={{ fontSize: '10px', color: AD.text2, letterSpacing: '2px', fontWeight: 600 }}>FLEET INTELLIGENCE</div>
+          </div>
+        </div>
+        <div style={{ fontSize: '22px', fontWeight: 800, marginBottom: '4px' }}>Admin Portal</div>
+        <div style={{ fontSize: '12px', color: AD.text2, marginBottom: '28px', lineHeight: 1.5 }}>Secured Systems Technologies Pvt. Ltd.<br/>Sign in with your fleet management account.</div>
+
+        <label style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '1.5px', color: AD.text2, marginBottom: '6px', display: 'block' }}>EMPLOYER CODE</label>
+        <input value={code} onChange={e => setCode(e.target.value)} onKeyDown={e => e.key === 'Enter' && document.getElementById('admin-pass-input').focus()}
+          placeholder="e.g. sentinel001-work" autoComplete="off"
+          style={{ width: '100%', padding: '12px 14px', marginBottom: '14px', background: AD.card, border: `1px solid ${AD.border}`, borderRadius: '10px', color: AD.text1, fontSize: '14px', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }} />
+        <label style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '1.5px', color: AD.text2, marginBottom: '6px', display: 'block' }}>PASSWORD</label>
+        <input id="admin-pass-input" type="password" value={pass} onChange={e => setPass(e.target.value)} onKeyDown={e => e.key === 'Enter' && doLogin()}
+          placeholder="Your admin password"
+          style={{ width: '100%', padding: '12px 14px', marginBottom: '14px', background: AD.card, border: `1px solid ${AD.border}`, borderRadius: '10px', color: AD.text1, fontSize: '14px', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }} />
+        <button onClick={doLogin} disabled={loading}
+          style={{ width: '100%', padding: '13px', marginTop: '4px', background: AD.amber, border: 'none', borderRadius: '10px', color: '#000', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', opacity: loading ? 0.7 : 1 }}>
+          {loading ? 'Verifying...' : 'Access Dashboard →'}
+        </button>
+        {err && <div style={{ color: AD.red, fontSize: '12px', marginTop: '10px', textAlign: 'center' }}>{err}</div>}
+      </div>
+    </div>
+  );
+}
+
+// ── Main Admin Page ──────────────────────────────────────────────────────────
+function AdminPage() {
+  const [admin, setAdmin] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('sentinel_admin')); } catch { return null; }
+  });
+  const [tab, setTab]         = useState('overview');
+  const [panel, setPanel]     = useState(null);
+
+  const tabs = [
+    { id: 'overview',  icon: '📊', label: 'Overview'  },
+    { id: 'drivers',   icon: '👤', label: 'Drivers'   },
+    { id: 'tracking',  icon: '📍', label: 'Tracking'  },
+    { id: 'scores',    icon: '📈', label: 'Scores'    },
+    { id: 'sos',       icon: '🆘', label: 'SOS'       },
+    { id: 'surveys',   icon: '📋', label: 'Surveys'   },
+    { id: 'incidents', icon: '⚠️', label: 'Incidents' },
+  ];
+
+  if (!admin) return <AdminAuth onLogin={setAdmin} />;
+
+  const logout = () => {
+    sessionStorage.removeItem('sentinel_admin');
+    setAdmin(null);
+  };
+
+  const eid = admin.employer_id;
+
+  return (
+    <div style={{ background: AD.bg, minHeight: '100vh', color: AD.text1, fontFamily: "'Inter', sans-serif", paddingBottom: '80px' }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+        @media(min-width:768px){ .admin-bnav{ display:none !important; } .admin-sidenav{ display:flex !important; } .admin-main{ padding-bottom:0 !important; } }
+        @media(max-width:767px){ .admin-sidenav{ display:none !important; } }
+        @media(min-width:640px){ .admin-stats-grid{ grid-template-columns: repeat(3,1fr) !important; } }
+        @media(min-width:1024px){ .admin-stats-grid{ grid-template-columns: repeat(6,1fr) !important; } }
+      `}</style>
+
+      {/* Topbar */}
+      <div style={{ position: 'sticky', top: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: '52px', background: 'rgba(8,13,24,0.95)', backdropFilter: 'blur(12px)', borderBottom: `1px solid ${AD.border}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect x="9" y="7" width="8" height="23" rx="2.5" fill="white"/><rect x="21" y="15" width="8" height="15" rx="2.5" fill="white"/></svg>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 700 }}>Sentinel Admin</div>
+            <div style={{ fontSize: '9px', color: AD.text2, letterSpacing: '1.5px', fontWeight: 600 }}>FLEET INTELLIGENCE</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '4px 9px', borderRadius: '20px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', fontSize: '9px', fontWeight: 700, letterSpacing: '1px', color: AD.green }}>
+            <div style={{ width: '5px', height: '5px', background: AD.green, borderRadius: '50%', animation: 'pulse 1.5s infinite' }} />LIVE
+          </div>
+          <span style={{ fontSize: '11px', color: AD.text2, fontWeight: 600 }}>{admin.name || ''}</span>
+          <button onClick={logout} style={{ padding: '5px 10px', borderRadius: '7px', background: 'transparent', border: `1px solid ${AD.border}`, color: AD.text2, fontSize: '11px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Sign out</button>
+        </div>
+      </div>
+
+      {/* Layout */}
+      <div style={{ display: 'flex' }}>
+        {/* Side nav (desktop) */}
+        <nav className="admin-sidenav" style={{ display: 'none', flexDirection: 'column', width: '200px', minHeight: 'calc(100vh - 52px)', background: AD.surface, borderRight: `1px solid ${AD.border}`, padding: '16px 10px', position: 'sticky', top: '52px', height: 'calc(100vh - 52px)', overflowY: 'auto' }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)} style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '9px 12px', borderRadius: '9px', border: tab === t.id ? `1px solid ${AD.border}` : '1px solid transparent', background: tab === t.id ? AD.card : 'transparent', color: tab === t.id ? AD.text1 : AD.text2, fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left', marginBottom: '2px', transition: 'all 0.15s' }}>
+              <span style={{ fontSize: '14px', width: '18px', textAlign: 'center' }}>{t.icon}</span>{t.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Content */}
+        <div style={{ flex: 1, overflowX: 'hidden' }}>
+          <div style={{ padding: '16px', maxWidth: '1200px', margin: '0 auto' }}>
+            {tab === 'overview'  && <OverviewTab  eid={eid} />}
+            {tab === 'drivers'   && <DriversTab   eid={eid} onOpenPanel={setPanel} />}
+            {tab === 'tracking'  && <TrackingTab  eid={eid} />}
+            {tab === 'scores'    && <ScoresTab    eid={eid} />}
+            {tab === 'sos'       && <SOSTab />}
+            {tab === 'surveys'   && <SurveysTab />}
+            {tab === 'incidents' && <IncidentsTab />}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile bottom nav */}
+      <nav className="admin-bnav" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100, display: 'flex', background: 'rgba(8,13,24,0.97)', backdropFilter: 'blur(12px)', borderTop: `1px solid ${AD.border}` }}>
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '10px 4px 8px', gap: '3px', cursor: 'pointer', border: 'none', background: 'transparent', color: tab === t.id ? AD.amber : AD.text3, fontFamily: 'inherit', transition: 'color 0.15s' }}>
+            <span style={{ fontSize: '18px', lineHeight: 1 }}>{t.icon}</span>
+            <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.5px' }}>{t.label}</span>
+          </button>
+        ))}
+      </nav>
+
+      {/* Worker detail panel */}
+      {panel && <WorkerPanel worker={panel} onClose={() => setPanel(null)} />}
+    </div>
+  );
+}
+
+
 export default function App() {
   const [page, setPage] = useState("home");
   const [activeBlog, setActiveBlog] = useState(null);
@@ -1088,6 +1718,7 @@ export default function App() {
         {page === "blog" && activeBlog && <BlogPage blog={activeBlog} setPage={setPage} />}
         {page === "sentinel" && <SentinelPage />}
         {page === "about" && <AboutPage setPage={setPage} />}
+        {page === "admin" && <AdminPage />}
       </PageTransition>
       <PilotModal />
     </div>
