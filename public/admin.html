@@ -416,11 +416,6 @@ const SUPABASE_URL = 'https://blurdndipqtyxeiljkel.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdXJkbmRpcHF0eXhlaWxqa2VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyNjEwNzIsImV4cCI6MjA2MTgzNzA3Mn0.FBMKfUvGIiSDI2G0VZwWIj97UBbT2bHhYzFaIjfVX7U';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// SHA-256 hash (same algo as app)
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
 
 let currentAdmin = null;
 
@@ -434,9 +429,8 @@ async function doLogin() {
   if (!code || !pass) { errEl.textContent = 'Enter employer code and password.'; errEl.style.display = 'block'; return; }
   loadEl.style.display = 'block';
   try {
-    const hash = await sha256(pass);
     const { data, error } = await sb.from('admin_accounts')
-      .select('*').eq('employer_id', code).eq('password_hash', hash).single();
+      .select('*').eq('employer_id', code).eq('password_hash', pass).single();
     if (error || !data) { loadEl.style.display='none'; errEl.textContent='Incorrect employer code or password.'; errEl.style.display='block'; return; }
     // Update last_login
     await sb.from('admin_accounts').update({ last_login: new Date().toISOString() }).eq('id', data.id);
