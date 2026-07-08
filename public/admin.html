@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+  <title>Sentinel Admin — Fleet Intelligence</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:#080d18;--surface:#0e1420;--card:#121a28;
+      --border:rgba(255,255,255,0.07);
+      --text1:#f0f4ff;--text2:#8892a4;--text3:#4a5568;
+      --amber:#f59e0b;--green:#22c55e;--red:#ef4444;--blue:#4f8ef7;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    html,body{height:100%;overflow-x:hidden;}
+    body{background:var(--bg);color:var(--text1);font-family:'Inter',sans-serif;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+
+    /* ── Logo SVG ───────────────────────────────────────────────────── */
+    .logo-svg{width:28px;height:28px;flex-shrink:0;}
+    .logo-svg rect{fill:white;}
+    /* Auth screen has bigger logo */
+    .auth-logo-svg{width:40px;height:40px;}
+    .auth-logo-svg rect{fill:white;}
+
+    /* ── Auth ───────────────────────────────────────────────────────── */
+    #auth-screen{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      background:var(--bg);z-index:999;padding:20px;
+    }
+    .auth-box{
+      width:100%;max-width:380px;padding:36px 32px;
+      background:var(--surface);border:1px solid var(--border);border-radius:20px;
+    }
+    .auth-brand{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
+    .auth-brand-text .t1{font-size:16px;font-weight:700;letter-spacing:0.3px;}
+    .auth-brand-text .t2{font-size:10px;color:var(--text2);letter-spacing:2px;font-weight:600;}
+    .auth-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+    .auth-sub{font-size:12px;color:var(--text2);margin-bottom:28px;line-height:1.5;}
+    .field-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text2);margin-bottom:6px;display:block;}
+    .auth-input{
+      width:100%;padding:12px 14px;margin-bottom:14px;
+      background:var(--card);border:1px solid var(--border);border-radius:10px;
+      color:var(--text1);font-size:14px;font-family:inherit;outline:none;
+      transition:border-color 0.15s;
+    }
+    .auth-input:focus{border-color:rgba(245,158,11,0.45);}
+    .auth-btn{
+      width:100%;padding:13px;margin-top:4px;
+      background:var(--amber);border:none;border-radius:10px;
+      color:#000;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;
+      transition:opacity 0.15s;
+    }
+    .auth-btn:active{opacity:0.85;}
+    .auth-error{color:var(--red);font-size:12px;margin-top:10px;text-align:center;display:none;}
+    .auth-loading{color:var(--text2);font-size:12px;margin-top:10px;text-align:center;display:none;}
+
+    /* ── App shell ──────────────────────────────────────────────────── */
+    #app{display:none;min-height:100vh;padding-bottom:80px;}
+
+    /* ── Topbar ─────────────────────────────────────────────────────── */
+    .topbar{
+      position:sticky;top:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 16px;height:52px;
+      background:rgba(8,13,24,0.95);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar-left{display:flex;align-items:center;gap:10px;}
+    .topbar-text .t1{font-size:13px;font-weight:700;}
+    .topbar-text .t2{font-size:9px;color:var(--text2);letter-spacing:1.5px;font-weight:600;}
+    .topbar-right{display:flex;align-items:center;gap:10px;}
+    .live-pill{
+      display:flex;align-items:center;gap:5px;padding:4px 9px;
+      border-radius:20px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);
+      font-size:9px;font-weight:700;letter-spacing:1px;color:var(--green);
+    }
+    .live-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+    .admin-name-pill{font-size:11px;color:var(--text2);font-weight:600;}
+    .logout-btn{
+      padding:5px 10px;border-radius:7px;background:transparent;
+      border:1px solid var(--border);color:var(--text2);font-size:11px;
+      font-weight:600;cursor:pointer;font-family:inherit;
+    }
+
+    /* ── Bottom nav (mobile) ────────────────────────────────────────── */
+    .bottom-nav{
+      position:fixed;bottom:0;left:0;right:0;z-index:100;
+      display:flex;background:rgba(8,13,24,0.97);backdrop-filter:blur(12px);
+      border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);
+    }
+    .bnav-item{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:10px 4px 8px;gap:3px;cursor:pointer;border:none;background:transparent;
+      color:var(--text3);font-family:inherit;transition:color 0.15s;
+    }
+    .bnav-item.active{color:var(--amber);}
+    .bnav-icon{font-size:18px;line-height:1;}
+    .bnav-label{font-size:9px;font-weight:700;letter-spacing:0.5px;}
+
+    /* ── Desktop side nav ───────────────────────────────────────────── */
+    @media(min-width:768px){
+      #app{display:none;min-height:100vh;padding-bottom:0;}
+      .bottom-nav{display:none;}
+      .desktop-layout{display:flex;}
+      .side-nav{
+        width:200px;min-height:calc(100vh - 52px);flex-shrink:0;
+        background:var(--surface);border-right:1px solid var(--border);
+        padding:16px 10px;position:sticky;top:52px;height:calc(100vh - 52px);
+        overflow-y:auto;
+      }
+      .side-nav-item{
+        display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;
+        border-radius:9px;border:none;background:transparent;
+        color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;
+        font-family:inherit;text-align:left;transition:all 0.15s;margin-bottom:2px;
+      }
+      .side-nav-item:hover{color:var(--text1);}
+      .side-nav-item.active{background:var(--card);color:var(--text1);border:1px solid var(--border);}
+      .side-nav-item .nav-icon{font-size:14px;width:18px;text-align:center;}
+      .main-content{flex:1;overflow-x:hidden;}
+    }
+    @media(max-width:767px){
+      .desktop-layout{display:block;}
+      .side-nav{display:none;}
+    }
+
+    /* ── Content ────────────────────────────────────────────────────── */
+    .content{padding:16px;max-width:1200px;margin:0 auto;}
+    @media(min-width:768px){.content{padding:24px 28px;}}
+    .section{display:none;}
+    .section.active{display:block;}
+
+    /* ── Stats grid ─────────────────────────────────────────────────── */
+    .stats-grid{
+      display:grid;gap:10px;margin-bottom:20px;
+      grid-template-columns:repeat(2,1fr);
+    }
+    @media(min-width:640px){.stats-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(min-width:1024px){.stats-grid{grid-template-columns:repeat(6,1fr);}}
+    .stat-card{
+      padding:16px;background:var(--card);
+      border:1px solid var(--border);border-radius:14px;
+    }
+    .stat-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text2);margin-bottom:6px;}
+    .stat-val{font-size:26px;font-weight:800;line-height:1;}
+    .stat-sub{font-size:10px;color:var(--text2);margin-top:4px;}
+    .c-green{color:var(--green)}.c-amber{color:var(--amber)}.c-red{color:var(--red)}.c-blue{color:var(--blue)}
+
+    /* ── Section header ─────────────────────────────────────────────── */
+    .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;margin-top:20px;}
+    .sec-title{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--text2);}
+
+    /* ── Table (scrollable on mobile) ──────────────────────────────── */
+    .table-wrap{
+      background:var(--card);border:1px solid var(--border);border-radius:14px;
+      overflow:hidden;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    }
+    table{width:100%;border-collapse:collapse;min-width:500px;}
+    th{
+      padding:10px 14px;text-align:left;
+      font-size:8px;font-weight:700;letter-spacing:2px;color:var(--text3);
+      border-bottom:1px solid var(--border);background:var(--surface);white-space:nowrap;
+    }
+    td{padding:12px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:rgba(255,255,255,0.015);}
+
+    /* ── Badges ─────────────────────────────────────────────────────── */
+    .badge{
+      display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;
+      font-size:9px;font-weight:700;letter-spacing:0.5px;white-space:nowrap;
+    }
+    .b-safe{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+    .b-mod{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+    .b-risky,.b-critical{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+    .b-on{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+    .b-off,.b-inactive{background:rgba(74,85,104,.2);color:var(--text2);border:1px solid var(--border);}
+    .b-pending{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+    .b-approved{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+
+    /* ── Buttons ────────────────────────────────────────────────────── */
+    .btn{
+      padding:5px 12px;border-radius:7px;cursor:pointer;
+      font-size:10px;font-weight:700;font-family:inherit;border:none;
+      transition:opacity 0.15s;white-space:nowrap;
+    }
+    .btn:active{opacity:0.8;}
+    .btn-approve{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);}
+    .btn-reject{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25);}
+    .btn-view{background:var(--surface);color:var(--text1);border:1px solid var(--border);}
+    .refresh-btn{
+      padding:5px 12px;border-radius:7px;cursor:pointer;font-size:10px;font-weight:700;
+      font-family:inherit;background:transparent;border:1px solid var(--border);color:var(--text2);
+    }
+
+    /* ── Detail panel ───────────────────────────────────────────────── */
+    .detail-panel{
+      position:fixed;inset:0;z-index:300;
+      background:var(--surface);overflow-y:auto;
+      transform:translateX(100%);transition:transform 0.25s ease;
+    }
+    @media(min-width:640px){
+      .detail-panel{inset:auto;top:0;right:0;bottom:0;width:420px;border-left:1px solid var(--border);}
+    }
+    .detail-panel.open{transform:translateX(0);}
+    .panel-header{
+      position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;
+      padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);
+    }
+    .panel-title{font-size:15px;font-weight:700;}
+    .panel-close{
+      width:28px;height:28px;border-radius:7px;
+      background:var(--card);border:1px solid var(--border);
+      color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    }
+    .panel-body{padding:20px;}
+    .p-section{margin-bottom:20px;}
+    .p-label{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--text3);margin-bottom:8px;}
+    .info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+    .info-row:last-child{border-bottom:none;}
+    .info-key{font-size:11px;color:var(--text2);}
+    .info-val{font-size:11px;font-weight:600;text-align:right;}
+    .score-wrap{
+      display:flex;align-items:center;gap:16px;padding:16px;
+      background:var(--card);border-radius:12px;margin-bottom:14px;
+    }
+    .score-ring{position:relative;width:72px;height:72px;flex-shrink:0;}
+    .score-ring svg{transform:rotate(-90deg);}
+    .score-ring-inner{
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+    }
+    .score-big{font-size:20px;font-weight:800;}
+    .score-small{font-size:8px;color:var(--text2);}
+    .score-stats{flex:1;}
+    .ss-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;}
+    .ss-label{color:var(--text2);}
+    .ss-val{font-weight:600;}
+    .empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:12px;}
+    .empty-icon{font-size:28px;margin-bottom:8px;}
+    .loading{text-align:center;padding:28px;color:var(--text2);font-size:12px;}
+
+    /* ── Scrollbar ──────────────────────────────────────────────────── */
+    ::-webkit-scrollbar{width:3px;}
+    ::-webkit-scrollbar-track{background:transparent;}
+    ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+  </style>
+</head>
+<body>
+
+<!-- Auth -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-brand">
+      <!-- Official two-bar logo -->
+      <svg class="auth-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+        <rect x="9"  y="7"  width="8" height="23" rx="2.5" fill="white"/>
+        <rect x="21" y="15" width="8" height="15" rx="2.5" fill="white"/>
+      </svg>
+      <div class="auth-brand-text">
+        <div class="t1">Sentinel</div>
+        <div class="t2">FLEET INTELLIGENCE</div>
+      </div>
+    </div>
+    <div class="auth-title">Admin Portal</div>
+    <div class="auth-sub">Secured Systems Technologies Pvt. Ltd.<br/>Sign in with your fleet management account.</div>
+
+    <label class="field-label">EMPLOYER CODE</label>
+    <input id="auth-code"  class="auth-input" type="text" placeholder="e.g. sentinel001-work" autocomplete="off" autocapitalize="none"/>
+    <label class="field-label">PASSWORD</label>
+    <input id="auth-pass"  class="auth-input" type="password" placeholder="Your admin password"/>
+    <button class="auth-btn" onclick="doLogin()">Access Dashboard →</button>
+    <div class="auth-error"  id="auth-error">Incorrect employer code or password.</div>
+    <div class="auth-loading" id="auth-loading">Verifying...</div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+        <rect x="9"  y="7"  width="8" height="23" rx="2.5"/>
+        <rect x="21" y="15" width="8" height="15" rx="2.5"/>
+      </svg>
+      <div class="topbar-text">
+        <div class="t1">Sentinel Admin</div>
+        <div class="t2">FLEET INTELLIGENCE</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+      <span class="admin-name-pill" id="admin-name-display"></span>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="desktop-layout">
+    <!-- Desktop side nav -->
+    <nav class="side-nav" id="side-nav">
+      <button class="side-nav-item active" onclick="showTab('overview',this)" data-tab="overview"><span class="nav-icon">📊</span>Overview</button>
+      <button class="side-nav-item" onclick="showTab('drivers',this)"  data-tab="drivers"> <span class="nav-icon">👤</span>Drivers</button>
+      <button class="side-nav-item" onclick="showTab('tracking',this)" data-tab="tracking"><span class="nav-icon">📍</span>Live Tracking</button>
+      <button class="side-nav-item" onclick="showTab('scores',this)"   data-tab="scores">  <span class="nav-icon">📈</span>Scores</button>
+      <button class="side-nav-item" onclick="showTab('sos',this)"      data-tab="sos">     <span class="nav-icon">🆘</span>SOS Events</button>
+      <button class="side-nav-item" onclick="showTab('surveys',this)"  data-tab="surveys"> <span class="nav-icon">📋</span>Surveys</button>
+      <button class="side-nav-item" onclick="showTab('incidents',this)"data-tab="incidents"><span class="nav-icon">⚠️</span>Incidents</button>
+    </nav>
+
+    <div class="main-content">
+      <div class="content">
+
+        <!-- Overview -->
+        <div class="section active" id="tab-overview">
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-label">WORKERS</div><div class="stat-val c-blue" id="s-workers">—</div><div class="stat-sub">Your fleet</div></div>
+            <div class="stat-card"><div class="stat-label">ON SHIFT</div><div class="stat-val c-green" id="s-active">—</div><div class="stat-sub">Right now</div></div>
+            <div class="stat-card"><div class="stat-label">SOS TODAY</div><div class="stat-val c-red" id="s-sos">—</div><div class="stat-sub">Last 24h</div></div>
+            <div class="stat-card"><div class="stat-label">INCIDENTS</div><div class="stat-val c-amber" id="s-incidents">—</div><div class="stat-sub">Total</div></div>
+            <div class="stat-card"><div class="stat-label">SURVEYS</div><div class="stat-val c-amber" id="s-surveys">—</div><div class="stat-sub">Pending</div></div>
+            <div class="stat-card"><div class="stat-label">RISKY DRIVERS</div><div class="stat-val c-red" id="s-risky">—</div><div class="stat-sub">Last 7 days</div></div>
+          </div>
+          <div class="sec-header"><div class="sec-title">RECENT SOS</div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>WORKER</th><th>TYPE</th><th>COORDINATES</th><th>STATUS</th><th>TIME</th></tr></thead>
+            <tbody id="ov-sos-body"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+
+        <!-- Drivers -->
+        <div class="section" id="tab-drivers">
+          <div class="sec-header"><div class="sec-title">YOUR FLEET</div><button class="refresh-btn" onclick="loadDrivers()">↻</button></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>NAME</th><th>PHONE</th><th>CITY</th><th>PLATFORM</th><th>SHIFT</th><th>LAST SEEN</th><th></th></tr></thead>
+            <tbody id="drivers-body"><tr><td colspan="7" class="loading">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+
+        <!-- Live Tracking -->
+        <div class="section" id="tab-tracking">
+          <div class="sec-header"><div class="sec-title">LIVE LOCATION FEED</div><button class="refresh-btn" onclick="loadTracking()">↻</button></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>WORKER</th><th>SPEED</th><th>LOCATION</th><th>RISK ZONE</th><th>EVENT</th><th>TIME</th></tr></thead>
+            <tbody id="tracking-body"><tr><td colspan="6" class="loading">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+
+        <!-- Scores -->
+        <div class="section" id="tab-scores">
+          <div class="sec-header"><div class="sec-title">SHIFT SCORES</div><button class="refresh-btn" onclick="loadScores()">↻</button></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>DRIVER</th><th>SCORE</th><th>RATING</th><th>DIST</th><th>AVG SPD</th><th>BRAKES</th><th>RISK ZONES</th><th>SHIFT END</th></tr></thead>
+            <tbody id="scores-body"><tr><td colspan="8" class="loading">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+
+        <!-- SOS -->
+        <div class="section" id="tab-sos">
+          <div class="sec-header"><div class="sec-title">SOS EVENTS</div><button class="refresh-btn" onclick="loadSOS()">↻</button></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>WORKER</th><th>PHONE</th><th>TYPE</th><th>LOCATION</th><th>STATUS</th><th>TIME</th></tr></thead>
+            <tbody id="sos-body"><tr><td colspan="6" class="loading">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+
+        <!-- Surveys -->
+        <div class="section" id="tab-surveys">
+          <div class="sec-header"><div class="sec-title">COMMUNITY SURVEYS</div><button class="refresh-btn" onclick="loadSurveys()">↻</button></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>TYPE</th><th>LOCATION</th><th>CITY</th><th>BY</th><th>STATUS</th><th>TIME</th><th>ACTION</th></tr></thead>
+            <tbody id="surveys-body"><tr><td colspan="7" class="loading">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+
+        <!-- Incidents -->
+        <div class="section" id="tab-incidents">
+          <div class="sec-header"><div class="sec-title">REPORTED INCIDENTS</div><button class="refresh-btn" onclick="loadIncidents()">↻</button></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>WORKER</th><th>TYPE</th><th>SEVERITY</th><th>CITY</th><th>DESCRIPTION</th><th>TIME</th></tr></thead>
+            <tbody id="incidents-body"><tr><td colspan="6" class="loading">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <nav class="bottom-nav">
+    <button class="bnav-item active" onclick="showTab('overview',this)" data-tab="overview"><span class="bnav-icon">📊</span><span class="bnav-label">Overview</span></button>
+    <button class="bnav-item" onclick="showTab('drivers',this)"  data-tab="drivers"> <span class="bnav-icon">👤</span><span class="bnav-label">Drivers</span></button>
+    <button class="bnav-item" onclick="showTab('tracking',this)" data-tab="tracking"><span class="bnav-icon">📍</span><span class="bnav-label">Tracking</span></button>
+    <button class="bnav-item" onclick="showTab('scores',this)"   data-tab="scores">  <span class="bnav-icon">📈</span><span class="bnav-label">Scores</span></button>
+    <button class="bnav-item" onclick="showTab('sos',this)"      data-tab="sos">     <span class="bnav-icon">🆘</span><span class="bnav-label">SOS</span></button>
+    <button class="bnav-item" onclick="showTab('surveys',this)"  data-tab="surveys"> <span class="bnav-icon">📋</span><span class="bnav-label">Surveys</span></button>
+    <button class="bnav-item" onclick="showTab('incidents',this)"data-tab="incidents"><span class="bnav-icon">⚠️</span><span class="bnav-label">Incidents</span></button>
+  </nav>
+</div>
+
+<!-- Driver detail panel -->
+<div class="detail-panel" id="detail-panel">
+  <div class="panel-header">
+    <div class="panel-title" id="panel-name">Driver Profile</div>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://blurdndipqtyxeiljkel.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdXJkbmRpcHF0eXhlaWxqa2VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyNjEwNzIsImV4cCI6MjA2MTgzNzA3Mn0.FBMKfUvGIiSDI2G0VZwWIj97UBbT2bHhYzFaIjfVX7U';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// SHA-256 hash (same algo as app)
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+let currentAdmin = null;
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const code = document.getElementById('auth-code').value.trim().toLowerCase();
+  const pass = document.getElementById('auth-pass').value;
+  const errEl = document.getElementById('auth-error');
+  const loadEl = document.getElementById('auth-loading');
+  errEl.style.display = 'none';
+  if (!code || !pass) { errEl.textContent = 'Enter employer code and password.'; errEl.style.display = 'block'; return; }
+  loadEl.style.display = 'block';
+  try {
+    const hash = await sha256(pass);
+    const { data, error } = await sb.from('admin_accounts')
+      .select('*').eq('employer_id', code).eq('password_hash', hash).single();
+    if (error || !data) { loadEl.style.display='none'; errEl.textContent='Incorrect employer code or password.'; errEl.style.display='block'; return; }
+    // Update last_login
+    await sb.from('admin_accounts').update({ last_login: new Date().toISOString() }).eq('id', data.id);
+    currentAdmin = data;
+    sessionStorage.setItem('sentinel_admin', JSON.stringify(data));
+    loadEl.style.display = 'none';
+    enterApp();
+  } catch(e) {
+    loadEl.style.display = 'none';
+    errEl.textContent = 'Connection error. Try again.';
+    errEl.style.display = 'block';
+  }
+}
+
+document.getElementById('auth-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('auth-code').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('auth-pass').focus(); });
+
+function doLogout() {
+  sessionStorage.removeItem('sentinel_admin');
+  currentAdmin = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('auth-pass').value = '';
+}
+
+function enterApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('admin-name-display').textContent = currentAdmin?.name || '';
+  loadAll();
+}
+
+// Restore session on reload
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = sessionStorage.getItem('sentinel_admin');
+  if (saved) { currentAdmin = JSON.parse(saved); enterApp(); }
+});
+
+// ── Tab routing ───────────────────────────────────────────────────────────────
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.side-nav-item,.bnav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  document.querySelectorAll('[data-tab="'+id+'"]').forEach(b=>b.classList.add('active'));
+  const map = {drivers:loadDrivers,tracking:loadTracking,scores:loadScores,sos:loadSOS,surveys:loadSurveys,incidents:loadIncidents};
+  if(map[id]) map[id]();
+}
+
+// ── Employer filter (show only this admin's workers) ──────────────────────────
+const eid = () => currentAdmin?.employer_id;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const fmt = ts => ts ? new Date(ts).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
+const fmtCoords = (lat,lng) => lat ? `${Number(lat).toFixed(4)}, ${Number(lng).toFixed(4)}` : '—';
+const rBadge = r => {
+  if(!r) return '<span class="badge b-inactive">—</span>';
+  const c = r==='SAFE'?'b-safe':r==='MODERATE'?'b-mod':'b-risky';
+  return `<span class="badge ${c}">${r}</span>`;
+};
+const zBadge = z => {
+  if(!z) return '<span class="badge b-inactive">—</span>';
+  const c = z==='CRITICAL'?'b-critical':z==='HIGH'?'b-risky':z==='MODERATE'?'b-mod':'b-safe';
+  return `<span class="badge ${c}">${z}</span>`;
+};
+const scColor = s => s>=80?'var(--green)':s>=60?'var(--amber)':'var(--red)';
+const ring = (sc,col) => {
+  const r=28,c=2*Math.PI*r,fill=(sc/100)*c;
+  return `<svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="${r}" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="7"/><circle cx="36" cy="36" r="${r}" fill="none" stroke="${col}" stroke-width="7" stroke-dasharray="${fill} ${c}" stroke-linecap="round" transform="rotate(-90 36 36)"/></svg>`;
+};
+
+// ── Overview ──────────────────────────────────────────────────────────────────
+async function loadAll() {
+  const e = eid();
+  const [workers,active,sos_t,incs,surveys,risky] = await Promise.all([
+    sb.from('workers').select('id',{count:'exact',head:true}).eq('employer_id',e),
+    sb.from('workers').select('id',{count:'exact',head:true}).eq('employer_id',e).eq('shift_active',true),
+    sb.from('sos_events').select('id',{count:'exact',head:true}).gte('created_at',new Date(Date.now()-86400000).toISOString()),
+    sb.from('incidents').select('id',{count:'exact',head:true}),
+    sb.from('surveys').select('id',{count:'exact',head:true}).eq('status','pending'),
+    sb.from('driver_scores').select('id',{count:'exact',head:true}).eq('rating','RISKY').gte('created_at',new Date(Date.now()-7*86400000).toISOString()),
+  ]);
+  document.getElementById('s-workers').textContent  = workers.count??'—';
+  document.getElementById('s-active').textContent   = active.count??'0';
+  document.getElementById('s-sos').textContent      = sos_t.count??'0';
+  document.getElementById('s-incidents').textContent= incs.count??'0';
+  document.getElementById('s-surveys').textContent  = surveys.count??'0';
+  document.getElementById('s-risky').textContent    = risky.count??'0';
+
+  const {data:sosList} = await sb.from('sos_events').select('*').order('created_at',{ascending:false}).limit(6);
+  const tb = document.getElementById('ov-sos-body');
+  if(!sosList?.length){tb.innerHTML='<tr><td colspan="5" class="empty">No SOS events yet</td></tr>';return;}
+  tb.innerHTML = sosList.map(e=>`<tr>
+    <td><b>${e.worker_name||'—'}</b></td>
+    <td><span class="mono" style="font-size:10px;color:var(--text2)">${e.type||'—'}</span></td>
+    <td><span class="mono" style="font-size:10px">${fmtCoords(e.lat,e.lng)}</span></td>
+    <td><span class="badge ${e.status==='active'?'b-critical':'b-inactive'}">${e.status||'—'}</span></td>
+    <td style="color:var(--text2);font-size:11px">${fmt(e.created_at)}</td>
+  </tr>`).join('');
+}
+
+// ── Drivers ───────────────────────────────────────────────────────────────────
+async function loadDrivers() {
+  const {data} = await sb.from('workers').select('*').eq('employer_id',eid()).order('created_at',{ascending:false});
+  const tb = document.getElementById('drivers-body');
+  if(!data?.length){tb.innerHTML='<tr><td colspan="7" class="empty"><div class="empty-icon">👤</div>No workers yet</td></tr>';return;}
+  tb.innerHTML = data.map(w=>`<tr>
+    <td><b>${w.name||'—'}</b></td>
+    <td class="mono" style="font-size:11px">${w.phone||'—'}</td>
+    <td>${w.city||'—'}</td>
+    <td style="color:var(--text2)">${w.platform||'—'}</td>
+    <td><span class="badge ${w.shift_active?'b-on':'b-off'}">${w.shift_active?'ON SHIFT':'OFF'}</span></td>
+    <td style="color:var(--text2);font-size:11px">${fmt(w.last_seen)}</td>
+    <td><button class="btn btn-view" onclick='openPanel(${JSON.stringify(w)})'>View</button></td>
+  </tr>`).join('');
+}
+
+// ── Live tracking ─────────────────────────────────────────────────────────────
+async function loadTracking() {
+  const workerIds = await getWorkerIds();
+  if(!workerIds.length){document.getElementById('tracking-body').innerHTML='<tr><td colspan="6" class="empty"><div class="empty-icon">📍</div>No workers in your fleet</td></tr>';return;}
+  const {data} = await sb.from('driver_tracking').select('*').in('worker_id',workerIds).order('created_at',{ascending:false}).limit(80);
+  const tb = document.getElementById('tracking-body');
+  if(!data?.length){tb.innerHTML='<tr><td colspan="6" class="empty"><div class="empty-icon">📍</div>No tracking data yet</td></tr>';return;}
+  tb.innerHTML = data.map(t=>`<tr>
+    <td><b>${t.worker_name||'—'}</b></td>
+    <td style="font-weight:700;color:${t.speed>80?'var(--red)':t.speed>50?'var(--amber)':'var(--text1)'}">${t.speed!=null?t.speed+' km/h':'—'}</td>
+    <td><span class="mono" style="font-size:10px">${fmtCoords(t.lat,t.lng)}</span></td>
+    <td>${zBadge(t.risk_zone)}</td>
+    <td><span class="mono" style="font-size:10px;color:${t.event_type==='harsh_brake'?'var(--red)':t.event_type==='rapid_accel'?'var(--amber)':'var(--text2)'}">${t.event_type||'—'}</span></td>
+    <td style="color:var(--text2);font-size:11px">${fmt(t.created_at)}</td>
+  </tr>`).join('');
+}
+
+// ── Scores ────────────────────────────────────────────────────────────────────
+async function loadScores() {
+  const workerIds = await getWorkerIds();
+  if(!workerIds.length){document.getElementById('scores-body').innerHTML='<tr><td colspan="8" class="empty">No workers</td></tr>';return;}
+  const {data} = await sb.from('driver_scores').select('*').in('worker_id',workerIds).order('created_at',{ascending:false}).limit(40);
+  const tb = document.getElementById('scores-body');
+  if(!data?.length){tb.innerHTML='<tr><td colspan="8" class="empty"><div class="empty-icon">📈</div>No shift scores yet</td></tr>';return;}
+  tb.innerHTML = data.map(s=>{
+    const sc=s.score??0,col=scColor(sc);
+    return `<tr>
+      <td><b>${s.worker_name||'—'}</b></td>
+      <td><span style="font-size:18px;font-weight:800;color:${col}">${sc}</span><span style="color:var(--text3);font-size:10px">/100</span></td>
+      <td>${rBadge(s.rating)}</td>
+      <td>${s.total_distance!=null?s.total_distance.toFixed(1)+' km':'—'}</td>
+      <td>${s.avg_speed!=null?s.avg_speed.toFixed(0)+' km/h':'—'}</td>
+      <td style="color:${(s.harsh_brakes||0)>3?'var(--red)':'inherit'}">${s.harsh_brakes??0}</td>
+      <td>${s.risk_zone_crossings??0}</td>
+      <td style="color:var(--text2);font-size:11px">${fmt(s.shift_end)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── SOS ───────────────────────────────────────────────────────────────────────
+async function loadSOS() {
+  const {data} = await sb.from('sos_events').select('*').order('created_at',{ascending:false}).limit(40);
+  const tb = document.getElementById('sos-body');
+  if(!data?.length){tb.innerHTML='<tr><td colspan="6" class="empty"><div class="empty-icon">🆘</div>No SOS events</td></tr>';return;}
+  tb.innerHTML = data.map(e=>`<tr>
+    <td><b>${e.worker_name||'—'}</b></td>
+    <td class="mono" style="font-size:11px">${e.worker_phone||'—'}</td>
+    <td style="color:var(--text2);font-size:11px">${e.type||'—'}</td>
+    <td><span class="mono" style="font-size:10px">${fmtCoords(e.lat,e.lng)}</span></td>
+    <td><span class="badge ${e.status==='active'?'b-critical':'b-inactive'}">${e.status||'—'}</span></td>
+    <td style="color:var(--text2);font-size:11px">${fmt(e.created_at)}</td>
+  </tr>`).join('');
+}
+
+// ── Surveys ───────────────────────────────────────────────────────────────────
+async function loadSurveys() {
+  const {data} = await sb.from('surveys').select('*').order('created_at',{ascending:false}).limit(40);
+  const tb = document.getElementById('surveys-body');
+  if(!data?.length){tb.innerHTML='<tr><td colspan="7" class="empty"><div class="empty-icon">📋</div>No surveys yet</td></tr>';return;}
+  tb.innerHTML = data.map(s=>`<tr>
+    <td><b>${s.type||'—'}</b></td>
+    <td style="color:var(--text2)">${s.location||'—'}</td>
+    <td>${s.city||'—'}</td>
+    <td style="font-size:11px;color:var(--text2)">${s.reported_by_name||'—'}</td>
+    <td><span class="badge ${s.status==='approved'?'b-approved':s.status==='pending'?'b-pending':'b-inactive'}">${s.status||'—'}</span></td>
+    <td style="color:var(--text2);font-size:11px">${fmt(s.created_at)}</td>
+    <td style="display:flex;gap:5px">${s.status==='pending'?`
+      <button class="btn btn-approve" onclick="updateSurvey('${s.id}','approved')">✓</button>
+      <button class="btn btn-reject"  onclick="updateSurvey('${s.id}','rejected')">✕</button>
+    `:'—'}</td>
+  </tr>`).join('');
+}
+async function updateSurvey(id,status){await sb.from('surveys').update({status}).eq('id',id);loadSurveys();}
+
+// ── Incidents ─────────────────────────────────────────────────────────────────
+async function loadIncidents() {
+  const {data} = await sb.from('incidents').select('*').order('created_at',{ascending:false}).limit(40);
+  const tb = document.getElementById('incidents-body');
+  if(!data?.length){tb.innerHTML='<tr><td colspan="6" class="empty"><div class="empty-icon">⚠️</div>No incidents yet</td></tr>';return;}
+  tb.innerHTML = data.map(i=>{
+    const sc=i.severity==='high'?'b-risky':i.severity==='medium'?'b-mod':'b-safe';
+    return `<tr>
+      <td><b>${i.worker_name||'—'}</b></td>
+      <td>${i.type||'—'}</td>
+      <td><span class="badge ${sc}">${i.severity||'—'}</span></td>
+      <td>${i.city||'—'}</td>
+      <td style="color:var(--text2);font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.description||'—'}</td>
+      <td style="color:var(--text2);font-size:11px">${fmt(i.created_at)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Driver detail panel ───────────────────────────────────────────────────────
+async function openPanel(worker) {
+  document.getElementById('panel-name').textContent = worker.name||'Driver Profile';
+  document.getElementById('detail-panel').classList.add('open');
+  const {data:scores} = await sb.from('driver_scores').select('*').eq('worker_id',worker.id).order('created_at',{ascending:false}).limit(5);
+  const latest = scores?.[0];
+  const sc = latest?.score??null;
+  const col = sc!=null?scColor(sc):'var(--text2)';
+  document.getElementById('panel-body').innerHTML = `
+    ${sc!=null?`<div class="p-section">
+      <div class="p-label">LATEST SHIFT SCORE</div>
+      <div class="score-wrap">
+        <div class="score-ring">${ring(sc,col)}<div class="score-ring-inner"><span class="score-big" style="color:${col}">${sc}</span><span class="score-small">/100</span></div></div>
+        <div class="score-stats">
+          <div class="ss-row"><span class="ss-label">Rating</span><span class="ss-val">${rBadge(latest.rating)}</span></div>
+          <div class="ss-row"><span class="ss-label">Distance</span><span class="ss-val">${latest.total_distance?.toFixed(1)||0} km</span></div>
+          <div class="ss-row"><span class="ss-label">Avg speed</span><span class="ss-val">${latest.avg_speed?.toFixed(0)||0} km/h</span></div>
+          <div class="ss-row"><span class="ss-label">Harsh brakes</span><span class="ss-val" style="color:${(latest.harsh_brakes||0)>3?'var(--red)':'inherit'}">${latest.harsh_brakes||0}</span></div>
+          <div class="ss-row"><span class="ss-label">Risk crossings</span><span class="ss-val">${latest.risk_zone_crossings||0}</span></div>
+        </div>
+      </div>
+    </div>`:''}
+    <div class="p-section">
+      <div class="p-label">WORKER DETAILS</div>
+      <div class="info-row"><span class="info-key">Phone</span><span class="info-val mono">${worker.phone||'—'}</span></div>
+      <div class="info-row"><span class="info-key">City</span><span class="info-val">${worker.city||'—'}</span></div>
+      <div class="info-row"><span class="info-key">Platform</span><span class="info-val">${worker.platform||'—'}</span></div>
+      <div class="info-row"><span class="info-key">Vehicle</span><span class="info-val">${worker.vehicle_type||'—'}</span></div>
+      <div class="info-row"><span class="info-key">Shift</span><span class="info-val">${worker.shift_active?'<span class="badge b-on">ON SHIFT</span>':'<span class="badge b-off">OFF</span>'}</span></div>
+      <div class="info-row"><span class="info-key">Speed</span><span class="info-val">${worker.current_speed!=null?worker.current_speed+' km/h':'—'}</span></div>
+      <div class="info-row"><span class="info-key">Location</span><span class="info-val mono" style="font-size:10px">${fmtCoords(worker.current_lat,worker.current_lng)}</span></div>
+      <div class="info-row"><span class="info-key">Last seen</span><span class="info-val">${fmt(worker.last_seen)}</span></div>
+      <div class="info-row"><span class="info-key">Joined</span><span class="info-val">${fmt(worker.created_at)}</span></div>
+    </div>
+    ${scores?.length>1?`<div class="p-section">
+      <div class="p-label">SHIFT HISTORY (LAST ${scores.length})</div>
+      ${scores.map(s=>`<div class="info-row"><span class="info-key" style="font-size:10px">${fmt(s.shift_end)}</span><span class="info-val" style="display:flex;align-items:center;gap:6px"><span style="color:${scColor(s.score)};font-weight:800">${s.score}</span>${rBadge(s.rating)}</span></div>`).join('')}
+    </div>`:''}
+  `;
+}
+function closePanel(){document.getElementById('detail-panel').classList.remove('open');}
+
+// ── Worker ID list helper (filter by employer) ────────────────────────────────
+async function getWorkerIds() {
+  const {data} = await sb.from('workers').select('id').eq('employer_id',eid());
+  return (data||[]).map(w=>w.id);
+}
+
+// Auto-refresh tracking every 30s
+setInterval(()=>{
+  if(document.getElementById('tab-tracking').classList.contains('active')) loadTracking();
+},30000);
+</script>
+</body>
+</html>
