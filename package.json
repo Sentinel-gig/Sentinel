@@ -2,7 +2,7 @@
   "name": "securedsystems",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://sentinel-gig.github.io/Sentinel",
+  "homepage": "https://sentinelco.in",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
