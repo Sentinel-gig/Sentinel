@@ -410,6 +410,15 @@ function Nav({ page, setPage, isDark, toggleTheme }) {
                 textAlign: "left",
               }}>{label}</button>
           ))}
+          {/* Mobile Admin button */}
+          <button onClick={() => { setPage("admin"); setMenuOpen(false); }}
+            style={{
+              background: C.accentBright, border: "none", cursor: "pointer",
+              fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px",
+              letterSpacing: "0.1em", textTransform: "uppercase",
+              color: "#fff", padding: "12px 0", borderRadius: "8px",
+              textAlign: "center", marginTop: "8px", fontWeight: 700,
+            }}>Admin ↗</button>
           {/* Mobile theme toggle */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 0" }}>
             <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: C.steelHi }}>
@@ -507,7 +516,7 @@ function HomePage({ stats, cases, news, blogs, setPage, setActiveBlog }) {
         <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 4vw, 44px)", fontWeight: 700, color: C.text, marginBottom: "40px", lineHeight: 1.15 }}>
           The Numbers That<br /><span style={{ color: C.accentBright }}>Don't Lie</span>
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: "1px", background: C.border, border: `1px solid ${C.border}`, borderRadius: "10px", overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: C.border, border: `1px solid ${C.border}`, borderRadius: "10px", overflow: "hidden" }}>
           {stats.map(s => (
             <div key={s.id} style={{
               background: C.surface, padding: "32px 28px",
@@ -1623,6 +1632,25 @@ function AdminPage() {
   );
 }
 
+
+
+// ─── ABOUT PAGE ───────────────────────────────────────────────────────────────
+function AboutPage({ setPage }) {
+  return (
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "80px 24px" }}>
+      <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: "#888", marginBottom: "24px" }}>// ABOUT</div>
+      <h1 style={{ fontSize: "42px", fontWeight: 800, marginBottom: "24px" }}>Secured Systems Technologies</h1>
+      <p style={{ fontSize: "16px", lineHeight: 1.8, color: "#666", marginBottom: "16px" }}>
+        Sentinel is India's first passive safety intelligence platform built for gig workers.
+        We combine real-time risk mapping, crash detection, and peer mesh alerts to protect
+        the 12 million gig workers operating without any safety net.
+      </p>
+      <p style={{ fontSize: "16px", lineHeight: 1.8, color: "#666" }}>
+        Founded by Arav Misra and Ashutosh Trivedi. Based in Kanpur, India.
+      </p>
+    </div>
+  );
+}
 
 export default function App() {
   const [page, setPage] = useState("home");
