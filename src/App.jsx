@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-
 // ─── SUPABASE CONFIG ──────────────────────────────────────────────────────────
 const SUPABASE_URL = "https://lxokvisnczntkgafzjlk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_YbmQcEe1mzcUXH-FivwOMw_08jUsGwl";
@@ -10,10 +9,10 @@ async function sbFetch(table, method = "GET", body = null) {
   const res = await fetch(url, {
     method,
     headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
       "Content-Type": "application/json",
-      "Prefer": method === "POST" ? "return=representation" : "",
+      Prefer: method === "POST" ? "return=representation" : "",
     },
     body: body ? JSON.stringify(body) : null,
   });
@@ -21,13 +20,15 @@ async function sbFetch(table, method = "GET", body = null) {
   return res.ok;
 }
 
-async function sbInsert(table, data) { return sbFetch(table, "POST", data); }
+async function sbInsert(table, data) {
+  return sbFetch(table, "POST", data);
+}
 async function sbDelete(table, id) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
     method: "DELETE",
     headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
     },
   });
   return res.ok;
@@ -99,24 +100,99 @@ const makeCss = (C) => `
 
 // ─── SEED DATA ────────────────────────────────────────────────────────────────
 const SEED_STATS = [
-  { id: 1, value: "12M+", label: "Gig Workers in India (FY2024-25)", source: "NITI Aayog" },
-  { id: 2, value: "90%", label: "Workforce operating informally — outside safety nets", source: "Ministry of Labour" },
-  { id: 3, value: "400+", label: "Worker deaths from workplace accidents in India (2024)", source: "IndustriALL" },
-  { id: 4, value: "23.5M", label: "Projected gig workers by 2029-30", source: "NITI Aayog" },
-  { id: 5, value: "₹0", label: "Average platform compensation to families after on-job fatalities", source: "Field Research" },
-  { id: 6, value: "1,109", label: "Avg annual factory deaths (2017–2020) — gig workers not counted", source: "DGFASLI" },
+  {
+    id: 1,
+    value: "12M+",
+    label: "Gig Workers in India (FY2024-25)",
+    source: "NITI Aayog",
+  },
+  {
+    id: 2,
+    value: "90%",
+    label: "Workforce operating informally — outside safety nets",
+    source: "Ministry of Labour",
+  },
+  {
+    id: 3,
+    value: "400+",
+    label: "Worker deaths from workplace accidents in India (2024)",
+    source: "IndustriALL",
+  },
+  {
+    id: 4,
+    value: "23.5M",
+    label: "Projected gig workers by 2029-30",
+    source: "NITI Aayog",
+  },
+  {
+    id: 5,
+    value: "₹0",
+    label: "Average platform compensation to families after on-job fatalities",
+    source: "Field Research",
+  },
+  {
+    id: 6,
+    value: "1,109",
+    label: "Avg annual factory deaths (2017–2020) — gig workers not counted",
+    source: "DGFASLI",
+  },
 ];
 
 const SEED_CASES = [
-  { id: 1, city: "Mumbai", title: "Delivery Rider Found Hours After Accident", date: "Mar 2025", desc: "A Swiggy delivery partner met with an accident in Andheri at 11 PM. No platform alert was triggered. His family found out 6 hours later when they called police.", tag: "INCIDENT" },
-  { id: 2, city: "Delhi", title: "Zomato Partner Robbed, Platform Unreachable", date: "Jan 2025", desc: "A delivery executive was robbed at knifepoint in South Delhi. He had no emergency protocol. The platform's helpline put him on hold for 22 minutes.", tag: "ROBBERY" },
-  { id: 3, city: "Bangalore", title: "Night-Shift Cab Driver Disappears for 14 Hours", date: "Feb 2025", desc: "An Ola driver went off-grid during a late-night pickup in Whitefield. His family had no tracking access. He was found at a hospital — had suffered a cardiac event alone.", tag: "MEDICAL" },
+  {
+    id: 1,
+    city: "Mumbai",
+    title: "Delivery Rider Found Hours After Accident",
+    date: "Mar 2025",
+    desc: "A Swiggy delivery partner met with an accident in Andheri at 11 PM. No platform alert was triggered. His family found out 6 hours later when they called police.",
+    tag: "INCIDENT",
+  },
+  {
+    id: 2,
+    city: "Delhi",
+    title: "Zomato Partner Robbed, Platform Unreachable",
+    date: "Jan 2025",
+    desc: "A delivery executive was robbed at knifepoint in South Delhi. He had no emergency protocol. The platform's helpline put him on hold for 22 minutes.",
+    tag: "ROBBERY",
+  },
+  {
+    id: 3,
+    city: "Bangalore",
+    title: "Night-Shift Cab Driver Disappears for 14 Hours",
+    date: "Feb 2025",
+    desc: "An Ola driver went off-grid during a late-night pickup in Whitefield. His family had no tracking access. He was found at a hospital — had suffered a cardiac event alone.",
+    tag: "MEDICAL",
+  },
 ];
 
 const SEED_NEWS = [
-  { id: 1, title: "Gig Workers' Strike Reveals Intolerable Working Conditions", source: "The Hindu", date: "Jan 2026", url: "#", summary: "First nationwide collective assertion by gig workers demanding dignity, regulation, and accountability in India's platform economy." },
-  { id: 2, title: "Union Budget 2025: Identity Cards & Healthcare for Gig Workers", source: "Drishti IAS", date: "Feb 2025", url: "#", summary: "Union Budget 2025 introduces identity cards and healthcare benefits for gig workers, but enforceable safety standards remain absent." },
-  { id: 3, title: "Karnataka Introduces Gig Workers Insurance Scheme", source: "PMC", date: "2024", url: "#", summary: "Karnataka's Platform-Based Gig Workers Bill mandates health, life, and disability insurance — a model other states are yet to follow." },
+  {
+    id: 1,
+    title: "Gig Workers' Strike Reveals Intolerable Working Conditions",
+    source: "The Hindu",
+    date: "Jan 2026",
+    url: "#",
+    summary:
+      "First nationwide collective assertion by gig workers demanding dignity, regulation, and accountability in India's platform economy.",
+  },
+  {
+    id: 2,
+    title: "Union Budget 2025: Identity Cards & Healthcare for Gig Workers",
+    source: "Drishti IAS",
+    date: "Feb 2025",
+    url: "#",
+    summary:
+      "Union Budget 2025 introduces identity cards and healthcare benefits for gig workers, but enforceable safety standards remain absent.",
+  },
+  {
+    id: 3,
+    title: "Karnataka Introduces Gig Workers Insurance Scheme",
+    source: "PMC",
+    date: "2024",
+    url: "#",
+    summary:
+      "Karnataka's Platform-Based Gig Workers Bill mandates health, life, and disability insurance — a model other states are yet to follow.",
+  },
 ];
 
 const SEED_BLOGS = [
@@ -158,7 +234,8 @@ This is what infrastructure looks like when you build it for the people who actu
     id: 2,
     slug: "tier2-risk",
     tag: "RESEARCH",
-    title: "Tier-2 Cities: Where Gig Worker Risk Is Highest and Visibility Lowest",
+    title:
+      "Tier-2 Cities: Where Gig Worker Risk Is Highest and Visibility Lowest",
     date: "Apr 2025",
     readTime: "5 min read",
     author: "Secured Systems Editorial",
@@ -208,11 +285,15 @@ const CITY_DATA = [
 // Storage now handled by Supabase — these are kept for compatibility
 async function loadData(key, fallback) {
   try {
-    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 4000));
+    const timeout = new Promise((_, rej) =>
+      setTimeout(() => rej(new Error("timeout")), 4000),
+    );
     const data = await Promise.race([sbFetch(key), timeout]);
     if (data && data.length > 0) return data;
     return fallback;
-  } catch { return fallback; }
+  } catch {
+    return fallback;
+  }
 }
 async function saveData(key, value) {
   // No-op: saves happen directly via sbInsert/sbDelete
@@ -222,52 +303,124 @@ async function saveData(key, value) {
 
 function Tag({ children, color = C.accent }) {
   return (
-    <span style={{
-      fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px",
-      letterSpacing: "0.15em", textTransform: "uppercase",
-      color, background: `${color}18`,
-      border: `1px solid ${color}33`,
-      padding: "3px 8px", borderRadius: "2px",
-    }}>{children}</span>
+    <span
+      style={{
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: "10px",
+        letterSpacing: "0.15em",
+        textTransform: "uppercase",
+        color,
+        background: `${color}18`,
+        border: `1px solid ${color}33`,
+        padding: "3px 8px",
+        borderRadius: "2px",
+      }}
+    >
+      {children}
+    </span>
   );
 }
 
 function Btn({ children, onClick, variant = "primary", small, style = {} }) {
   const base = {
-    border: "none", borderRadius: "5px", cursor: "pointer",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
     fontFamily: "'IBM Plex Sans', sans-serif",
-    fontWeight: 500, letterSpacing: "0.03em",
+    fontWeight: 500,
+    letterSpacing: "0.03em",
     transition: "all 0.15s",
     padding: small ? "7px 16px" : "11px 24px",
     fontSize: small ? "12px" : "13px",
     ...style,
   };
-  if (variant === "primary") return <button onClick={onClick} style={{ ...base, background: C.btnPrimary, color: C.white }}>{children}</button>;
-  if (variant === "ghost") return <button onClick={onClick} style={{ ...base, background: "none", border: `1px solid ${C.borderHi}`, color: C.steelHi }}>{children}</button>;
-  if (variant === "danger") return <button onClick={onClick} style={{ ...base, background: `${C.danger}22`, border: `1px solid ${C.danger}44`, color: C.danger }}>{children}</button>;
+  if (variant === "primary")
+    return (
+      <button
+        onClick={onClick}
+        style={{ ...base, background: C.btnPrimary, color: C.white }}
+      >
+        {children}
+      </button>
+    );
+  if (variant === "ghost")
+    return (
+      <button
+        onClick={onClick}
+        style={{
+          ...base,
+          background: "none",
+          border: `1px solid ${C.borderHi}`,
+          color: C.steelHi,
+        }}
+      >
+        {children}
+      </button>
+    );
+  if (variant === "danger")
+    return (
+      <button
+        onClick={onClick}
+        style={{
+          ...base,
+          background: `${C.danger}22`,
+          border: `1px solid ${C.danger}44`,
+          color: C.danger,
+        }}
+      >
+        {children}
+      </button>
+    );
 }
 
 function Input({ value, onChange, placeholder, multiline, rows = 3, label }) {
   const shared = {
-    width: "100%", background: C.surface,
-    border: `1px solid ${C.border}`, borderRadius: "6px",
-    padding: "10px 14px", color: C.text,
-    fontSize: "13px", lineHeight: 1.6, outline: "none",
+    width: "100%",
+    background: C.surface,
+    border: `1px solid ${C.border}`,
+    borderRadius: "6px",
+    padding: "10px 14px",
+    color: C.text,
+    fontSize: "13px",
+    lineHeight: 1.6,
+    outline: "none",
     transition: "border-color 0.15s",
   };
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-      {label && <label style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>{label}</label>}
-      {multiline
-        ? <textarea value={value} onChange={onChange} placeholder={placeholder} rows={rows}
-            style={{ ...shared, resize: "vertical" }}
-            onFocus={e => e.target.style.borderColor = C.accent}
-            onBlur={e => e.target.style.borderColor = C.border} />
-        : <input value={value} onChange={onChange} placeholder={placeholder}
-            style={{ ...shared }}
-            onFocus={e => e.target.style.borderColor = C.accent}
-            onBlur={e => e.target.style.borderColor = C.border} />
-      }
+      {label && (
+        <label
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: "10px",
+            color: C.muted,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+          }}
+        >
+          {label}
+        </label>
+      )}
+      {multiline ? (
+        <textarea
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          rows={rows}
+          style={{ ...shared, resize: "vertical" }}
+          onFocus={(e) => (e.target.style.borderColor = C.accent)}
+          onBlur={(e) => (e.target.style.borderColor = C.border)}
+        />
+      ) : (
+        <input
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          style={{ ...shared }}
+          onFocus={(e) => (e.target.style.borderColor = C.accent)}
+          onBlur={(e) => (e.target.style.borderColor = C.border)}
+        />
+      )}
     </div>
   );
 }
@@ -290,11 +443,13 @@ function PageTransition({ page, children }) {
   }, [page]);
 
   return (
-    <div style={{
-      opacity: visible ? 1 : 0,
-      transform: visible ? "translateY(0px)" : "translateY(10px)",
-      transition: "opacity 0.18s ease, transform 0.18s ease",
-    }}>
+    <div
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0px)" : "translateY(10px)",
+        transition: "opacity 0.18s ease, transform 0.18s ease",
+      }}
+    >
       {children}
     </div>
   );
@@ -314,130 +469,316 @@ function Nav({ page, setPage, isDark, toggleTheme }) {
     <>
       <nav
         style={{
-          position:       "fixed",
-          top:            0,
-          left:           0,
-          right:          0,
-          zIndex:         200,
-          height:         "60px",
-          padding:        "0 clamp(16px, 4vw, 48px)",
-          display:        "flex",
-          alignItems:     "center",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 200,
+          height: "60px",
+          padding: "0 clamp(16px, 4vw, 48px)",
+          display: "flex",
+          alignItems: "center",
           justifyContent: "space-between",
-          background:     scrolled || menuOpen ? C.navBg : "transparent",
+          background: scrolled || menuOpen ? C.navBg : "transparent",
           backdropFilter: scrolled || menuOpen ? "blur(14px)" : "none",
-          borderBottom:   scrolled ? `1px solid ${C.border}` : "none",
-          transition:     "background 0.3s, border-color 0.3s",
+          borderBottom: scrolled ? `1px solid ${C.border}` : "none",
+          transition: "background 0.3s, border-color 0.3s",
         }}
       >
         {/* Logo */}
-        <button onClick={() => { setPage("home"); setMenuOpen(false); }}
-          style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px" }}>
-          <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAMgAyADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD8Q6KKK9A5wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKK7/9nT9lj9oz9rjx2Php+zR8GPEHjXW/L8yay0HT2m+zx5x5kz/cgjzxvkZVzxmgDgKK+67f/g2k/wCC2tzAtxH+xO4V1yBJ8RPDiN+KtqII+hFP/wCIZ3/gtx/0ZT/5kjw3/wDLGp54dx2Z8I0V93f8Qzv/AAW4/wCjKf8AzJHhv/5Y0f8AEM7/AMFuP+jKf/MkeG//AJY0c8O4WZ8I0V91XX/BtL/wW0tLd7mX9ieQqi5YRfEPw47EeyrqJJPsBXyX8ff2b/j1+yz8QZ/hV+0X8I9e8GeIbdBI2ma/pz27yRkkCWMsNssZIOJELKcHBNNSi9mFmjiaKKKYgooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+yX/glF+wB8M/+Cc/7GPhP4JeDfDtrDr1xpdvf+O9ZSECfVdXkiDTySP1KIxMcanhI0Udck/xtV/dxWFduyRpTCiiiuY0CiiigAr5T/wCCxX/BN/4a/wDBSb9jLxL8NNd8OWzeM9E0y51L4da95I+0afqaRlkiD9RDOUWKVOhVg2N0aFfqyimm07oNz+Eeiiiu85wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOcKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK/u4r+Eev7uK56/Q0p9QooornNAooooAKKKKAP4R6KKK9A5wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOcKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK/u4r+Eev7uK56/Q0p9QooornNAooooAKKKKAP4R6KKK9A5wr6z+Af/AAQu/wCCsv7TPgu1+Inwj/Yr8Rz6NfRCWxvdd1Cx0YXMRGVkjXUbiBpEI5DqCpByCRX0t/wao/sAfDP9r39s7xH8bfjL4dtda0H4P6XZ39lo17CJIJ9Xu5ZFs5JUPDpEtvcSBTx5ixk8KQf6b6xqVeV2RcY3Vz+TX/iGd/4Lcf8ARlP/AJkjw3/8saP+IZ3/AILcf9GU/wDmSPDf/wAsa/rKorP28yuRH8mv/EM7/wAFuP8Aoyn/AMyR4b/+WNH/ABDO/wDBbj/oyn/zJHhv/wCWNf1lUUe3mHIj+PD9o7/giP8A8FUv2TvA118S/jj+xt4isNBsYjLqGq6PfWWsRWcQGTJMdOnn8lB3d8KO5r5Wr+7d0SRDHIoZWGGUjIIr+Xn/AIOgv+CcXw4/YZ/bP0b4n/BDw9b6L4O+Lmm3WpwaFZxCO307VLaRFvY4EHCQsJ7eUIMBWmdVAVVA0p1eZ2ZMoWVz8zqKKK2ICiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/wCDKD/m5f8A7kz/ANztfu5X4R/8GUH/ADcv/wByZ/7na/dyuOr/ABGbQ+EKKKKzKCiiigAr8I/+D1//AJto/wC5z/8AcFX7uV+Ef/B6/wD820f9zn/7gq0pfxETP4T8I6KKK7DEKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOc/dz/gyg/wCbl/8AuTP/AHO1+7lfhH/wZQf83L/9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/4PX/+baP+5z/9wVfu5X4R/wDB6/8A820f9zn/AO4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/wDBlB/zcv8A9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/AOD1/wD5to/7nP8A9wVfu5X4R/8AB6//AM20f9zn/wC4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/8ABlB/zcv/ANyZ/wC52v3crjq/xGbQ+EKKKKzKCiiigAr8I/8Ag9f/AObaP+5z/wDcFX7uV+Ef/B6//wA20f8Ac5/+4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/wCDKD/m5f8A7kz/ANztfu5X4R/8GUH/ADcv/wByZ/7na/dyuOr/ABGbQ+EKKKKzKCiiigAr8I/+D1//AJto/wC5z/8AcFX7uV+Ef/B6/wD820f9zn/7gq0pfxETP4T8I6KKK7DEKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOc/dz/gyg/wCbl/8AuTP/AHO1+7lfhH/wZQf83L/9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/4PX/+baP+5z/9wVfu5X4R/wDB6/8A820f9zn/AO4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/wDBlB/zcv8A9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/AOD1/wD5to/7nP8A9wVfu5X4R/8AB6//AM20f9zn/wC4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/8ABlB/zcv/ANyZ/wC52v3crjq/xGbQ+EKKKKzKCiiigAr8I/8Ag9f/AObaP+5z/wDcFX7uV+Ef/B6//wA20f8Ac5/+4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/sM/4I7/8ABSD4af8ABSb9jPw38TNB8R2reMtE0y2034i6B5w+0afqaRhXlKdRDOUaWJ+hViudyOFwrp2TNKZ9WUUUVzGgUUUUAFFFfNf/AAVg/wCCgHwz/wCCc/7GHiz41+MvEdtBr9zpVxYeA9GaUefquryRFYEjTqURmEkjDhI0Y9cAtJt2QH8bdFFFd5zn7uf8GUH/ADcv/wByZ/7na/dyv5eP+DXz/go78N/2Gf2zta+F/wAcPENtovg74uaba6ZNrt5KI7fTtUtpHayknc8JCwnuIi5wFaZGYhVYj+oZHSRBJG4ZWGVYHII9a5KyambQ+EWiiisigooooAK/CP8A4PX/APm2j/uc/wD3BV+7lfzH/wDB1Z/wUA+Gf7X/AO2f4d+CnwZ8R22t6B8INKvLC81mylEkFxq91LG14kTrw6Rrb28ZYceYkgGQATrRTcyZ/CflvRRRXWYhRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAV2vwD/aP+PX7LPxBg+Kv7Onxc17wZ4ht0Ma6poGovbyPGSCYpAp2yxkgZjcMpwMg1xVFAH3Va/8HLP/AAW0s7dLWL9tiQrGuFMvw98OOxHuzacST7k1J/xExf8ABbj/AKPW/wDMb+G//ldXwjRU8kOw7s+7v+ImL/gtx/0et/5jfw3/APK6j/iJi/4Lcf8AR63/AJjfw3/8rq+EaKOSHYLs+67j/g5b/wCC2t1A9vJ+2w4V1wTH8PPDiN+DLpwI+oNfKX7RP7Uv7Rf7W3jtviZ+0t8Z/EHjXW/L8uK917UXm+zx5z5cKH5IY887I1Vc84rgaKajFbILthRRRTEFfVP7OH/Bbf8A4Ko/sm+BrX4afA39snxFYaDYxCLT9K1ixstYhs4gMCOEahBP5KDsibVHYV8rUUmk9w2Pu7/iJi/4Lcf9Hrf+Y38N/wDyuo/4iYv+C3H/AEet/wCY38N//K6vhGilyQ7Duz7u/wCImL/gtx/0et/5jfw3/wDK6j/iJi/4Lcf9Hrf+Y38N/wDyur4Roo5Idguz6y+Pv/Bc/wD4KyftNeC7r4d/F39tTxHPo19EYr6x0KwsdGW5iIw0cjadbwNIhHBRiVIOCCK+TaKKaSWwrthRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA/9k=" alt="Sentinel" style={{ width: "32px", height: "32px", borderRadius: "6px", objectFit: "cover" }} /> 
-          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "17px", fontWeight: 600, color: C.text, letterSpacing: "0.04em" }}>
+        <button
+          onClick={() => {
+            setPage("home");
+            setMenuOpen(false);
+          }}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          <img
+            src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAMgAyADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD8Q6KKK9A5wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKK7/9nT9lj9oz9rjx2Php+zR8GPEHjXW/L8yay0HT2m+zx5x5kz/cgjzxvkZVzxmgDgKK+67f/g2k/wCC2tzAtxH+xO4V1yBJ8RPDiN+KtqII+hFP/wCIZ3/gtx/0ZT/5kjw3/wDLGp54dx2Z8I0V93f8Qzv/AAW4/wCjKf8AzJHhv/5Y0f8AEM7/AMFuP+jKf/MkeG//AJY0c8O4WZ8I0V91XX/BtL/wW0tLd7mX9ieQqi5YRfEPw47EeyrqJJPsBXyX8ff2b/j1+yz8QZ/hV+0X8I9e8GeIbdBI2ma/pz27yRkkCWMsNssZIOJELKcHBNNSi9mFmjiaKKKYgooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+yX/glF+wB8M/+Cc/7GPhP4JeDfDtrDr1xpdvf+O9ZSECfVdXkiDTySP1KIxMcanhI0Udck/xtV/dxWFduyRpTCiiiuY0CiiigAr5T/wCCxX/BN/4a/wDBSb9jLxL8NNd8OWzeM9E0y51L4da95I+0afqaRlkiD9RDOUWKVOhVg2N0aFfqyimm07oNz+Eeiiiu85wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOcKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK/u4r+Eev7uK56/Q0p9QooornNAooooAKKKKAP4R6KKK9A5wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOcKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK/u4r+Eev7uK56/Q0p9QooornNAooooAKKKKAP4R6KKK9A5wr6z+Af/AAQu/wCCsv7TPgu1+Inwj/Yr8Rz6NfRCWxvdd1Cx0YXMRGVkjXUbiBpEI5DqCpByCRX0t/wao/sAfDP9r39s7xH8bfjL4dtda0H4P6XZ39lo17CJIJ9Xu5ZFs5JUPDpEtvcSBTx5ixk8KQf6b6xqVeV2RcY3Vz+TX/iGd/4Lcf8ARlP/AJkjw3/8saP+IZ3/AILcf9GU/wDmSPDf/wAsa/rKorP28yuRH8mv/EM7/wAFuP8Aoyn/AMyR4b/+WNH/ABDO/wDBbj/oyn/zJHhv/wCWNf1lUUe3mHIj+PD9o7/giP8A8FUv2TvA118S/jj+xt4isNBsYjLqGq6PfWWsRWcQGTJMdOnn8lB3d8KO5r5Wr+7d0SRDHIoZWGGUjIIr+Xn/AIOgv+CcXw4/YZ/bP0b4n/BDw9b6L4O+Lmm3WpwaFZxCO307VLaRFvY4EHCQsJ7eUIMBWmdVAVVA0p1eZ2ZMoWVz8zqKKK2ICiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/wCDKD/m5f8A7kz/ANztfu5X4R/8GUH/ADcv/wByZ/7na/dyuOr/ABGbQ+EKKKKzKCiiigAr8I/+D1//AJto/wC5z/8AcFX7uV+Ef/B6/wD820f9zn/7gq0pfxETP4T8I6KKK7DEKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOc/dz/gyg/wCbl/8AuTP/AHO1+7lfhH/wZQf83L/9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/4PX/+baP+5z/9wVfu5X4R/wDB6/8A820f9zn/AO4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/wDBlB/zcv8A9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/AOD1/wD5to/7nP8A9wVfu5X4R/8AB6//AM20f9zn/wC4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/8ABlB/zcv/ANyZ/wC52v3crjq/xGbQ+EKKKKzKCiiigAr8I/8Ag9f/AObaP+5z/wDcFX7uV+Ef/B6//wA20f8Ac5/+4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/wCDKD/m5f8A7kz/ANztfu5X4R/8GUH/ADcv/wByZ/7na/dyuOr/ABGbQ+EKKKKzKCiiigAr8I/+D1//AJto/wC5z/8AcFX7uV+Ef/B6/wD820f9zn/7gq0pfxETP4T8I6KKK7DEKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACv7uK/hHr+7iuev0NKfUKKKK5zQKKKKACiiigD+EeiiivQOc/dz/gyg/wCbl/8AuTP/AHO1+7lfhH/wZQf83L/9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/4PX/+baP+5z/9wVfu5X4R/wDB6/8A820f9zn/AO4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/wDBlB/zcv8A9yZ/7na/dyuOr/EZtD4QooorMoKKKKACvwj/AOD1/wD5to/7nP8A9wVfu5X4R/8AB6//AM20f9zn/wC4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/u4rnr9DSn1Ciiiuc0CiiigAooooA/hHooor0DnP3c/4MoP+bl/+5M/9ztfu5X4R/8ABlB/zcv/ANyZ/wC52v3crjq/xGbQ+EKKKKzKCiiigAr8I/8Ag9f/AObaP+5z/wDcFX7uV+Ef/B6//wA20f8Ac5/+4KtKX8REz+E/COiiiuwxCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+7iv4R6/sM/4I7/8ABSD4af8ABSb9jPw38TNB8R2reMtE0y2034i6B5w+0afqaRhXlKdRDOUaWJ+hViudyOFwrp2TNKZ9WUUUVzGgUUUUAFFFfNf/AAVg/wCCgHwz/wCCc/7GHiz41+MvEdtBr9zpVxYeA9GaUefquryRFYEjTqURmEkjDhI0Y9cAtJt2QH8bdFFFd5zn7uf8GUH/ADcv/wByZ/7na/dyv5eP+DXz/go78N/2Gf2zta+F/wAcPENtovg74uaba6ZNrt5KI7fTtUtpHayknc8JCwnuIi5wFaZGYhVYj+oZHSRBJG4ZWGVYHII9a5KyambQ+EWiiisigooooAK/CP8A4PX/APm2j/uc/wD3BV+7lfzH/wDB1Z/wUA+Gf7X/AO2f4d+CnwZ8R22t6B8INKvLC81mylEkFxq91LG14kTrw6Rrb28ZYceYkgGQATrRTcyZ/CflvRRRXWYhRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAV2vwD/aP+PX7LPxBg+Kv7Onxc17wZ4ht0Ma6poGovbyPGSCYpAp2yxkgZjcMpwMg1xVFAH3Va/8HLP/AAW0s7dLWL9tiQrGuFMvw98OOxHuzacST7k1J/xExf8ABbj/AKPW/wDMb+G//ldXwjRU8kOw7s+7v+ImL/gtx/0et/5jfw3/APK6j/iJi/4Lcf8AR63/AJjfw3/8rq+EaKOSHYLs+67j/g5b/wCC2t1A9vJ+2w4V1wTH8PPDiN+DLpwI+oNfKX7RP7Uv7Rf7W3jtviZ+0t8Z/EHjXW/L8uK917UXm+zx5z5cKH5IY887I1Vc84rgaKajFbILthRRRTEFfVP7OH/Bbf8A4Ko/sm+BrX4afA39snxFYaDYxCLT9K1ixstYhs4gMCOEahBP5KDsibVHYV8rUUmk9w2Pu7/iJi/4Lcf9Hrf+Y38N/wDyuo/4iYv+C3H/AEet/wCY38N//K6vhGilyQ7Duz7u/wCImL/gtx/0et/5jfw3/wDK6j/iJi/4Lcf9Hrf+Y38N/wDyur4Roo5Idguz6y+Pv/Bc/wD4KyftNeC7r4d/F39tTxHPo19EYr6x0KwsdGW5iIw0cjadbwNIhHBRiVIOCCK+TaKKaSWwrthRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA/9k="
+            alt="Sentinel"
+            style={{
+              width: "32px",
+              height: "32px",
+              borderRadius: "6px",
+              objectFit: "cover",
+            }}
+          />
+          <span
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "17px",
+              fontWeight: 600,
+              color: C.text,
+              letterSpacing: "0.04em",
+            }}
+          >
             Sentinel
-            <span style={{ color: C.accentBright, fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", marginLeft: "4px" }}>by Secured Systems</span>
+            <span
+              style={{
+                color: C.accentBright,
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: "11px",
+                marginLeft: "4px",
+              }}
+            >
+              by Secured Systems
+            </span>
           </span>
         </button>
 
         {/* Desktop nav */}
-        <div style={{ display: "flex", gap: "28px", alignItems: "center", "@media(max-width:600px)": { display: "none" } }}
-          className="desktop-nav">
-          {[["home","Awareness"],["sentinel","Sentinel"],["blogs","Blog"],["about","About"]].map(([p,label]) => (
-            <button key={p} onClick={() => setPage(p)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px",
-              letterSpacing: "0.12em", textTransform: "uppercase",
-              color: page === p ? C.accentBright : C.steel,
-              borderBottom: page === p ? `1px solid ${C.accentBright}` : "1px solid transparent",
-              paddingBottom: "2px", transition: "color 0.15s",
-            }}>{label}</button>
+        <div
+          style={{
+            display: "flex",
+            gap: "28px",
+            alignItems: "center",
+            "@media(max-width:600px)": { display: "none" },
+          }}
+          className="desktop-nav"
+        >
+          {[
+            ["home", "Awareness"],
+            ["sentinel", "Sentinel"],
+            ["blogs", "Blog"],
+            ["about", "About"],
+          ].map(([p, label]) => (
+            <button
+              key={p}
+              onClick={() => setPage(p)}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: "11px",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: page === p ? C.accentBright : C.steel,
+                borderBottom:
+                  page === p
+                    ? `1px solid ${C.accentBright}`
+                    : "1px solid transparent",
+                paddingBottom: "2px",
+                transition: "color 0.15s",
+              }}
+            >
+              {label}
+            </button>
           ))}
-          <Btn small onClick={() => setPage("admin")}>Admin ↗</Btn>
+          <Btn small onClick={() => setPage("admin")}>
+            Admin ↗
+          </Btn>
           {/* Theme toggle */}
-          <button onClick={toggleTheme} style={{
-            background: "none", border: `1px solid ${C.border}`, borderRadius: "20px",
-            cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
-            padding: "5px 10px", transition: "all 0.2s",
-          }}>
+          <button
+            onClick={toggleTheme}
+            style={{
+              background: "none",
+              border: `1px solid ${C.border}`,
+              borderRadius: "20px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "5px 10px",
+              transition: "all 0.2s",
+            }}
+          >
             <span style={{ fontSize: "12px" }}>{isDark ? "☀️" : "🌑"}</span>
-            <div style={{
-              width: "28px", height: "15px", borderRadius: "8px",
-              background: isDark ? C.accent : C.border,
-              position: "relative", transition: "background 0.3s",
-            }}>
-              <div style={{
-                position: "absolute", top: "2px",
-                left: isDark ? "15px" : "2px",
-                width: "11px", height: "11px", borderRadius: "50%",
-                background: C.white, transition: "left 0.25s",
-              }} />
+            <div
+              style={{
+                width: "28px",
+                height: "15px",
+                borderRadius: "8px",
+                background: isDark ? C.accent : C.border,
+                position: "relative",
+                transition: "background 0.3s",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  left: isDark ? "15px" : "2px",
+                  width: "11px",
+                  height: "11px",
+                  borderRadius: "50%",
+                  background: C.white,
+                  transition: "left 0.25s",
+                }}
+              />
             </div>
           </button>
         </div>
 
         {/* Hamburger */}
-        <button onClick={() => setMenuOpen(!menuOpen)}
-          style={{ background: "none", border: "none", cursor: "pointer", display: "none", flexDirection: "column", gap: "5px", padding: "4px" }}
-          className="hamburger">
-          {[0,1,2].map(i => (
-            <div key={i} style={{ width: "22px", height: "2px", background: C.text, borderRadius: "2px",
-              transform: menuOpen ? (i===0?"rotate(45deg) translate(5px,5px)":i===2?"rotate(-45deg) translate(5px,-5px)":"scaleX(0)") : "none",
-              transition: "all 0.2s",
-            }}/>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            display: "none",
+            flexDirection: "column",
+            gap: "5px",
+            padding: "4px",
+          }}
+          className="hamburger"
+        >
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              style={{
+                width: "22px",
+                height: "2px",
+                background: C.text,
+                borderRadius: "2px",
+                transform: menuOpen
+                  ? i === 0
+                    ? "rotate(45deg) translate(5px,5px)"
+                    : i === 2
+                      ? "rotate(-45deg) translate(5px,-5px)"
+                      : "scaleX(0)"
+                  : "none",
+                transition: "all 0.2s",
+              }}
+            />
           ))}
         </button>
       </nav>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div style={{
-          position: "fixed", top: "60px", left: 0, right: 0, zIndex: 199,
-          background: C.navBg, backdropFilter: "blur(14px)",
-          borderBottom: `1px solid ${C.border}`,
-          display: "flex", flexDirection: "column", padding: "16px 24px 24px",
-          gap: "0",
-        }}>
-          {[["home","Awareness"],["sentinel","Sentinel"],["blogs","Blog"],["about","About"]].map(([p,label]) => (
-            <button key={p} onClick={() => { setPage(p); setMenuOpen(false); }}
+        <div
+          style={{
+            position: "fixed",
+            top: "60px",
+            left: 0,
+            right: 0,
+            zIndex: 199,
+            background: C.navBg,
+            backdropFilter: "blur(14px)",
+            borderBottom: `1px solid ${C.border}`,
+            display: "flex",
+            flexDirection: "column",
+            padding: "16px 24px 24px",
+            gap: "0",
+          }}
+        >
+          {[
+            ["home", "Awareness"],
+            ["sentinel", "Sentinel"],
+            ["blogs", "Blog"],
+            ["about", "About"],
+          ].map(([p, label]) => (
+            <button
+              key={p}
+              onClick={() => {
+                setPage(p);
+                setMenuOpen(false);
+              }}
               style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontFamily: "'IBM Plex Mono', monospace", fontSize: "13px",
-                letterSpacing: "0.1em", textTransform: "uppercase",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: "13px",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
                 color: page === p ? C.accentBright : C.steelHi,
                 padding: "14px 0",
                 borderBottom: `1px solid ${C.border}`,
                 textAlign: "left",
-              }}>{label}</button>
+              }}
+            >
+              {label}
+            </button>
           ))}
           {/* Mobile Admin button */}
-          <button onClick={() => { setPage("admin"); setMenuOpen(false); }}
+          <button
+            onClick={() => {
+              setPage("admin");
+              setMenuOpen(false);
+            }}
             style={{
-              background: C.accentBright, border: "none", cursor: "pointer",
-              fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px",
-              letterSpacing: "0.1em", textTransform: "uppercase",
-              color: "#fff", padding: "12px 0", borderRadius: "8px",
-              textAlign: "center", marginTop: "8px", fontWeight: 700,
-            }}>Admin ↗</button>
+              background: C.accentBright,
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: "12px",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "#fff",
+              padding: "12px 0",
+              borderRadius: "8px",
+              textAlign: "center",
+              marginTop: "8px",
+              fontWeight: 700,
+            }}
+          >
+            Admin ↗
+          </button>
           {/* Mobile theme toggle */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 0" }}>
-            <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: C.steelHi }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "14px 0",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: "11px",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: C.steelHi,
+              }}
+            >
               {isDark ? "Dark Mode" : "Light Mode"}
             </span>
-            <button onClick={toggleTheme} style={{
-              background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: "8px",
-            }}>
+            <button
+              onClick={toggleTheme}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
               <span style={{ fontSize: "14px" }}>{isDark ? "🌑" : "☀️"}</span>
-              <div style={{
-                width: "36px", height: "20px", borderRadius: "10px",
-                background: isDark ? C.accent : C.border, position: "relative", transition: "background 0.3s",
-              }}>
-                <div style={{
-                  position: "absolute", top: "3px",
-                  left: isDark ? "18px" : "3px",
-                  width: "14px", height: "14px", borderRadius: "50%",
-                  background: C.white, transition: "left 0.25s",
-                }} />
+              <div
+                style={{
+                  width: "36px",
+                  height: "20px",
+                  borderRadius: "10px",
+                  background: isDark ? C.accent : C.border,
+                  position: "relative",
+                  transition: "background 0.3s",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "3px",
+                    left: isDark ? "18px" : "3px",
+                    width: "14px",
+                    height: "14px",
+                    borderRadius: "50%",
+                    background: C.white,
+                    transition: "left 0.25s",
+                  }}
+                />
               </div>
             </button>
           </div>
@@ -454,81 +795,219 @@ function Nav({ page, setPage, isDark, toggleTheme }) {
   );
 }
 
-
 // ─── HOME PAGE ────────────────────────────────────────────────────────────────
 function HomePage({ stats, cases, news, blogs, setPage, setActiveBlog }) {
   return (
     <div style={{ paddingTop: "60px" }}>
       {/* Hero */}
-      <div style={{
-        minHeight: "92vh", display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center",
-        textAlign: "center", padding: "80px clamp(16px, 4vw, 48px) 60px",
-        position: "relative", overflow: "hidden",
-        background: `radial-gradient(ellipse 80% 60% at 50% 0%, ${C.heroBg}, transparent)`,
-      }}>
+      <div
+        style={{
+          minHeight: "92vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          padding: "80px clamp(16px, 4vw, 48px) 60px",
+          position: "relative",
+          overflow: "hidden",
+          background: `radial-gradient(ellipse 80% 60% at 50% 0%, ${C.heroBg}, transparent)`,
+        }}
+      >
         <div style={{ marginBottom: "18px" }}>
           <Tag>// The Gig Worker Safety Crisis — India</Tag>
         </div>
-        <h1 style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: "clamp(38px, 6.5vw, 78px)",
-          fontWeight: 700, lineHeight: 1.08,
-          color: C.text, maxWidth: "860px", marginBottom: "22px",
-          letterSpacing: "-0.01em",
-        }}>
-          Millions Work.<br />
+        <h1
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(38px, 6.5vw, 78px)",
+            fontWeight: 700,
+            lineHeight: 1.08,
+            color: C.text,
+            maxWidth: "860px",
+            marginBottom: "22px",
+            letterSpacing: "-0.01em",
+          }}
+        >
+          Millions Work.
+          <br />
           <span style={{ color: C.accentBright }}>None Are Protected.</span>
         </h1>
-        <p style={{
-          fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "17px", color: C.muted,
-          maxWidth: "500px", lineHeight: 1.75, marginBottom: "40px",
-        }}>
-          India has 12 million gig workers. Platforms track their every move — but build zero safety infrastructure around them. We're here to fix that.
+        <p
+          style={{
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            fontSize: "17px",
+            color: C.muted,
+            maxWidth: "500px",
+            lineHeight: 1.75,
+            marginBottom: "40px",
+          }}
+        >
+          India has 12 million gig workers. Platforms track their every move —
+          but build zero safety infrastructure around them. We're here to fix
+          that.
         </p>
-        <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "14px",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
           <Btn onClick={() => setPage("sentinel")}>See Sentinel →</Btn>
-          <Btn variant="ghost" onClick={() => document.getElementById("awareness")?.scrollIntoView({ behavior: "smooth" })}>View the Crisis ↓</Btn>
+          <Btn
+            variant="ghost"
+            onClick={() =>
+              document
+                .getElementById("awareness")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            View the Crisis ↓
+          </Btn>
         </div>
 
         {/* Stat strip */}
-        <div style={{
-          display: "flex", marginTop: "72px",
-          border: `1px solid ${C.border}`, borderRadius: "8px",
-          background: C.surface, overflow: "hidden", flexWrap: "wrap",
-        }}>
+        <div
+          style={{
+            display: "flex",
+            marginTop: "72px",
+            border: `1px solid ${C.border}`,
+            borderRadius: "8px",
+            background: C.surface,
+            overflow: "hidden",
+            flexWrap: "wrap",
+          }}
+        >
           {stats.slice(0, 4).map((s, i) => (
-            <div key={s.id} style={{
-              padding: "18px 28px", textAlign: "center",
-              borderRight: i < 3 ? `1px solid ${C.border}` : "none",
-              minWidth: "140px",
-            }}>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", fontWeight: 700, color: C.accentBright }}>{s.value}</div>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim, marginTop: "3px", letterSpacing: "0.05em" }}>{s.label.split("—")[0].trim()}</div>
+            <div
+              key={s.id}
+              style={{
+                padding: "18px 28px",
+                textAlign: "center",
+                borderRight: i < 3 ? `1px solid ${C.border}` : "none",
+                minWidth: "140px",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "24px",
+                  fontWeight: 700,
+                  color: C.accentBright,
+                }}
+              >
+                {s.value}
+              </div>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: "10px",
+                  color: C.dim,
+                  marginTop: "3px",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {s.label.split("—")[0].trim()}
+              </div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Awareness Stats */}
-      <section id="awareness" style={{ padding: "80px clamp(16px, 4vw, 48px)", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "12px" }}><Tag>// Data</Tag></div>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 4vw, 44px)", fontWeight: 700, color: C.text, marginBottom: "40px", lineHeight: 1.15 }}>
-          The Numbers That<br /><span style={{ color: C.accentBright }}>Don't Lie</span>
+      <section
+        id="awareness"
+        style={{
+          padding: "80px clamp(16px, 4vw, 48px)",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
+          <Tag>// Data</Tag>
+        </div>
+        <h2
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(26px, 4vw, 44px)",
+            fontWeight: 700,
+            color: C.text,
+            marginBottom: "40px",
+            lineHeight: 1.15,
+          }}
+        >
+          The Numbers That
+          <br />
+          <span style={{ color: C.accentBright }}>Don't Lie</span>
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: C.border, border: `1px solid ${C.border}`, borderRadius: "10px", overflow: "hidden" }}>
-          {stats.map(s => (
-            <div key={s.id} style={{
-              background: C.surface, padding: "32px 28px",
-              transition: "background 0.2s",
-              display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "140px",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = C.surfaceAlt; }}
-            onMouseLeave={e => { e.currentTarget.style.background = C.surface; }}>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(36px, 4vw, 48px)", fontWeight: 600, color: C.accentBright, lineHeight: 1 }}>{s.value}</div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "1px",
+            background: C.border,
+            border: `1px solid ${C.border}`,
+            borderRadius: "10px",
+            overflow: "hidden",
+          }}
+        >
+          {stats.map((s) => (
+            <div
+              key={s.id}
+              style={{
+                background: C.surface,
+                padding: "32px 28px",
+                transition: "background 0.2s",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                minHeight: "140px",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = C.surfaceAlt;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = C.surface;
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "clamp(36px, 4vw, 48px)",
+                  fontWeight: 600,
+                  color: C.accentBright,
+                  lineHeight: 1,
+                }}
+              >
+                {s.value}
+              </div>
               <div>
-                <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", fontWeight: 500, color: C.text, lineHeight: 1.5, marginBottom: "6px", marginTop: "12px" }}>{s.label}</div>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", color: C.dim, letterSpacing: "0.12em", textTransform: "uppercase" }}>{s.source}</div>
+                <div
+                  style={{
+                    fontFamily: "'IBM Plex Sans', sans-serif",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: C.text,
+                    lineHeight: 1.5,
+                    marginBottom: "6px",
+                    marginTop: "12px",
+                  }}
+                >
+                  {s.label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: "9px",
+                    color: C.dim,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {s.source}
+                </div>
               </div>
             </div>
           ))}
@@ -536,26 +1015,80 @@ function HomePage({ stats, cases, news, blogs, setPage, setActiveBlog }) {
       </section>
 
       {/* Cases */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 48px) 80px", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "12px" }}><Tag color={C.danger}>// Documented Cases</Tag></div>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(24px, 3.5vw, 38px)", fontWeight: 700, color: C.text, marginBottom: "32px", lineHeight: 1.15 }}>
-          Real Workers.<br /><span style={{ color: C.danger }}>Real Failures.</span>
+      <section
+        style={{
+          padding: "0 clamp(16px, 4vw, 48px) 80px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
+          <Tag color={C.danger}>// Documented Cases</Tag>
+        </div>
+        <h2
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(24px, 3.5vw, 38px)",
+            fontWeight: 700,
+            color: C.text,
+            marginBottom: "32px",
+            lineHeight: 1.15,
+          }}
+        >
+          Real Workers.
+          <br />
+          <span style={{ color: C.danger }}>Real Failures.</span>
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-          {cases.map(c => (
-            <div key={c.id} style={{
-              background: C.surface, border: `1px solid ${C.border}`,
-              borderLeft: `3px solid ${C.danger}`,
-              borderRadius: "8px", padding: "22px 24px",
-              display: "flex", gap: "20px", flexWrap: "wrap",
-            }}>
+          {cases.map((c) => (
+            <div
+              key={c.id}
+              style={{
+                background: C.surface,
+                border: `1px solid ${C.border}`,
+                borderLeft: `3px solid ${C.danger}`,
+                borderRadius: "8px",
+                padding: "22px 24px",
+                display: "flex",
+                gap: "20px",
+                flexWrap: "wrap",
+              }}
+            >
               <div style={{ minWidth: "100px" }}>
                 <Tag color={C.danger}>{c.tag}</Tag>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim, marginTop: "8px" }}>{c.city} · {c.date}</div>
+                <div
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: "10px",
+                    color: C.dim,
+                    marginTop: "8px",
+                  }}
+                >
+                  {c.city} · {c.date}
+                </div>
               </div>
               <div style={{ flex: 1, minWidth: "200px" }}>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "18px", fontWeight: 600, color: C.text, marginBottom: "6px" }}>{c.title}</div>
-                <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: C.muted, lineHeight: 1.65 }}>{c.desc}</div>
+                <div
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    color: C.text,
+                    marginBottom: "6px",
+                  }}
+                >
+                  {c.title}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'IBM Plex Sans', sans-serif",
+                    fontSize: "13px",
+                    color: C.muted,
+                    lineHeight: 1.65,
+                  }}
+                >
+                  {c.desc}
+                </div>
               </div>
             </div>
           ))}
@@ -563,132 +1096,475 @@ function HomePage({ stats, cases, news, blogs, setPage, setActiveBlog }) {
       </section>
 
       {/* News */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 48px) 80px", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "12px" }}><Tag color={C.amber}>// Press & Coverage</Tag></div>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(24px, 3.5vw, 38px)", fontWeight: 700, color: C.text, marginBottom: "32px", lineHeight: 1.15 }}>
-          The World Is<br /><span style={{ color: C.amber }}>Starting to Notice</span>
+      <section
+        style={{
+          padding: "0 clamp(16px, 4vw, 48px) 80px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
+          <Tag color={C.amber}>// Press & Coverage</Tag>
+        </div>
+        <h2
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(24px, 3.5vw, 38px)",
+            fontWeight: 700,
+            color: C.text,
+            marginBottom: "32px",
+            lineHeight: 1.15,
+          }}
+        >
+          The World Is
+          <br />
+          <span style={{ color: C.amber }}>Starting to Notice</span>
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "14px" }}>
-          {news.map(n => (
-            <div key={n.id} style={{
-              background: C.surface, border: `1px solid ${C.border}`,
-              borderRadius: "8px", padding: "24px 22px",
-              transition: "border-color 0.2s",
-            }}
-            onMouseEnter={e => e.currentTarget.style.borderColor = C.amber + "66"}
-            onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "14px",
+          }}
+        >
+          {news.map((n) => (
+            <div
+              key={n.id}
+              style={{
+                background: C.surface,
+                border: `1px solid ${C.border}`,
+                borderRadius: "8px",
+                padding: "24px 22px",
+                transition: "border-color 0.2s",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.borderColor = C.amber + "66")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.borderColor = C.border)
+              }
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "12px",
+                }}
+              >
                 <Tag color={C.amber}>{n.source}</Tag>
-                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim }}>{n.date}</span>
+                <span
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: "10px",
+                    color: C.dim,
+                  }}
+                >
+                  {n.date}
+                </span>
               </div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "17px", fontWeight: 600, color: C.text, marginBottom: "10px", lineHeight: 1.35 }}>{n.title}</div>
-              <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: C.muted, lineHeight: 1.6 }}>{n.summary}</div>
+              <div
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "17px",
+                  fontWeight: 600,
+                  color: C.text,
+                  marginBottom: "10px",
+                  lineHeight: 1.35,
+                }}
+              >
+                {n.title}
+              </div>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Sans', sans-serif",
+                  fontSize: "12px",
+                  color: C.muted,
+                  lineHeight: 1.6,
+                }}
+              >
+                {n.summary}
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Blog preview */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 48px) 80px", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "32px", flexWrap: "wrap", gap: "12px" }}>
+      <section
+        style={{
+          padding: "0 clamp(16px, 4vw, 48px) 80px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            marginBottom: "32px",
+            flexWrap: "wrap",
+            gap: "12px",
+          }}
+        >
           <div>
-            <div style={{ marginBottom: "10px" }}><Tag>// Latest from the Blog</Tag></div>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(24px, 3.5vw, 38px)", fontWeight: 700, color: C.text, lineHeight: 1.15 }}>Raising Awareness.<br /><span style={{ color: C.accentBright }}>One Story at a Time.</span></h2>
+            <div style={{ marginBottom: "10px" }}>
+              <Tag>// Latest from the Blog</Tag>
+            </div>
+            <h2
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "clamp(24px, 3.5vw, 38px)",
+                fontWeight: 700,
+                color: C.text,
+                lineHeight: 1.15,
+              }}
+            >
+              Raising Awareness.
+              <br />
+              <span style={{ color: C.accentBright }}>
+                One Story at a Time.
+              </span>
+            </h2>
           </div>
-          <Btn variant="ghost" small onClick={() => setPage("blogs")}>All Posts →</Btn>
+          <Btn variant="ghost" small onClick={() => setPage("blogs")}>
+            All Posts →
+          </Btn>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "14px" }}>
-          {blogs.slice(0, 3).map(b => (
-            <div key={b.id} style={{
-              background: C.surface, border: `1px solid ${C.border}`,
-              borderRadius: "8px", padding: "26px 22px", cursor: "pointer",
-              transition: "all 0.2s",
-            }}
-            onClick={() => { setActiveBlog(b); setPage("blog"); }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderHi; e.currentTarget.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = "translateY(0)"; }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "14px",
+          }}
+        >
+          {blogs.slice(0, 3).map((b) => (
+            <div
+              key={b.id}
+              style={{
+                background: C.surface,
+                border: `1px solid ${C.border}`,
+                borderRadius: "8px",
+                padding: "26px 22px",
+                cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+              onClick={() => {
+                setActiveBlog(b);
+                setPage("blog");
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = C.borderHi;
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = C.border;
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "14px",
+                }}
+              >
                 <Tag>{b.tag}</Tag>
-                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim }}>{b.readTime}</span>
+                <span
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: "10px",
+                    color: C.dim,
+                  }}
+                >
+                  {b.readTime}
+                </span>
               </div>
-              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "19px", fontWeight: 600, color: C.text, lineHeight: 1.35, marginBottom: "10px" }}>{b.title}</h3>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim }}>{b.date} · {b.author}</div>
+              <h3
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "19px",
+                  fontWeight: 600,
+                  color: C.text,
+                  lineHeight: 1.35,
+                  marginBottom: "10px",
+                }}
+              >
+                {b.title}
+              </h3>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: "10px",
+                  color: C.dim,
+                }}
+              >
+                {b.date} · {b.author}
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* About Us */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 48px) 80px", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "12px" }}><Tag>// About Us</Tag></div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "32px", alignItems: "start" }}>
+      <section
+        style={{
+          padding: "0 clamp(16px, 4vw, 48px) 80px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
+          <Tag>// About Us</Tag>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "32px",
+            alignItems: "start",
+          }}
+        >
           {/* Left — mission */}
           <div>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 700, color: C.text, lineHeight: 1.15, marginBottom: "20px" }}>
-              Built by People Who<br /><span style={{ color: C.accentBright }}>Refuse to Look Away</span>
+            <h2
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "clamp(26px, 4vw, 42px)",
+                fontWeight: 700,
+                color: C.text,
+                lineHeight: 1.15,
+                marginBottom: "20px",
+              }}
+            >
+              Built by People Who
+              <br />
+              <span style={{ color: C.accentBright }}>Refuse to Look Away</span>
             </h2>
-            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "15px", color: C.muted, lineHeight: 1.8, marginBottom: "16px" }}>
-              Secured Systems was founded in 2026 with one conviction: that the people powering India's gig economy deserve the same safety infrastructure as anyone else in the workforce.
+            <p
+              style={{
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: "15px",
+                color: C.muted,
+                lineHeight: 1.8,
+                marginBottom: "16px",
+              }}
+            >
+              Secured Systems was founded in 2026 with one conviction: that the
+              people powering India's gig economy deserve the same safety
+              infrastructure as anyone else in the workforce.
             </p>
-            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "15px", color: C.muted, lineHeight: 1.8, marginBottom: "28px" }}>
-              We're not building another app for workers to manage. We're building the passive layer underneath — intelligent, invisible, always on. Starting with Sentinel, and expanding into hardware and direct-to-worker services.
+            <p
+              style={{
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: "15px",
+                color: C.muted,
+                lineHeight: 1.8,
+                marginBottom: "28px",
+              }}
+            >
+              We're not building another app for workers to manage. We're
+              building the passive layer underneath — intelligent, invisible,
+              always on. Starting with Sentinel, and expanding into hardware and
+              direct-to-worker services.
             </p>
             <div style={{ display: "flex", gap: "32px" }}>
-              {[["2026", "Founded"], ["4", "Pilot Cities"], ["₹0", "VC Dependency"]].map(([v, l]) => (
+              {[
+                ["2026", "Founded"],
+                ["4", "Pilot Cities"],
+                ["₹0", "VC Dependency"],
+              ].map(([v, l]) => (
                 <div key={l}>
-                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "26px", fontWeight: 700, color: C.accentBright }}>{v}</div>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim, letterSpacing: "0.08em", marginTop: "3px" }}>{l}</div>
+                  <div
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: "26px",
+                      fontWeight: 700,
+                      color: C.accentBright,
+                    }}
+                  >
+                    {v}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: "10px",
+                      color: C.dim,
+                      letterSpacing: "0.08em",
+                      marginTop: "3px",
+                    }}
+                  >
+                    {l}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Right — team + values */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "14px" }}
+          >
             {/* Team cards */}
             {[
-              { name: "Arav", role: "Co-Founder & CEO", bio: "BCA student, AI/ML practitioner, FMCG operator. Building at the intersection of technology and underserved markets." },
-              { name: "Ashutosh Trivedi", role: "Co-Founder & CTO", bio: "Technology lead and strategy architect. Focused on turning Sentinel's passive intelligence layer into the definitive safety standard for India's gig platforms." },
+              {
+                name: "Arav",
+                role: "Co-Founder & CEO",
+                bio: "BCA student, AI/ML practitioner, FMCG operator. Building at the intersection of technology and underserved markets.",
+              },
+              {
+                name: "Ashutosh Trivedi",
+                role: "Co-Founder & CTO",
+                bio: "Technology lead and strategy architect. Focused on turning Sentinel's passive intelligence layer into the definitive safety standard for India's gig platforms.",
+              },
             ].map((m) => (
-              <div key={m.name} style={{
-                background: C.surface, border: `1px solid ${C.border}`,
-                borderRadius: "8px", padding: "20px 22px",
-                display: "flex", gap: "16px", alignItems: "flex-start",
-                transition: "border-color 0.2s",
-              }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = C.borderHi}
-              onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>
-                <div style={{
-                  width: "40px", height: "40px", borderRadius: "50%", flexShrink: 0,
-                  background: `linear-gradient(135deg, ${C.accent}55, #1D4ED855)`,
-                  border: `1px solid ${C.accent}44`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontFamily: "'Cormorant Garamond', serif", fontSize: "17px", fontWeight: 700, color: C.accentBright,
-                }}>
+              <div
+                key={m.name}
+                style={{
+                  background: C.surface,
+                  border: `1px solid ${C.border}`,
+                  borderRadius: "8px",
+                  padding: "20px 22px",
+                  display: "flex",
+                  gap: "16px",
+                  alignItems: "flex-start",
+                  transition: "border-color 0.2s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.borderColor = C.borderHi)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.borderColor = C.border)
+                }
+              >
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    flexShrink: 0,
+                    background: `linear-gradient(135deg, ${C.accent}55, #1D4ED855)`,
+                    border: `1px solid ${C.accent}44`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "17px",
+                    fontWeight: 700,
+                    color: C.accentBright,
+                  }}
+                >
                   {m.name[0]}
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "14px", fontWeight: 600, color: C.text }}>{m.name}</div>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.accent, letterSpacing: "0.08em", marginBottom: "6px" }}>{m.role}</div>
-                  <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: C.muted, lineHeight: 1.6 }}>{m.bio}</div>
+                  <div
+                    style={{
+                      fontFamily: "'IBM Plex Sans', sans-serif",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: C.text,
+                    }}
+                  >
+                    {m.name}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: "10px",
+                      color: C.accent,
+                      letterSpacing: "0.08em",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    {m.role}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'IBM Plex Sans', sans-serif",
+                      fontSize: "12px",
+                      color: C.muted,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {m.bio}
+                  </div>
                 </div>
               </div>
             ))}
 
             {/* Values strip */}
-            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: "8px", padding: "20px 22px" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim, letterSpacing: "0.12em", marginBottom: "14px" }}>WHAT WE STAND FOR</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div
+              style={{
+                background: C.surface,
+                border: `1px solid ${C.border}`,
+                borderRadius: "8px",
+                padding: "20px 22px",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: "10px",
+                  color: C.dim,
+                  letterSpacing: "0.12em",
+                  marginBottom: "14px",
+                }}
+              >
+                WHAT WE STAND FOR
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
                 {[
-                  ["Passive First",    "Safety should require zero effort from the worker."],
-                  ["Peer Before Platform", "Real people nearby beat a call centre every time."],
-                  ["Tier-2 Honest",    "Real validation happens where it's hardest, not easiest."],
+                  [
+                    "Passive First",
+                    "Safety should require zero effort from the worker.",
+                  ],
+                  [
+                    "Peer Before Platform",
+                    "Real people nearby beat a call centre every time.",
+                  ],
+                  [
+                    "Tier-2 Honest",
+                    "Real validation happens where it's hardest, not easiest.",
+                  ],
                 ].map(([title, desc]) => (
                   <div key={title} style={{ display: "flex", gap: "10px" }}>
-                    <span style={{ color: C.accentBright, fontSize: "13px", marginTop: "1px", flexShrink: 0 }}>▸</span>
+                    <span
+                      style={{
+                        color: C.accentBright,
+                        fontSize: "13px",
+                        marginTop: "1px",
+                        flexShrink: 0,
+                      }}
+                    >
+                      ▸
+                    </span>
                     <div>
-                      <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", fontWeight: 600, color: C.text }}>{title} — </span>
-                      <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: C.muted }}>{desc}</span>
+                      <span
+                        style={{
+                          fontFamily: "'IBM Plex Sans', sans-serif",
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: C.text,
+                        }}
+                      >
+                        {title} —{" "}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "'IBM Plex Sans', sans-serif",
+                          fontSize: "13px",
+                          color: C.muted,
+                        }}
+                      >
+                        {desc}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -699,9 +1575,35 @@ function HomePage({ stats, cases, news, blogs, setPage, setActiveBlog }) {
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: `1px solid ${C.border}`, padding: "28px 48px", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
-        <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: C.dim }}>© 2026 SecuredSystems.in — Secured Systems Pvt. Ltd.</span>
-        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim, letterSpacing: "0.1em" }}>SAFETY INTELLIGENCE · INDIA</span>
+      <footer
+        style={{
+          borderTop: `1px solid ${C.border}`,
+          padding: "28px 48px",
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "12px",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            fontSize: "12px",
+            color: C.dim,
+          }}
+        >
+          © 2026 SecuredSystems.in — Secured Systems Pvt. Ltd.
+        </span>
+        <span
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: "10px",
+            color: C.dim,
+            letterSpacing: "0.1em",
+          }}
+        >
+          SAFETY INTELLIGENCE · INDIA
+        </span>
       </footer>
     </div>
   );
@@ -710,38 +1612,126 @@ function HomePage({ stats, cases, news, blogs, setPage, setActiveBlog }) {
 // ─── BLOG LIST PAGE ───────────────────────────────────────────────────────────
 function BlogsPage({ blogs, setPage, setActiveBlog }) {
   return (
-    <div style={{ paddingTop: "100px", maxWidth: "900px", margin: "0 auto", padding: "100px clamp(16px, 4vw, 48px) 80px" }}>
-      <div style={{ marginBottom: "12px" }}><Tag>// Blog</Tag></div>
-      <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(30px, 5vw, 52px)", fontWeight: 700, color: C.text, marginBottom: "12px", lineHeight: 1.1 }}>
-        Intelligence &<br /><span style={{ color: C.accentBright }}>Awareness</span>
+    <div
+      style={{
+        paddingTop: "100px",
+        maxWidth: "900px",
+        margin: "0 auto",
+        padding: "100px clamp(16px, 4vw, 48px) 80px",
+      }}
+    >
+      <div style={{ marginBottom: "12px" }}>
+        <Tag>// Blog</Tag>
+      </div>
+      <h1
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: "clamp(30px, 5vw, 52px)",
+          fontWeight: 700,
+          color: C.text,
+          marginBottom: "12px",
+          lineHeight: 1.1,
+        }}
+      >
+        Intelligence &<br />
+        <span style={{ color: C.accentBright }}>Awareness</span>
       </h1>
-      <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "15px", color: C.muted, marginBottom: "48px", lineHeight: 1.7 }}>
+      <p
+        style={{
+          fontFamily: "'IBM Plex Sans', sans-serif",
+          fontSize: "15px",
+          color: C.muted,
+          marginBottom: "48px",
+          lineHeight: 1.7,
+        }}
+      >
         Research, field reports, and analysis on gig worker safety in India.
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {blogs.map(b => (
-          <div key={b.id} style={{
-            background: C.surface, border: `1px solid ${C.border}`,
-            borderRadius: "8px", padding: "26px 28px", cursor: "pointer",
-            display: "flex", gap: "24px", alignItems: "flex-start",
-            transition: "all 0.2s",
-          }}
-          onClick={() => { setActiveBlog(b); setPage("blog"); }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderHi; e.currentTarget.style.background = C.surfaceAlt; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.background = C.surface; }}>
+        {blogs.map((b) => (
+          <div
+            key={b.id}
+            style={{
+              background: C.surface,
+              border: `1px solid ${C.border}`,
+              borderRadius: "8px",
+              padding: "26px 28px",
+              cursor: "pointer",
+              display: "flex",
+              gap: "24px",
+              alignItems: "flex-start",
+              transition: "all 0.2s",
+            }}
+            onClick={() => {
+              setActiveBlog(b);
+              setPage("blog");
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = C.borderHi;
+              e.currentTarget.style.background = C.surfaceAlt;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = C.border;
+              e.currentTarget.style.background = C.surface;
+            }}
+          >
             <div style={{ minWidth: "80px" }}>
               <Tag>{b.tag}</Tag>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.dim, marginTop: "8px" }}>{b.date}</div>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: "10px",
+                  color: C.dim,
+                  marginTop: "8px",
+                }}
+              >
+                {b.date}
+              </div>
             </div>
             <div style={{ flex: 1 }}>
-              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "20px", fontWeight: 600, color: C.text, marginBottom: "6px", lineHeight: 1.3 }}>{b.title}</h3>
-              <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: C.muted }}>{b.readTime} · {b.author}</div>
+              <h3
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "20px",
+                  fontWeight: 600,
+                  color: C.text,
+                  marginBottom: "6px",
+                  lineHeight: 1.3,
+                }}
+              >
+                {b.title}
+              </h3>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Sans', sans-serif",
+                  fontSize: "12px",
+                  color: C.muted,
+                }}
+              >
+                {b.readTime} · {b.author}
+              </div>
             </div>
-            <span style={{ color: C.accentBright, fontSize: "18px", marginTop: "2px" }}>→</span>
+            <span
+              style={{
+                color: C.accentBright,
+                fontSize: "18px",
+                marginTop: "2px",
+              }}
+            >
+              →
+            </span>
           </div>
         ))}
         {blogs.length === 0 && (
-          <div style={{ textAlign: "center", padding: "60px", color: C.dim, fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px" }}>
+          <div
+            style={{
+              textAlign: "center",
+              padding: "60px",
+              color: C.dim,
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: "12px",
+            }}
+          >
             No blogs published yet. Use the admin panel to add content.
           </div>
         )}
@@ -754,18 +1744,88 @@ function BlogsPage({ blogs, setPage, setActiveBlog }) {
 function BlogPage({ blog, setPage }) {
   const formatted = (blog.body || "").split("\n\n").map((para, i) => {
     if (para.startsWith("**") && para.endsWith("**")) {
-      return <h3 key={i} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", fontWeight: 700, color: C.text, margin: "32px 0 14px" }}>{para.replace(/\*\*/g, "")}</h3>;
+      return (
+        <h3
+          key={i}
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "24px",
+            fontWeight: 700,
+            color: C.text,
+            margin: "32px 0 14px",
+          }}
+        >
+          {para.replace(/\*\*/g, "")}
+        </h3>
+      );
     }
-    return <p key={i} style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "16px", color: C.muted, lineHeight: 1.85, marginBottom: "18px" }}>{para}</p>;
+    return (
+      <p
+        key={i}
+        style={{
+          fontFamily: "'IBM Plex Sans', sans-serif",
+          fontSize: "16px",
+          color: C.muted,
+          lineHeight: 1.85,
+          marginBottom: "18px",
+        }}
+      >
+        {para}
+      </p>
+    );
   });
   return (
-    <div style={{ paddingTop: "60px", maxWidth: "720px", margin: "0 auto", padding: "100px clamp(16px, 4vw, 48px) 80px" }}>
-      <button onClick={() => setPage("blogs")} style={{ background: "none", border: "none", cursor: "pointer", color: C.muted, fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: "0.1em", marginBottom: "32px", display: "flex", alignItems: "center", gap: "6px" }}>
+    <div
+      style={{
+        paddingTop: "60px",
+        maxWidth: "720px",
+        margin: "0 auto",
+        padding: "100px clamp(16px, 4vw, 48px) 80px",
+      }}
+    >
+      <button
+        onClick={() => setPage("blogs")}
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          color: C.muted,
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: "11px",
+          letterSpacing: "0.1em",
+          marginBottom: "32px",
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+        }}
+      >
         ← BACK TO BLOG
       </button>
-      <div style={{ marginBottom: "14px" }}><Tag>{blog.tag}</Tag></div>
-      <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(28px, 4.5vw, 44px)", fontWeight: 700, color: C.text, lineHeight: 1.12, marginBottom: "18px" }}>{blog.title}</h1>
-      <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", color: C.dim, marginBottom: "48px", paddingBottom: "28px", borderBottom: `1px solid ${C.border}` }}>
+      <div style={{ marginBottom: "14px" }}>
+        <Tag>{blog.tag}</Tag>
+      </div>
+      <h1
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: "clamp(28px, 4.5vw, 44px)",
+          fontWeight: 700,
+          color: C.text,
+          lineHeight: 1.12,
+          marginBottom: "18px",
+        }}
+      >
+        {blog.title}
+      </h1>
+      <div
+        style={{
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: "11px",
+          color: C.dim,
+          marginBottom: "48px",
+          paddingBottom: "28px",
+          borderBottom: `1px solid ${C.border}`,
+        }}
+      >
         {blog.date} · {blog.readTime} · {blog.author}
       </div>
       <div>{formatted}</div>
@@ -776,102 +1836,408 @@ function BlogPage({ blog, setPage }) {
 // ─── SENTINEL PAGE ────────────────────────────────────────────────────────────
 function SentinelPage() {
   const roadmap = [
-    { phase: "Phase 1 — Now", label: "Sentinel App", desc: "Passive safety intelligence for gig workers. No active input. Always on.", active: true },
-    { phase: "Phase 2 — 2026", label: "Watch Interface", desc: "Hardware wearable layer with biometric alerts and direct peer pings.", active: false },
-    { phase: "Phase 3 — 2027", label: "B2C Platform", desc: "Direct-to-worker safety subscription with insurance integration.", active: false },
+    {
+      phase: "Phase 1 — Now",
+      label: "Sentinel App",
+      desc: "Passive safety intelligence for gig workers. No active input. Always on.",
+      active: true,
+    },
+    {
+      phase: "Phase 2 — 2026",
+      label: "Watch Interface",
+      desc: "Hardware wearable layer with biometric alerts and direct peer pings.",
+      active: false,
+    },
+    {
+      phase: "Phase 3 — 2027",
+      label: "B2C Platform",
+      desc: "Direct-to-worker safety subscription with insurance integration.",
+      active: false,
+    },
   ];
   return (
     <div style={{ paddingTop: "60px" }}>
-      <div style={{
-        padding: "80px clamp(16px, 4vw, 48px) 60px", textAlign: "center",
-        background: `radial-gradient(ellipse 70% 50% at 50% 0%, ${C.heroBg}, transparent)`,
-      }}>
-        <div style={{ marginBottom: "16px" }}><Tag>// Sentinel by Secured Systems</Tag></div>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(34px, 6vw, 68px)", fontWeight: 700, color: C.text, lineHeight: 1.1, marginBottom: "20px" }}>
-          Passive Safety.<br /><span style={{ color: C.accentBright }}>Always On.</span>
+      <div
+        style={{
+          padding: "80px clamp(16px, 4vw, 48px) 60px",
+          textAlign: "center",
+          background: `radial-gradient(ellipse 70% 50% at 50% 0%, ${C.heroBg}, transparent)`,
+        }}
+      >
+        <div style={{ marginBottom: "16px" }}>
+          <Tag>// Sentinel by Secured Systems</Tag>
+        </div>
+        <h1
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(34px, 6vw, 68px)",
+            fontWeight: 700,
+            color: C.text,
+            lineHeight: 1.1,
+            marginBottom: "20px",
+          }}
+        >
+          Passive Safety.
+          <br />
+          <span style={{ color: C.accentBright }}>Always On.</span>
         </h1>
-        <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "16px", color: C.muted, maxWidth: "480px", margin: "0 auto 40px", lineHeight: 1.75 }}>
-          No button to press. No check-in to remember. Sentinel watches quietly — and acts when it matters.
+        <p
+          style={{
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            fontSize: "16px",
+            color: C.muted,
+            maxWidth: "480px",
+            margin: "0 auto 40px",
+            lineHeight: 1.75,
+          }}
+        >
+          No button to press. No check-in to remember. Sentinel watches quietly
+          — and acts when it matters.
         </p>
-        <Btn onClick={() => window.open("https://drive.google.com/uc?export=download&id=1HiK3MXWApVpYN2668i02DB3XOA7FwD4c", "_blank")}>Download App →</Btn>
+        <Btn
+          onClick={() =>
+            window.open(
+              "https://drive.google.com/file/d/1HSUxQu_8kzH9LaTcRYvE03u_IvC_cDaL/view?usp=sharing",
+              "_blank",
+            )
+          }
+        >
+          Download App →
+        </Btn>
       </div>
 
       {/* Metrics */}
-      <section style={{ padding: "60px clamp(16px, 4vw, 48px)", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "12px" }}><Tag>// Live Adoption Metrics</Tag></div>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 700, color: C.text, marginBottom: "28px" }}>Where We Are Today</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
+      <section
+        style={{
+          padding: "60px clamp(16px, 4vw, 48px)",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
+          <Tag>// Live Adoption Metrics</Tag>
+        </div>
+        <h2
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(22px, 3vw, 34px)",
+            fontWeight: 700,
+            color: C.text,
+            marginBottom: "28px",
+          }}
+        >
+          Where We Are Today
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "12px",
+          }}
+        >
           {SENTINEL_METRICS.map((m, i) => (
-            <div key={i} style={{
-              background: C.surface, border: `1px solid ${C.border}`,
-              borderRadius: "8px", padding: "22px 18px", textAlign: "center",
-            }}>
-              <div style={{ fontSize: "22px", marginBottom: "8px", color: C.accentBright }}>{m.icon}</div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "26px", fontWeight: 700, color: C.accentBright, marginBottom: "4px" }}>{m.value}</div>
-              <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: C.muted }}>{m.label}</div>
+            <div
+              key={i}
+              style={{
+                background: C.surface,
+                border: `1px solid ${C.border}`,
+                borderRadius: "8px",
+                padding: "22px 18px",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "22px",
+                  marginBottom: "8px",
+                  color: C.accentBright,
+                }}
+              >
+                {m.icon}
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "26px",
+                  fontWeight: 700,
+                  color: C.accentBright,
+                  marginBottom: "4px",
+                }}
+              >
+                {m.value}
+              </div>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Sans', sans-serif",
+                  fontSize: "12px",
+                  color: C.muted,
+                }}
+              >
+                {m.label}
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Cities */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 48px) 60px", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "12px" }}><Tag>// Target Cities</Tag></div>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 700, color: C.text, marginBottom: "24px" }}>Pilot Coverage</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "12px" }}>
+      <section
+        style={{
+          padding: "0 clamp(16px, 4vw, 48px) 60px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
+          <Tag>// Target Cities</Tag>
+        </div>
+        <h2
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(22px, 3vw, 34px)",
+            fontWeight: 700,
+            color: C.text,
+            marginBottom: "24px",
+          }}
+        >
+          Pilot Coverage
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "12px",
+          }}
+        >
           {CITY_DATA.map((c, i) => (
-            <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: "8px", padding: "20px 18px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "20px", fontWeight: 700, color: C.text }}>{c.city}</span>
+            <div
+              key={i}
+              style={{
+                background: C.surface,
+                border: `1px solid ${C.border}`,
+                borderRadius: "8px",
+                padding: "20px 18px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "20px",
+                    fontWeight: 700,
+                    color: C.text,
+                  }}
+                >
+                  {c.city}
+                </span>
                 <Tag color={C.green}>{c.status}</Tag>
               </div>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", color: C.muted }}>{c.workers} addressable workers</div>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: "11px",
+                  color: C.muted,
+                }}
+              >
+                {c.workers} addressable workers
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* How it works */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 48px) 60px", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "12px" }}><Tag>// How Sentinel Works</Tag></div>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 700, color: C.text, marginBottom: "28px" }}>Passive. Peer-Backed. Precise.</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "14px" }}>
+      <section
+        style={{
+          padding: "0 clamp(16px, 4vw, 48px) 60px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
+          <Tag>// How Sentinel Works</Tag>
+        </div>
+        <h2
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(22px, 3vw, 34px)",
+            fontWeight: 700,
+            color: C.text,
+            marginBottom: "28px",
+          }}
+        >
+          Passive. Peer-Backed. Precise.
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "14px",
+          }}
+        >
           {[
-            { n: "01", title: "Passive Monitoring", desc: "Sentinel runs silently in the background. Motion, location, and behavioral signals are analyzed continuously — no worker input needed." },
-            { n: "02", title: "Anomaly Detection", desc: "When patterns deviate — unusual stillness, route deviation, location anomaly — the system flags it within the theoretical 10-minute window." },
-            { n: "03", title: "Peer Mesh Alert", desc: "The nearest verified gig worker gets a peer ping. No call centre. No hold music. Real people, close by, who know the job." },
-            { n: "04", title: "Incident Log", desc: "Every alert is logged, timestamped, and stored. Building India's first gig worker safety incident database from the ground up." },
+            {
+              n: "01",
+              title: "Passive Monitoring",
+              desc: "Sentinel runs silently in the background. Motion, location, and behavioral signals are analyzed continuously — no worker input needed.",
+            },
+            {
+              n: "02",
+              title: "Anomaly Detection",
+              desc: "When patterns deviate — unusual stillness, route deviation, location anomaly — the system flags it within the theoretical 10-minute window.",
+            },
+            {
+              n: "03",
+              title: "Peer Mesh Alert",
+              desc: "The nearest verified gig worker gets a peer ping. No call centre. No hold music. Real people, close by, who know the job.",
+            },
+            {
+              n: "04",
+              title: "Incident Log",
+              desc: "Every alert is logged, timestamped, and stored. Building India's first gig worker safety incident database from the ground up.",
+            },
           ].map((s, i) => (
-            <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: "8px", padding: "26px 22px" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", color: C.accentBright, marginBottom: "12px", letterSpacing: "0.1em" }}>{s.n}</div>
-              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "18px", fontWeight: 700, color: C.text, marginBottom: "8px" }}>{s.title}</h3>
-              <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: C.muted, lineHeight: 1.65 }}>{s.desc}</p>
+            <div
+              key={i}
+              style={{
+                background: C.surface,
+                border: `1px solid ${C.border}`,
+                borderRadius: "8px",
+                padding: "26px 22px",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: "11px",
+                  color: C.accentBright,
+                  marginBottom: "12px",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                {s.n}
+              </div>
+              <h3
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  color: C.text,
+                  marginBottom: "8px",
+                }}
+              >
+                {s.title}
+              </h3>
+              <p
+                style={{
+                  fontFamily: "'IBM Plex Sans', sans-serif",
+                  fontSize: "13px",
+                  color: C.muted,
+                  lineHeight: 1.65,
+                }}
+              >
+                {s.desc}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Product Roadmap */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 48px) 80px", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "12px" }}><Tag>// Product Roadmap</Tag></div>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 700, color: C.text, marginBottom: "28px" }}>Sentinel Is Phase One</h2>
+      <section
+        style={{
+          padding: "0 clamp(16px, 4vw, 48px) 80px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
+          <Tag>// Product Roadmap</Tag>
+        </div>
+        <h2
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(22px, 3vw, 34px)",
+            fontWeight: 700,
+            color: C.text,
+            marginBottom: "28px",
+          }}
+        >
+          Sentinel Is Phase One
+        </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
           {roadmap.map((r, i) => (
             <div key={i} style={{ display: "flex", gap: "24px" }}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "40px" }}>
-                <div style={{
-                  width: "14px", height: "14px", borderRadius: "50%",
-                  background: r.active ? C.accentBright : C.border,
-                  border: `2px solid ${r.active ? C.accentBright : C.dim}`,
-                  boxShadow: r.active ? `0 0 12px ${C.accentBright}` : "none",
-                  marginTop: "5px", flexShrink: 0,
-                }} />
-                {i < roadmap.length - 1 && <div style={{ width: "1px", height: "52px", background: C.border }} />}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "40px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "14px",
+                    height: "14px",
+                    borderRadius: "50%",
+                    background: r.active ? C.accentBright : C.border,
+                    border: `2px solid ${r.active ? C.accentBright : C.dim}`,
+                    boxShadow: r.active ? `0 0 12px ${C.accentBright}` : "none",
+                    marginTop: "5px",
+                    flexShrink: 0,
+                  }}
+                />
+                {i < roadmap.length - 1 && (
+                  <div
+                    style={{
+                      width: "1px",
+                      height: "52px",
+                      background: C.border,
+                    }}
+                  />
+                )}
               </div>
               <div style={{ paddingBottom: "28px" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: r.active ? C.accentBright : C.dim, letterSpacing: "0.1em", marginBottom: "4px" }}>{r.phase}</div>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "20px", fontWeight: 700, color: r.active ? C.text : C.steel, marginBottom: "4px" }}>{r.label}</div>
-                <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: C.muted, lineHeight: 1.6 }}>{r.desc}</p>
+                <div
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: "10px",
+                    color: r.active ? C.accentBright : C.dim,
+                    letterSpacing: "0.1em",
+                    marginBottom: "4px",
+                  }}
+                >
+                  {r.phase}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "20px",
+                    fontWeight: 700,
+                    color: r.active ? C.text : C.steel,
+                    marginBottom: "4px",
+                  }}
+                >
+                  {r.label}
+                </div>
+                <p
+                  style={{
+                    fontFamily: "'IBM Plex Sans', sans-serif",
+                    fontSize: "13px",
+                    color: C.muted,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {r.desc}
+                </p>
               </div>
             </div>
           ))}
@@ -879,24 +2245,74 @@ function SentinelPage() {
       </section>
 
       {/* Investor CTA */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 48px) 80px", maxWidth: "1100px", margin: "0 auto" }}>
-        <div style={{
-          background: C.codeBlockBg,
-          border: `1px solid ${C.accent}44`,
-          borderRadius: "10px", padding: "40px 44px",
-          display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "20px",
-        }}>
+      <section
+        style={{
+          padding: "0 clamp(16px, 4vw, 48px) 80px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div
+          style={{
+            background: C.codeBlockBg,
+            border: `1px solid ${C.accent}44`,
+            borderRadius: "10px",
+            padding: "40px 44px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "20px",
+          }}
+        >
           <div>
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.accent, letterSpacing: "0.15em", marginBottom: "8px" }}>PRE-SEED OPEN</div>
-            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", fontWeight: 700, color: C.text, marginBottom: "6px" }}>Backing Sentinel?</div>
-            <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "14px", color: C.muted }}>₹25–30L pre-seed · 10–12% equity · Limited slots</div>
+            <div
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: "10px",
+                color: C.accent,
+                letterSpacing: "0.15em",
+                marginBottom: "8px",
+              }}
+            >
+              PRE-SEED OPEN
+            </div>
+            <div
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "24px",
+                fontWeight: 700,
+                color: C.text,
+                marginBottom: "6px",
+              }}
+            >
+              Backing Sentinel?
+            </div>
+            <div
+              style={{
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: "14px",
+                color: C.muted,
+              }}
+            >
+              ₹25–30L pre-seed · 10–12% equity · Limited slots
+            </div>
           </div>
-          <a href="mailto:business@sentinelco.in" style={{
-            background: `linear-gradient(135deg, ${C.accent}, #1D4ED8)`,
-            borderRadius: "6px", padding: "12px 26px",
-            fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px",
-            color: C.white, fontWeight: 600, textDecoration: "none",
-          }}>business@sentinelco.in →</a>
+          <a
+            href="mailto:business@sentinelco.in"
+            style={{
+              background: `linear-gradient(135deg, ${C.accent}, #1D4ED8)`,
+              borderRadius: "6px",
+              padding: "12px 26px",
+              fontFamily: "'IBM Plex Sans', sans-serif",
+              fontSize: "13px",
+              color: C.white,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            business@sentinelco.in →
+          </a>
         </div>
       </section>
     </div>
@@ -905,11 +2321,26 @@ function SentinelPage() {
 
 // ─── PILOT MODAL ──────────────────────────────────────────────────────────────
 function PilotModal() {
-  const [form, setForm] = useState({ name: "", phone: "", city: "", platform: "", submitted: false });
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    city: "",
+    platform: "",
+    submitted: false,
+  });
   const cities = ["Mumbai", "Delhi", "Bangalore", "Kanpur", "Other"];
-  const platforms = ["Swiggy", "Zomato", "Blinkit", "Zepto", "Ola", "Uber", "Other"];
+  const platforms = [
+    "Swiggy",
+    "Zomato",
+    "Blinkit",
+    "Zepto",
+    "Ola",
+    "Uber",
+    "Other",
+  ];
 
-  const SHEET_URL = "https://script.google.com/macros/s/AKfycbw8Y7Ze-SupI_Gy7dOvIztVB_OrbnO5zVmJvKs0m7qByDm8yTh4H5iGMKnUBG9bW3nh/exec";
+  const SHEET_URL =
+    "https://script.google.com/macros/s/AKfycbw8Y7Ze-SupI_Gy7dOvIztVB_OrbnO5zVmJvKs0m7qByDm8yTh4H5iGMKnUBG9bW3nh/exec";
 
   const handleSubmit = async () => {
     if (!form.name || !form.phone || !form.city || !form.platform) {
@@ -924,12 +2355,24 @@ function PilotModal() {
       platform: form.platform,
     };
     try {
-      await sbInsert("pilot_signups", { name: form.name, phone: form.phone, city: form.city, platform: form.platform });
-    } catch(e) { console.error("Supabase error:", e); }
+      await sbInsert("pilot_signups", {
+        name: form.name,
+        phone: form.phone,
+        city: form.city,
+        platform: form.platform,
+      });
+    } catch (e) {
+      console.error("Supabase error:", e);
+    }
     // Also send to Google Sheet as backup
     try {
-      await fetch(SHEET_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    } catch(e) {}
+      await fetch(SHEET_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (e) {}
     setForm({ ...form, submitted: true });
   };
 
@@ -939,63 +2382,202 @@ function PilotModal() {
   };
 
   return (
-    <div id="pilot-modal" style={{
-      display: "none", position: "fixed", inset: 0, zIndex: 999,
-      background: "rgba(0,0,0,0.8)", backdropFilter: "blur(8px)",
-      alignItems: "center", justifyContent: "center", padding: "20px",
-    }} onClick={e => { if (e.target.id === "pilot-modal") close(); }}>
-      <div style={{
-        background: C.surface, border: `1px solid ${C.borderHi}`,
-        borderRadius: "12px", padding: "40px", maxWidth: "480px", width: "100%",
-        position: "relative",
-      }}>
-        <button onClick={close} style={{
-          position: "absolute", top: "16px", right: "20px",
-          background: "none", border: "none", cursor: "pointer",
-          color: C.muted, fontSize: "20px", lineHeight: 1,
-        }}>×</button>
+    <div
+      id="pilot-modal"
+      style={{
+        display: "none",
+        position: "fixed",
+        inset: 0,
+        zIndex: 999,
+        background: "rgba(0,0,0,0.8)",
+        backdropFilter: "blur(8px)",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "20px",
+      }}
+      onClick={(e) => {
+        if (e.target.id === "pilot-modal") close();
+      }}
+    >
+      <div
+        style={{
+          background: C.surface,
+          border: `1px solid ${C.borderHi}`,
+          borderRadius: "12px",
+          padding: "40px",
+          maxWidth: "480px",
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        <button
+          onClick={close}
+          style={{
+            position: "absolute",
+            top: "16px",
+            right: "20px",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: C.muted,
+            fontSize: "20px",
+            lineHeight: 1,
+          }}
+        >
+          ×
+        </button>
 
         {!form.submitted ? (
           <>
-            <div style={{ marginBottom: "6px" }}><Tag>// Join the Pilot</Tag></div>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "28px", fontWeight: 700, color: C.text, marginBottom: "8px" }}>
+            <div style={{ marginBottom: "6px" }}>
+              <Tag>// Join the Pilot</Tag>
+            </div>
+            <h2
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "28px",
+                fontWeight: 700,
+                color: C.text,
+                marginBottom: "8px",
+              }}
+            >
               Be Part of Sentinel
             </h2>
-            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: C.muted, marginBottom: "28px", lineHeight: 1.6 }}>
-              We're onboarding gig workers in Mumbai, Delhi, Bangalore & Kanpur. No app to manage. Just protection.
+            <p
+              style={{
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: "13px",
+                color: C.muted,
+                marginBottom: "28px",
+                lineHeight: 1.6,
+              }}
+            >
+              We're onboarding gig workers in Mumbai, Delhi, Bangalore & Kanpur.
+              No app to manage. Just protection.
             </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Your full name" label="Full Name" />
-              <Input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="+91 XXXXX XXXXX" label="Phone Number" />
-              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                <label style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>City</label>
-                <select value={form.city} onChange={e => setForm({ ...form, city: e.target.value })}
-                  style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: "6px", padding: "10px 14px", color: form.city ? C.text : C.dim, fontSize: "13px", outline: "none" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "14px" }}
+            >
+              <Input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="Your full name"
+                label="Full Name"
+              />
+              <Input
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                placeholder="+91 XXXXX XXXXX"
+                label="Phone Number"
+              />
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "5px" }}
+              >
+                <label
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: "10px",
+                    color: C.muted,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  City
+                </label>
+                <select
+                  value={form.city}
+                  onChange={(e) => setForm({ ...form, city: e.target.value })}
+                  style={{
+                    background: C.surface,
+                    border: `1px solid ${C.border}`,
+                    borderRadius: "6px",
+                    padding: "10px 14px",
+                    color: form.city ? C.text : C.dim,
+                    fontSize: "13px",
+                    outline: "none",
+                  }}
+                >
                   <option value="">Select city</option>
-                  {cities.map(c => <option key={c} value={c}>{c}</option>)}
+                  {cities.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
                 </select>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                <label style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", color: C.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>Platform you work on</label>
-                <select value={form.platform} onChange={e => setForm({ ...form, platform: e.target.value })}
-                  style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: "6px", padding: "10px 14px", color: form.platform ? C.text : C.dim, fontSize: "13px", outline: "none" }}>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "5px" }}
+              >
+                <label
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: "10px",
+                    color: C.muted,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Platform you work on
+                </label>
+                <select
+                  value={form.platform}
+                  onChange={(e) =>
+                    setForm({ ...form, platform: e.target.value })
+                  }
+                  style={{
+                    background: C.surface,
+                    border: `1px solid ${C.border}`,
+                    borderRadius: "6px",
+                    padding: "10px 14px",
+                    color: form.platform ? C.text : C.dim,
+                    fontSize: "13px",
+                    outline: "none",
+                  }}
+                >
                   <option value="">Select platform</option>
-                  {platforms.map(p => <option key={p} value={p}>{p}</option>)}
+                  {platforms.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div style={{ marginTop: "6px" }}>
-                <Btn onClick={handleSubmit} style={{ width: "100%" }}>Submit →</Btn>
+                <Btn onClick={handleSubmit} style={{ width: "100%" }}>
+                  Submit →
+                </Btn>
               </div>
             </div>
           </>
         ) : (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
             <div style={{ fontSize: "40px", marginBottom: "16px" }}>✓</div>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "26px", fontWeight: 700, color: C.text, marginBottom: "10px" }}>You're on the list</h2>
-            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "14px", color: C.muted, lineHeight: 1.7, marginBottom: "24px" }}>
-              We'll reach out on your number when Sentinel launches in {form.city}. Welcome to the mesh.
+            <h2
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "26px",
+                fontWeight: 700,
+                color: C.text,
+                marginBottom: "10px",
+              }}
+            >
+              You're on the list
+            </h2>
+            <p
+              style={{
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: "14px",
+                color: C.muted,
+                lineHeight: 1.7,
+                marginBottom: "24px",
+              }}
+            >
+              We'll reach out on your number when Sentinel launches in{" "}
+              {form.city}. Welcome to the mesh.
             </p>
-            <Btn onClick={close} variant="ghost">Close</Btn>
+            <Btn onClick={close} variant="ghost">
+              Close
+            </Btn>
           </div>
         )}
       </div>
@@ -1005,93 +2587,217 @@ function PilotModal() {
 
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 // ─── ADMIN PORTAL ────────────────────────────────────────────────────────────
-const ADMIN_SB_URL = 'https://blurdndipqtyxeiljkel.supabase.co';
-const ADMIN_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdXJkbmRpcHF0eXhlaWxqa2VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyNjEwNzIsImV4cCI6MjA2MTgzNzA3Mn0.FBMKfUvGIiSDI2G0VZwWIj97UBbT2bHhYzFaIjfVX7U';
+const ADMIN_SB_URL = "https://blurdndipqtyxeiljkel.supabase.co";
+const ADMIN_SB_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdXJkbmRpcHF0eXhlaWxqa2VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyNjEwNzIsImV4cCI6MjA2MTgzNzA3Mn0.FBMKfUvGIiSDI2G0VZwWIj97UBbT2bHhYzFaIjfVX7U";
 
 async function adminFetch(table, opts = {}) {
   const { filter = {}, limit = 80, count = false, head = false } = opts;
   let url = `${ADMIN_SB_URL}/rest/v1/${table}?`;
-  if (count) url += 'select=id&';
-  else url += 'select=*&';
-  Object.entries(filter).forEach(([k, v]) => { url += `${k}=eq.${encodeURIComponent(v)}&`; });
+  if (count) url += "select=id&";
+  else url += "select=*&";
+  Object.entries(filter).forEach(([k, v]) => {
+    url += `${k}=eq.${encodeURIComponent(v)}&`;
+  });
   if (limit) url += `limit=${limit}&`;
-  url += 'order=created_at.desc';
+  url += "order=created_at.desc";
   const res = await fetch(url, {
     headers: {
-      apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}`,
-      ...(count ? { Prefer: 'count=exact' } : {}),
+      apikey: ADMIN_SB_KEY,
+      Authorization: `Bearer ${ADMIN_SB_KEY}`,
+      ...(count ? { Prefer: "count=exact" } : {}),
     },
   });
-  if (count) return parseInt(res.headers.get('content-range')?.split('/')[1] || '0');
+  if (count)
+    return parseInt(res.headers.get("content-range")?.split("/")[1] || "0");
   return res.json();
 }
 
 async function adminFetchIn(table, field, ids, opts = {}) {
   const { limit = 80 } = opts;
-  const url = `${ADMIN_SB_URL}/rest/v1/${table}?select=*&${field}=in.(${ids.join(',')})&limit=${limit}&order=created_at.desc`;
-  const res = await fetch(url, { headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}` } });
+  const url = `${ADMIN_SB_URL}/rest/v1/${table}?select=*&${field}=in.(${ids.join(",")})&limit=${limit}&order=created_at.desc`;
+  const res = await fetch(url, {
+    headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}` },
+  });
   return res.json();
 }
 
 async function adminUpdate(table, id, data) {
   await fetch(`${ADMIN_SB_URL}/rest/v1/${table}?id=eq.${id}`, {
-    method: 'PATCH',
-    headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+    method: "PATCH",
+    headers: {
+      apikey: ADMIN_SB_KEY,
+      Authorization: `Bearer ${ADMIN_SB_KEY}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
     body: JSON.stringify(data),
   });
 }
 
 // Admin helpers
-const adminFmt = ts => ts ? new Date(ts).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
-const adminFmtCoords = (lat, lng) => lat ? `${Number(lat).toFixed(4)}, ${Number(lng).toFixed(4)}` : '—';
-const scColor = s => s >= 80 ? '#22c55e' : s >= 60 ? '#f59e0b' : '#ef4444';
+const adminFmt = (ts) =>
+  ts
+    ? new Date(ts).toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "—";
+const adminFmtCoords = (lat, lng) =>
+  lat ? `${Number(lat).toFixed(4)}, ${Number(lng).toFixed(4)}` : "—";
+const scColor = (s) => (s >= 80 ? "#22c55e" : s >= 60 ? "#f59e0b" : "#ef4444");
 
 const AD = {
-  bg: '#080d18', surface: '#0e1420', card: '#121a28',
-  border: 'rgba(255,255,255,0.07)', text1: '#f0f4ff',
-  text2: '#8892a4', text3: '#4a5568',
-  amber: '#f59e0b', green: '#22c55e', red: '#ef4444', blue: '#4f8ef7',
+  bg: "#080d18",
+  surface: "#0e1420",
+  card: "#121a28",
+  border: "rgba(255,255,255,0.07)",
+  text1: "#f0f4ff",
+  text2: "#8892a4",
+  text3: "#4a5568",
+  amber: "#f59e0b",
+  green: "#22c55e",
+  red: "#ef4444",
+  blue: "#4f8ef7",
 };
 
 function Badge({ type }) {
   const map = {
-    SAFE:     { bg: 'rgba(34,197,94,.12)',   color: '#22c55e', border: 'rgba(34,197,94,.2)'   },
-    MODERATE: { bg: 'rgba(245,158,11,.12)',  color: '#f59e0b', border: 'rgba(245,158,11,.2)'  },
-    RISKY:    { bg: 'rgba(239,68,68,.12)',   color: '#ef4444', border: 'rgba(239,68,68,.2)'   },
-    CRITICAL: { bg: 'rgba(239,68,68,.12)',   color: '#ef4444', border: 'rgba(239,68,68,.2)'   },
-    HIGH:     { bg: 'rgba(239,68,68,.12)',   color: '#ef4444', border: 'rgba(239,68,68,.2)'   },
-    active:   { bg: 'rgba(239,68,68,.12)',   color: '#ef4444', border: 'rgba(239,68,68,.2)'   },
-    approved: { bg: 'rgba(34,197,94,.12)',   color: '#22c55e', border: 'rgba(34,197,94,.2)'   },
-    pending:  { bg: 'rgba(245,158,11,.12)',  color: '#f59e0b', border: 'rgba(245,158,11,.2)'  },
-    ON:       { bg: 'rgba(34,197,94,.12)',   color: '#22c55e', border: 'rgba(34,197,94,.2)'   },
-    OFF:      { bg: 'rgba(74,85,104,.2)',    color: '#8892a4', border: 'rgba(255,255,255,.07)' },
-    default:  { bg: 'rgba(74,85,104,.2)',    color: '#8892a4', border: 'rgba(255,255,255,.07)' },
+    SAFE: {
+      bg: "rgba(34,197,94,.12)",
+      color: "#22c55e",
+      border: "rgba(34,197,94,.2)",
+    },
+    MODERATE: {
+      bg: "rgba(245,158,11,.12)",
+      color: "#f59e0b",
+      border: "rgba(245,158,11,.2)",
+    },
+    RISKY: {
+      bg: "rgba(239,68,68,.12)",
+      color: "#ef4444",
+      border: "rgba(239,68,68,.2)",
+    },
+    CRITICAL: {
+      bg: "rgba(239,68,68,.12)",
+      color: "#ef4444",
+      border: "rgba(239,68,68,.2)",
+    },
+    HIGH: {
+      bg: "rgba(239,68,68,.12)",
+      color: "#ef4444",
+      border: "rgba(239,68,68,.2)",
+    },
+    active: {
+      bg: "rgba(239,68,68,.12)",
+      color: "#ef4444",
+      border: "rgba(239,68,68,.2)",
+    },
+    approved: {
+      bg: "rgba(34,197,94,.12)",
+      color: "#22c55e",
+      border: "rgba(34,197,94,.2)",
+    },
+    pending: {
+      bg: "rgba(245,158,11,.12)",
+      color: "#f59e0b",
+      border: "rgba(245,158,11,.2)",
+    },
+    ON: {
+      bg: "rgba(34,197,94,.12)",
+      color: "#22c55e",
+      border: "rgba(34,197,94,.2)",
+    },
+    OFF: {
+      bg: "rgba(74,85,104,.2)",
+      color: "#8892a4",
+      border: "rgba(255,255,255,.07)",
+    },
+    default: {
+      bg: "rgba(74,85,104,.2)",
+      color: "#8892a4",
+      border: "rgba(255,255,255,.07)",
+    },
   };
   const s = map[type] || map.default;
   return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: '20px',
-      fontSize: '9px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap',
-      background: s.bg, color: s.color, border: `1px solid ${s.border}`,
-    }}>{type || '—'}</span>
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        padding: "2px 8px",
+        borderRadius: "20px",
+        fontSize: "9px",
+        fontWeight: 700,
+        letterSpacing: "0.5px",
+        whiteSpace: "nowrap",
+        background: s.bg,
+        color: s.color,
+        border: `1px solid ${s.border}`,
+      }}
+    >
+      {type || "—"}
+    </span>
   );
 }
 
 function AdminTable({ headers, children, loading }) {
   return (
-    <div style={{ background: AD.card, border: `1px solid ${AD.border}`, borderRadius: '14px', overflow: 'hidden', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '500px' }}>
+    <div
+      style={{
+        background: AD.card,
+        border: `1px solid ${AD.border}`,
+        borderRadius: "14px",
+        overflow: "hidden",
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
+      }}
+    >
+      <table
+        style={{ width: "100%", borderCollapse: "collapse", minWidth: "500px" }}
+      >
         <thead>
           <tr>
-            {headers.map(h => (
-              <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontSize: '8px', fontWeight: 700, letterSpacing: '2px', color: AD.text3, borderBottom: `1px solid ${AD.border}`, background: AD.surface, whiteSpace: 'nowrap' }}>{h}</th>
+            {headers.map((h) => (
+              <th
+                key={h}
+                style={{
+                  padding: "10px 14px",
+                  textAlign: "left",
+                  fontSize: "8px",
+                  fontWeight: 700,
+                  letterSpacing: "2px",
+                  color: AD.text3,
+                  borderBottom: `1px solid ${AD.border}`,
+                  background: AD.surface,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {h}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {loading ? (
-            <tr><td colSpan={headers.length} style={{ textAlign: 'center', padding: '28px', color: AD.text2, fontSize: '12px' }}>Loading...</td></tr>
-          ) : children}
+            <tr>
+              <td
+                colSpan={headers.length}
+                style={{
+                  textAlign: "center",
+                  padding: "28px",
+                  color: AD.text2,
+                  fontSize: "12px",
+                }}
+              >
+                Loading...
+              </td>
+            </tr>
+          ) : (
+            children
+          )}
         </tbody>
       </table>
     </div>
@@ -1100,30 +2806,98 @@ function AdminTable({ headers, children, loading }) {
 
 function AdminTd({ children, mono, muted, bold }) {
   return (
-    <td style={{
-      padding: '12px 14px', fontSize: mono ? '11px' : '12px', borderBottom: `1px solid ${AD.border}`, verticalAlign: 'middle',
-      fontFamily: mono ? "'JetBrains Mono', monospace" : 'inherit',
-      color: muted ? AD.text2 : 'inherit', fontWeight: bold ? 700 : 400,
-    }}>{children}</td>
+    <td
+      style={{
+        padding: "12px 14px",
+        fontSize: mono ? "11px" : "12px",
+        borderBottom: `1px solid ${AD.border}`,
+        verticalAlign: "middle",
+        fontFamily: mono ? "'JetBrains Mono', monospace" : "inherit",
+        color: muted ? AD.text2 : "inherit",
+        fontWeight: bold ? 700 : 400,
+      }}
+    >
+      {children}
+    </td>
   );
 }
 
 function StatCard({ label, value, sub, color }) {
   return (
-    <div style={{ padding: '16px', background: AD.card, border: `1px solid ${AD.border}`, borderRadius: '14px' }}>
-      <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '1.5px', color: AD.text2, marginBottom: '6px' }}>{label}</div>
-      <div style={{ fontSize: '26px', fontWeight: 800, lineHeight: 1, color: color || AD.text1 }}>{value ?? '—'}</div>
-      <div style={{ fontSize: '10px', color: AD.text2, marginTop: '4px' }}>{sub}</div>
+    <div
+      style={{
+        padding: "16px",
+        background: AD.card,
+        border: `1px solid ${AD.border}`,
+        borderRadius: "14px",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "9px",
+          fontWeight: 700,
+          letterSpacing: "1.5px",
+          color: AD.text2,
+          marginBottom: "6px",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontSize: "26px",
+          fontWeight: 800,
+          lineHeight: 1,
+          color: color || AD.text1,
+        }}
+      >
+        {value ?? "—"}
+      </div>
+      <div style={{ fontSize: "10px", color: AD.text2, marginTop: "4px" }}>
+        {sub}
+      </div>
     </div>
   );
 }
 
 function SecHeader({ title, onRefresh }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', marginTop: '20px' }}>
-      <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: AD.text2 }}>{title}</div>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: "12px",
+        marginTop: "20px",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "9px",
+          fontWeight: 700,
+          letterSpacing: "2px",
+          color: AD.text2,
+        }}
+      >
+        {title}
+      </div>
       {onRefresh && (
-        <button onClick={onRefresh} style={{ padding: '5px 12px', borderRadius: '7px', cursor: 'pointer', fontSize: '10px', fontWeight: 700, fontFamily: 'inherit', background: 'transparent', border: `1px solid ${AD.border}`, color: AD.text2 }}>↻</button>
+        <button
+          onClick={onRefresh}
+          style={{
+            padding: "5px 12px",
+            borderRadius: "7px",
+            cursor: "pointer",
+            fontSize: "10px",
+            fontWeight: 700,
+            fontFamily: "inherit",
+            background: "transparent",
+            border: `1px solid ${AD.border}`,
+            color: AD.text2,
+          }}
+        >
+          ↻
+        </button>
       )}
     </div>
   );
@@ -1131,7 +2905,14 @@ function SecHeader({ title, onRefresh }) {
 
 // ── Overview Tab ─────────────────────────────────────────────────────────────
 function OverviewTab({ eid }) {
-  const [stats, setStats] = useState({ workers: '—', active: '—', sos: '—', incidents: '—', surveys: '—', risky: '—' });
+  const [stats, setStats] = useState({
+    workers: "—",
+    active: "—",
+    sos: "—",
+    incidents: "—",
+    surveys: "—",
+    risky: "—",
+  });
   const [sosList, setSosList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -1139,16 +2920,42 @@ function OverviewTab({ eid }) {
     (async () => {
       setLoading(true);
       const ago24h = new Date(Date.now() - 86400000).toISOString();
-      const ago7d  = new Date(Date.now() - 7 * 86400000).toISOString();
-      const [workers, active, sosT, incs, surveys, risky, sosFeed] = await Promise.all([
-        adminFetch('workers',      { filter: { employer_id: eid }, count: true }),
-        adminFetch('workers',      { filter: { employer_id: eid, shift_active: true }, count: true }),
-        fetch(`${ADMIN_SB_URL}/rest/v1/sos_events?select=id&created_at=gte.${ago24h}`, { headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}`, Prefer: 'count=exact' } }).then(r => parseInt(r.headers.get('content-range')?.split('/')[1] || '0')),
-        adminFetch('incidents',    { count: true }),
-        adminFetch('surveys',      { filter: { status: 'pending' }, count: true }),
-        fetch(`${ADMIN_SB_URL}/rest/v1/driver_scores?select=id&rating=eq.RISKY&created_at=gte.${ago7d}`, { headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}`, Prefer: 'count=exact' } }).then(r => parseInt(r.headers.get('content-range')?.split('/')[1] || '0')),
-        adminFetch('sos_events',   { limit: 6 }),
-      ]);
+      const ago7d = new Date(Date.now() - 7 * 86400000).toISOString();
+      const [workers, active, sosT, incs, surveys, risky, sosFeed] =
+        await Promise.all([
+          adminFetch("workers", { filter: { employer_id: eid }, count: true }),
+          adminFetch("workers", {
+            filter: { employer_id: eid, shift_active: true },
+            count: true,
+          }),
+          fetch(
+            `${ADMIN_SB_URL}/rest/v1/sos_events?select=id&created_at=gte.${ago24h}`,
+            {
+              headers: {
+                apikey: ADMIN_SB_KEY,
+                Authorization: `Bearer ${ADMIN_SB_KEY}`,
+                Prefer: "count=exact",
+              },
+            },
+          ).then((r) =>
+            parseInt(r.headers.get("content-range")?.split("/")[1] || "0"),
+          ),
+          adminFetch("incidents", { count: true }),
+          adminFetch("surveys", { filter: { status: "pending" }, count: true }),
+          fetch(
+            `${ADMIN_SB_URL}/rest/v1/driver_scores?select=id&rating=eq.RISKY&created_at=gte.${ago7d}`,
+            {
+              headers: {
+                apikey: ADMIN_SB_KEY,
+                Authorization: `Bearer ${ADMIN_SB_KEY}`,
+                Prefer: "count=exact",
+              },
+            },
+          ).then((r) =>
+            parseInt(r.headers.get("content-range")?.split("/")[1] || "0"),
+          ),
+          adminFetch("sos_events", { limit: 6 }),
+        ]);
       setStats({ workers, active, sos: sosT, incidents: incs, surveys, risky });
       setSosList(Array.isArray(sosFeed) ? sosFeed : []);
       setLoading(false);
@@ -1157,27 +2964,80 @@ function OverviewTab({ eid }) {
 
   return (
     <div>
-      <div style={{ display: 'grid', gap: '10px', marginBottom: '20px', gridTemplateColumns: 'repeat(2,1fr)' }}>
-        <StatCard label="WORKERS"      value={stats.workers}   sub="Your fleet"  color={AD.blue}  />
-        <StatCard label="ON SHIFT"     value={stats.active}    sub="Right now"   color={AD.green} />
-        <StatCard label="SOS TODAY"    value={stats.sos}       sub="Last 24h"    color={AD.red}   />
-        <StatCard label="INCIDENTS"    value={stats.incidents} sub="Total"       color={AD.amber} />
-        <StatCard label="SURVEYS"      value={stats.surveys}   sub="Pending"     color={AD.amber} />
-        <StatCard label="RISKY DRIVERS" value={stats.risky}   sub="Last 7 days" color={AD.red}   />
+      <div
+        style={{
+          display: "grid",
+          gap: "10px",
+          marginBottom: "20px",
+          gridTemplateColumns: "repeat(2,1fr)",
+        }}
+      >
+        <StatCard
+          label="WORKERS"
+          value={stats.workers}
+          sub="Your fleet"
+          color={AD.blue}
+        />
+        <StatCard
+          label="ON SHIFT"
+          value={stats.active}
+          sub="Right now"
+          color={AD.green}
+        />
+        <StatCard
+          label="SOS TODAY"
+          value={stats.sos}
+          sub="Last 24h"
+          color={AD.red}
+        />
+        <StatCard
+          label="INCIDENTS"
+          value={stats.incidents}
+          sub="Total"
+          color={AD.amber}
+        />
+        <StatCard
+          label="SURVEYS"
+          value={stats.surveys}
+          sub="Pending"
+          color={AD.amber}
+        />
+        <StatCard
+          label="RISKY DRIVERS"
+          value={stats.risky}
+          sub="Last 7 days"
+          color={AD.red}
+        />
       </div>
       <SecHeader title="RECENT SOS" />
-      <AdminTable headers={['WORKER','TYPE','COORDINATES','STATUS','TIME']} loading={loading}>
-        {!sosList.length
-          ? <tr><td colSpan={5} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No SOS events yet</td></tr>
-          : sosList.map((e, i) => (
+      <AdminTable
+        headers={["WORKER", "TYPE", "COORDINATES", "STATUS", "TIME"]}
+        loading={loading}
+      >
+        {!sosList.length ? (
+          <tr>
+            <td
+              colSpan={5}
+              style={{ textAlign: "center", padding: "40px", color: AD.text3 }}
+            >
+              No SOS events yet
+            </td>
+          </tr>
+        ) : (
+          sosList.map((e, i) => (
             <tr key={i}>
-              <AdminTd bold>{e.worker_name || '—'}</AdminTd>
-              <AdminTd mono muted>{e.type || '—'}</AdminTd>
+              <AdminTd bold>{e.worker_name || "—"}</AdminTd>
+              <AdminTd mono muted>
+                {e.type || "—"}
+              </AdminTd>
               <AdminTd mono>{adminFmtCoords(e.lat, e.lng)}</AdminTd>
-              <AdminTd><Badge type={e.status} /></AdminTd>
+              <AdminTd>
+                <Badge type={e.status} />
+              </AdminTd>
               <AdminTd muted>{adminFmt(e.created_at)}</AdminTd>
             </tr>
-          ))}
+          ))
+        )}
       </AdminTable>
     </div>
   );
@@ -1189,30 +3049,77 @@ function DriversTab({ eid, onOpenPanel }) {
   const [loading, setLoading] = useState(true);
   const load = async () => {
     setLoading(true);
-    const d = await adminFetch('workers', { filter: { employer_id: eid }, limit: 100 });
+    const d = await adminFetch("workers", {
+      filter: { employer_id: eid },
+      limit: 100,
+    });
     setData(Array.isArray(d) ? d : []);
     setLoading(false);
   };
-  useEffect(() => { load(); }, [eid]);
+  useEffect(() => {
+    load();
+  }, [eid]);
   return (
     <div>
       <SecHeader title="YOUR FLEET" onRefresh={load} />
-      <AdminTable headers={['NAME','PHONE','CITY','PLATFORM','SHIFT','LAST SEEN','']} loading={loading}>
-        {!data.length
-          ? <tr><td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No workers yet</td></tr>
-          : data.map((w, i) => (
-            <tr key={i} style={{ cursor: 'pointer' }}>
-              <AdminTd bold>{w.name || '—'}</AdminTd>
-              <AdminTd mono>{w.phone || '—'}</AdminTd>
-              <AdminTd>{w.city || '—'}</AdminTd>
-              <AdminTd muted>{w.platform || '—'}</AdminTd>
-              <AdminTd><Badge type={w.shift_active ? 'ON' : 'OFF'} /></AdminTd>
+      <AdminTable
+        headers={[
+          "NAME",
+          "PHONE",
+          "CITY",
+          "PLATFORM",
+          "SHIFT",
+          "LAST SEEN",
+          "",
+        ]}
+        loading={loading}
+      >
+        {!data.length ? (
+          <tr>
+            <td
+              colSpan={7}
+              style={{ textAlign: "center", padding: "40px", color: AD.text3 }}
+            >
+              No workers yet
+            </td>
+          </tr>
+        ) : (
+          data.map((w, i) => (
+            <tr key={i} style={{ cursor: "pointer" }}>
+              <AdminTd bold>{w.name || "—"}</AdminTd>
+              <AdminTd mono>{w.phone || "—"}</AdminTd>
+              <AdminTd>{w.city || "—"}</AdminTd>
+              <AdminTd muted>{w.platform || "—"}</AdminTd>
+              <AdminTd>
+                <Badge type={w.shift_active ? "ON" : "OFF"} />
+              </AdminTd>
               <AdminTd muted>{adminFmt(w.last_seen)}</AdminTd>
-              <td style={{ padding: '12px 14px', borderBottom: `1px solid ${AD.border}` }}>
-                <button onClick={() => onOpenPanel(w)} style={{ padding: '5px 12px', borderRadius: '7px', cursor: 'pointer', fontSize: '10px', fontWeight: 700, fontFamily: 'inherit', background: AD.surface, color: AD.text1, border: `1px solid ${AD.border}` }}>View</button>
+              <td
+                style={{
+                  padding: "12px 14px",
+                  borderBottom: `1px solid ${AD.border}`,
+                }}
+              >
+                <button
+                  onClick={() => onOpenPanel(w)}
+                  style={{
+                    padding: "5px 12px",
+                    borderRadius: "7px",
+                    cursor: "pointer",
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    fontFamily: "inherit",
+                    background: AD.surface,
+                    color: AD.text1,
+                    border: `1px solid ${AD.border}`,
+                  }}
+                >
+                  View
+                </button>
               </td>
             </tr>
-          ))}
+          ))
+        )}
       </AdminTable>
     </div>
   );
@@ -1224,31 +3131,75 @@ function TrackingTab({ eid }) {
   const [loading, setLoading] = useState(true);
   const load = async () => {
     setLoading(true);
-    const workers = await adminFetch('workers', { filter: { employer_id: eid }, count: false });
-    const ids = Array.isArray(workers) ? workers.map(w => w.id) : [];
-    if (!ids.length) { setData([]); setLoading(false); return; }
-    const d = await adminFetchIn('driver_tracking', 'worker_id', ids);
+    const workers = await adminFetch("workers", {
+      filter: { employer_id: eid },
+      count: false,
+    });
+    const ids = Array.isArray(workers) ? workers.map((w) => w.id) : [];
+    if (!ids.length) {
+      setData([]);
+      setLoading(false);
+      return;
+    }
+    const d = await adminFetchIn("driver_tracking", "worker_id", ids);
     setData(Array.isArray(d) ? d : []);
     setLoading(false);
   };
-  useEffect(() => { load(); }, [eid]);
-  const zColor = z => z === 'CRITICAL' || z === 'HIGH' ? AD.red : z === 'MODERATE' ? AD.amber : AD.green;
+  useEffect(() => {
+    load();
+  }, [eid]);
+  const zColor = (z) =>
+    z === "CRITICAL" || z === "HIGH"
+      ? AD.red
+      : z === "MODERATE"
+        ? AD.amber
+        : AD.green;
   return (
     <div>
       <SecHeader title="LIVE LOCATION FEED" onRefresh={load} />
-      <AdminTable headers={['WORKER','SPEED','LOCATION','RISK ZONE','EVENT','TIME']} loading={loading}>
-        {!data.length
-          ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No tracking data yet</td></tr>
-          : data.map((t, i) => (
+      <AdminTable
+        headers={["WORKER", "SPEED", "LOCATION", "RISK ZONE", "EVENT", "TIME"]}
+        loading={loading}
+      >
+        {!data.length ? (
+          <tr>
+            <td
+              colSpan={6}
+              style={{ textAlign: "center", padding: "40px", color: AD.text3 }}
+            >
+              No tracking data yet
+            </td>
+          </tr>
+        ) : (
+          data.map((t, i) => (
             <tr key={i}>
-              <AdminTd bold>{t.worker_name || '—'}</AdminTd>
-              <AdminTd><span style={{ fontWeight: 700, color: t.speed > 80 ? AD.red : t.speed > 50 ? AD.amber : AD.text1 }}>{t.speed != null ? `${t.speed} km/h` : '—'}</span></AdminTd>
+              <AdminTd bold>{t.worker_name || "—"}</AdminTd>
+              <AdminTd>
+                <span
+                  style={{
+                    fontWeight: 700,
+                    color:
+                      t.speed > 80
+                        ? AD.red
+                        : t.speed > 50
+                          ? AD.amber
+                          : AD.text1,
+                  }}
+                >
+                  {t.speed != null ? `${t.speed} km/h` : "—"}
+                </span>
+              </AdminTd>
               <AdminTd mono>{adminFmtCoords(t.lat, t.lng)}</AdminTd>
-              <AdminTd>{t.risk_zone ? <Badge type={t.risk_zone} /> : '—'}</AdminTd>
-              <AdminTd mono muted>{t.event_type || '—'}</AdminTd>
+              <AdminTd>
+                {t.risk_zone ? <Badge type={t.risk_zone} /> : "—"}
+              </AdminTd>
+              <AdminTd mono muted>
+                {t.event_type || "—"}
+              </AdminTd>
               <AdminTd muted>{adminFmt(t.created_at)}</AdminTd>
             </tr>
-          ))}
+          ))
+        )}
       </AdminTable>
     </div>
   );
@@ -1260,35 +3211,93 @@ function ScoresTab({ eid }) {
   const [loading, setLoading] = useState(true);
   const load = async () => {
     setLoading(true);
-    const workers = await adminFetch('workers', { filter: { employer_id: eid } });
-    const ids = Array.isArray(workers) ? workers.map(w => w.id) : [];
-    if (!ids.length) { setData([]); setLoading(false); return; }
-    const d = await adminFetchIn('driver_scores', 'worker_id', ids, { limit: 40 });
+    const workers = await adminFetch("workers", {
+      filter: { employer_id: eid },
+    });
+    const ids = Array.isArray(workers) ? workers.map((w) => w.id) : [];
+    if (!ids.length) {
+      setData([]);
+      setLoading(false);
+      return;
+    }
+    const d = await adminFetchIn("driver_scores", "worker_id", ids, {
+      limit: 40,
+    });
     setData(Array.isArray(d) ? d : []);
     setLoading(false);
   };
-  useEffect(() => { load(); }, [eid]);
+  useEffect(() => {
+    load();
+  }, [eid]);
   return (
     <div>
       <SecHeader title="SHIFT SCORES" onRefresh={load} />
-      <AdminTable headers={['DRIVER','SCORE','RATING','DIST','AVG SPD','BRAKES','RISK ZONES','SHIFT END']} loading={loading}>
-        {!data.length
-          ? <tr><td colSpan={8} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No scores yet</td></tr>
-          : data.map((s, i) => {
+      <AdminTable
+        headers={[
+          "DRIVER",
+          "SCORE",
+          "RATING",
+          "DIST",
+          "AVG SPD",
+          "BRAKES",
+          "RISK ZONES",
+          "SHIFT END",
+        ]}
+        loading={loading}
+      >
+        {!data.length ? (
+          <tr>
+            <td
+              colSpan={8}
+              style={{ textAlign: "center", padding: "40px", color: AD.text3 }}
+            >
+              No scores yet
+            </td>
+          </tr>
+        ) : (
+          data.map((s, i) => {
             const sc = s.score ?? 0;
             return (
               <tr key={i}>
-                <AdminTd bold>{s.worker_name || '—'}</AdminTd>
-                <AdminTd><span style={{ fontSize: '18px', fontWeight: 800, color: scColor(sc) }}>{sc}</span><span style={{ color: AD.text3, fontSize: '10px' }}>/100</span></AdminTd>
-                <AdminTd>{s.rating ? <Badge type={s.rating} /> : '—'}</AdminTd>
-                <AdminTd>{s.total_distance != null ? `${s.total_distance.toFixed(1)} km` : '—'}</AdminTd>
-                <AdminTd>{s.avg_speed != null ? `${s.avg_speed.toFixed(0)} km/h` : '—'}</AdminTd>
-                <AdminTd><span style={{ color: (s.harsh_brakes || 0) > 3 ? AD.red : AD.text1 }}>{s.harsh_brakes ?? 0}</span></AdminTd>
+                <AdminTd bold>{s.worker_name || "—"}</AdminTd>
+                <AdminTd>
+                  <span
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 800,
+                      color: scColor(sc),
+                    }}
+                  >
+                    {sc}
+                  </span>
+                  <span style={{ color: AD.text3, fontSize: "10px" }}>
+                    /100
+                  </span>
+                </AdminTd>
+                <AdminTd>{s.rating ? <Badge type={s.rating} /> : "—"}</AdminTd>
+                <AdminTd>
+                  {s.total_distance != null
+                    ? `${s.total_distance.toFixed(1)} km`
+                    : "—"}
+                </AdminTd>
+                <AdminTd>
+                  {s.avg_speed != null ? `${s.avg_speed.toFixed(0)} km/h` : "—"}
+                </AdminTd>
+                <AdminTd>
+                  <span
+                    style={{
+                      color: (s.harsh_brakes || 0) > 3 ? AD.red : AD.text1,
+                    }}
+                  >
+                    {s.harsh_brakes ?? 0}
+                  </span>
+                </AdminTd>
                 <AdminTd>{s.risk_zone_crossings ?? 0}</AdminTd>
                 <AdminTd muted>{adminFmt(s.shift_end)}</AdminTd>
               </tr>
             );
-          })}
+          })
+        )}
       </AdminTable>
     </div>
   );
@@ -1300,27 +3309,43 @@ function SOSTab() {
   const [loading, setLoading] = useState(true);
   const load = async () => {
     setLoading(true);
-    const d = await adminFetch('sos_events', { limit: 40 });
+    const d = await adminFetch("sos_events", { limit: 40 });
     setData(Array.isArray(d) ? d : []);
     setLoading(false);
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
   return (
     <div>
       <SecHeader title="SOS EVENTS" onRefresh={load} />
-      <AdminTable headers={['WORKER','PHONE','TYPE','LOCATION','STATUS','TIME']} loading={loading}>
-        {!data.length
-          ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No SOS events yet</td></tr>
-          : data.map((e, i) => (
+      <AdminTable
+        headers={["WORKER", "PHONE", "TYPE", "LOCATION", "STATUS", "TIME"]}
+        loading={loading}
+      >
+        {!data.length ? (
+          <tr>
+            <td
+              colSpan={6}
+              style={{ textAlign: "center", padding: "40px", color: AD.text3 }}
+            >
+              No SOS events yet
+            </td>
+          </tr>
+        ) : (
+          data.map((e, i) => (
             <tr key={i}>
-              <AdminTd bold>{e.worker_name || '—'}</AdminTd>
-              <AdminTd mono>{e.worker_phone || '—'}</AdminTd>
-              <AdminTd muted>{e.type || '—'}</AdminTd>
+              <AdminTd bold>{e.worker_name || "—"}</AdminTd>
+              <AdminTd mono>{e.worker_phone || "—"}</AdminTd>
+              <AdminTd muted>{e.type || "—"}</AdminTd>
               <AdminTd mono>{adminFmtCoords(e.lat, e.lng)}</AdminTd>
-              <AdminTd><Badge type={e.status} /></AdminTd>
+              <AdminTd>
+                <Badge type={e.status} />
+              </AdminTd>
               <AdminTd muted>{adminFmt(e.created_at)}</AdminTd>
             </tr>
-          ))}
+          ))
+        )}
       </AdminTable>
     </div>
   );
@@ -1332,39 +3357,92 @@ function SurveysTab() {
   const [loading, setLoading] = useState(true);
   const load = async () => {
     setLoading(true);
-    const d = await adminFetch('surveys', { limit: 40 });
+    const d = await adminFetch("surveys", { limit: 40 });
     setData(Array.isArray(d) ? d : []);
     setLoading(false);
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
   const update = async (id, status) => {
-    await adminUpdate('surveys', id, { status });
+    await adminUpdate("surveys", id, { status });
     load();
   };
   return (
     <div>
       <SecHeader title="COMMUNITY SURVEYS" onRefresh={load} />
-      <AdminTable headers={['TYPE','LOCATION','CITY','BY','STATUS','TIME','ACTION']} loading={loading}>
-        {!data.length
-          ? <tr><td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No surveys yet</td></tr>
-          : data.map((s, i) => (
+      <AdminTable
+        headers={["TYPE", "LOCATION", "CITY", "BY", "STATUS", "TIME", "ACTION"]}
+        loading={loading}
+      >
+        {!data.length ? (
+          <tr>
+            <td
+              colSpan={7}
+              style={{ textAlign: "center", padding: "40px", color: AD.text3 }}
+            >
+              No surveys yet
+            </td>
+          </tr>
+        ) : (
+          data.map((s, i) => (
             <tr key={i}>
-              <AdminTd bold>{s.type || '—'}</AdminTd>
-              <AdminTd muted>{s.location || '—'}</AdminTd>
-              <AdminTd>{s.city || '—'}</AdminTd>
-              <AdminTd muted>{s.reported_by_name || '—'}</AdminTd>
-              <AdminTd><Badge type={s.status} /></AdminTd>
+              <AdminTd bold>{s.type || "—"}</AdminTd>
+              <AdminTd muted>{s.location || "—"}</AdminTd>
+              <AdminTd>{s.city || "—"}</AdminTd>
+              <AdminTd muted>{s.reported_by_name || "—"}</AdminTd>
+              <AdminTd>
+                <Badge type={s.status} />
+              </AdminTd>
               <AdminTd muted>{adminFmt(s.created_at)}</AdminTd>
-              <td style={{ padding: '12px 14px', borderBottom: `1px solid ${AD.border}` }}>
-                {s.status === 'pending' ? (
-                  <div style={{ display: 'flex', gap: '5px' }}>
-                    <button onClick={() => update(s.id, 'approved')} style={{ padding: '5px 12px', borderRadius: '7px', cursor: 'pointer', fontSize: '10px', fontWeight: 700, fontFamily: 'inherit', background: 'rgba(34,197,94,.15)', color: AD.green, border: '1px solid rgba(34,197,94,.3)' }}>✓</button>
-                    <button onClick={() => update(s.id, 'rejected')} style={{ padding: '5px 12px', borderRadius: '7px', cursor: 'pointer', fontSize: '10px', fontWeight: 700, fontFamily: 'inherit', background: 'rgba(239,68,68,.1)', color: AD.red, border: '1px solid rgba(239,68,68,.25)' }}>✕</button>
+              <td
+                style={{
+                  padding: "12px 14px",
+                  borderBottom: `1px solid ${AD.border}`,
+                }}
+              >
+                {s.status === "pending" ? (
+                  <div style={{ display: "flex", gap: "5px" }}>
+                    <button
+                      onClick={() => update(s.id, "approved")}
+                      style={{
+                        padding: "5px 12px",
+                        borderRadius: "7px",
+                        cursor: "pointer",
+                        fontSize: "10px",
+                        fontWeight: 700,
+                        fontFamily: "inherit",
+                        background: "rgba(34,197,94,.15)",
+                        color: AD.green,
+                        border: "1px solid rgba(34,197,94,.3)",
+                      }}
+                    >
+                      ✓
+                    </button>
+                    <button
+                      onClick={() => update(s.id, "rejected")}
+                      style={{
+                        padding: "5px 12px",
+                        borderRadius: "7px",
+                        cursor: "pointer",
+                        fontSize: "10px",
+                        fontWeight: 700,
+                        fontFamily: "inherit",
+                        background: "rgba(239,68,68,.1)",
+                        color: AD.red,
+                        border: "1px solid rgba(239,68,68,.25)",
+                      }}
+                    >
+                      ✕
+                    </button>
                   </div>
-                ) : '—'}
+                ) : (
+                  "—"
+                )}
               </td>
             </tr>
-          ))}
+          ))
+        )}
       </AdminTable>
     </div>
   );
@@ -1376,27 +3454,68 @@ function IncidentsTab() {
   const [loading, setLoading] = useState(true);
   const load = async () => {
     setLoading(true);
-    const d = await adminFetch('incidents', { limit: 40 });
+    const d = await adminFetch("incidents", { limit: 40 });
     setData(Array.isArray(d) ? d : []);
     setLoading(false);
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
   return (
     <div>
       <SecHeader title="REPORTED INCIDENTS" onRefresh={load} />
-      <AdminTable headers={['WORKER','TYPE','SEVERITY','CITY','DESCRIPTION','TIME']} loading={loading}>
-        {!data.length
-          ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: AD.text3 }}>No incidents yet</td></tr>
-          : data.map((inc, i) => (
+      <AdminTable
+        headers={["WORKER", "TYPE", "SEVERITY", "CITY", "DESCRIPTION", "TIME"]}
+        loading={loading}
+      >
+        {!data.length ? (
+          <tr>
+            <td
+              colSpan={6}
+              style={{ textAlign: "center", padding: "40px", color: AD.text3 }}
+            >
+              No incidents yet
+            </td>
+          </tr>
+        ) : (
+          data.map((inc, i) => (
             <tr key={i}>
-              <AdminTd bold>{inc.worker_name || '—'}</AdminTd>
-              <AdminTd>{inc.type || '—'}</AdminTd>
-              <AdminTd>{inc.severity ? <Badge type={inc.severity === 'high' ? 'CRITICAL' : inc.severity === 'medium' ? 'MODERATE' : 'SAFE'} /> : '—'}</AdminTd>
-              <AdminTd>{inc.city || '—'}</AdminTd>
-              <td style={{ padding: '12px 14px', fontSize: '12px', borderBottom: `1px solid ${AD.border}`, maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: AD.text2 }}>{inc.description || '—'}</td>
+              <AdminTd bold>{inc.worker_name || "—"}</AdminTd>
+              <AdminTd>{inc.type || "—"}</AdminTd>
+              <AdminTd>
+                {inc.severity ? (
+                  <Badge
+                    type={
+                      inc.severity === "high"
+                        ? "CRITICAL"
+                        : inc.severity === "medium"
+                          ? "MODERATE"
+                          : "SAFE"
+                    }
+                  />
+                ) : (
+                  "—"
+                )}
+              </AdminTd>
+              <AdminTd>{inc.city || "—"}</AdminTd>
+              <td
+                style={{
+                  padding: "12px 14px",
+                  fontSize: "12px",
+                  borderBottom: `1px solid ${AD.border}`,
+                  maxWidth: "180px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  color: AD.text2,
+                }}
+              >
+                {inc.description || "—"}
+              </td>
               <AdminTd muted>{adminFmt(inc.created_at)}</AdminTd>
             </tr>
-          ))}
+          ))
+        )}
       </AdminTable>
     </div>
   );
@@ -1407,42 +3526,157 @@ function WorkerPanel({ worker, onClose }) {
   const [scores, setScores] = useState([]);
   useEffect(() => {
     if (!worker) return;
-    adminFetch('driver_scores', { filter: { worker_id: worker.id }, limit: 5 }).then(d => setScores(Array.isArray(d) ? d : []));
+    adminFetch("driver_scores", {
+      filter: { worker_id: worker.id },
+      limit: 5,
+    }).then((d) => setScores(Array.isArray(d) ? d : []));
   }, [worker]);
   if (!worker) return null;
   const latest = scores[0];
   const sc = latest?.score ?? null;
   const col = sc != null ? scColor(sc) : AD.text2;
-  const r = 28, circ = 2 * Math.PI * r;
+  const r = 28,
+    circ = 2 * Math.PI * r;
   const fill = sc != null ? (sc / 100) * circ : 0;
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 300, background: AD.surface, overflowY: 'auto',
-      transform: 'translateX(0)', transition: 'transform 0.25s ease',
-    }}>
-      <div style={{ position: 'sticky', top: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: AD.surface, borderBottom: `1px solid ${AD.border}` }}>
-        <div style={{ fontSize: '15px', fontWeight: 700 }}>{worker.name || 'Driver Profile'}</div>
-        <button onClick={onClose} style={{ width: '28px', height: '28px', borderRadius: '7px', background: AD.card, border: `1px solid ${AD.border}`, color: AD.text2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px' }}>✕</button>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 300,
+        background: AD.surface,
+        overflowY: "auto",
+        transform: "translateX(0)",
+        transition: "transform 0.25s ease",
+      }}
+    >
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "16px 20px",
+          background: AD.surface,
+          borderBottom: `1px solid ${AD.border}`,
+        }}
+      >
+        <div style={{ fontSize: "15px", fontWeight: 700 }}>
+          {worker.name || "Driver Profile"}
+        </div>
+        <button
+          onClick={onClose}
+          style={{
+            width: "28px",
+            height: "28px",
+            borderRadius: "7px",
+            background: AD.card,
+            border: `1px solid ${AD.border}`,
+            color: AD.text2,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "14px",
+          }}
+        >
+          ✕
+        </button>
       </div>
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: "20px" }}>
         {sc != null && (
-          <div style={{ marginBottom: '20px' }}>
-            <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: AD.text3, marginBottom: '8px' }}>LATEST SHIFT SCORE</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px', background: AD.card, borderRadius: '12px', marginBottom: '14px' }}>
-              <div style={{ position: 'relative', width: '72px', height: '72px', flexShrink: 0 }}>
+          <div style={{ marginBottom: "20px" }}>
+            <div
+              style={{
+                fontSize: "9px",
+                fontWeight: 700,
+                letterSpacing: "2px",
+                color: AD.text3,
+                marginBottom: "8px",
+              }}
+            >
+              LATEST SHIFT SCORE
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                padding: "16px",
+                background: AD.card,
+                borderRadius: "12px",
+                marginBottom: "14px",
+              }}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  width: "72px",
+                  height: "72px",
+                  flexShrink: 0,
+                }}
+              >
                 <svg width="72" height="72" viewBox="0 0 72 72">
-                  <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(255,255,255,.05)" strokeWidth="7"/>
-                  <circle cx="36" cy="36" r={r} fill="none" stroke={col} strokeWidth="7" strokeDasharray={`${fill} ${circ}`} strokeLinecap="round" transform="rotate(-90 36 36)"/>
+                  <circle
+                    cx="36"
+                    cy="36"
+                    r={r}
+                    fill="none"
+                    stroke="rgba(255,255,255,.05)"
+                    strokeWidth="7"
+                  />
+                  <circle
+                    cx="36"
+                    cy="36"
+                    r={r}
+                    fill="none"
+                    stroke={col}
+                    strokeWidth="7"
+                    strokeDasharray={`${fill} ${circ}`}
+                    strokeLinecap="round"
+                    transform="rotate(-90 36 36)"
+                  />
                 </svg>
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: '20px', fontWeight: 800, color: col }}>{sc}</span>
-                  <span style={{ fontSize: '8px', color: AD.text2 }}>/100</span>
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <span
+                    style={{ fontSize: "20px", fontWeight: 800, color: col }}
+                  >
+                    {sc}
+                  </span>
+                  <span style={{ fontSize: "8px", color: AD.text2 }}>/100</span>
                 </div>
               </div>
               <div style={{ flex: 1 }}>
-                {[['Rating', latest?.rating ? <Badge type={latest.rating} /> : '—'], ['Distance', `${latest?.total_distance?.toFixed(1) || 0} km`], ['Avg speed', `${latest?.avg_speed?.toFixed(0) || 0} km/h`], ['Harsh brakes', latest?.harsh_brakes || 0], ['Risk crossings', latest?.risk_zone_crossings || 0]].map(([label, val]) => (
-                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '3px 0' }}>
+                {[
+                  [
+                    "Rating",
+                    latest?.rating ? <Badge type={latest.rating} /> : "—",
+                  ],
+                  ["Distance", `${latest?.total_distance?.toFixed(1) || 0} km`],
+                  ["Avg speed", `${latest?.avg_speed?.toFixed(0) || 0} km/h`],
+                  ["Harsh brakes", latest?.harsh_brakes || 0],
+                  ["Risk crossings", latest?.risk_zone_crossings || 0],
+                ].map(([label, val]) => (
+                  <div
+                    key={label}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: "11px",
+                      padding: "3px 0",
+                    }}
+                  >
                     <span style={{ color: AD.text2 }}>{label}</span>
                     <span style={{ fontWeight: 600 }}>{val}</span>
                   </div>
@@ -1451,23 +3685,96 @@ function WorkerPanel({ worker, onClose }) {
             </div>
           </div>
         )}
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: AD.text3, marginBottom: '8px' }}>WORKER DETAILS</div>
-          {[['Phone', worker.phone], ['City', worker.city], ['Platform', worker.platform], ['Vehicle', worker.vehicle_type], ['Shift', worker.shift_active ? <Badge type="ON" /> : <Badge type="OFF" />], ['Speed', worker.current_speed != null ? `${worker.current_speed} km/h` : '—'], ['Location', adminFmtCoords(worker.current_lat, worker.current_lng)], ['Last seen', adminFmt(worker.last_seen)], ['Joined', adminFmt(worker.created_at)]].map(([k, v]) => (
-            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: `1px solid ${AD.border}` }}>
-              <span style={{ fontSize: '11px', color: AD.text2 }}>{k}</span>
-              <span style={{ fontSize: '11px', fontWeight: 600, textAlign: 'right' }}>{v || '—'}</span>
+        <div style={{ marginBottom: "20px" }}>
+          <div
+            style={{
+              fontSize: "9px",
+              fontWeight: 700,
+              letterSpacing: "2px",
+              color: AD.text3,
+              marginBottom: "8px",
+            }}
+          >
+            WORKER DETAILS
+          </div>
+          {[
+            ["Phone", worker.phone],
+            ["City", worker.city],
+            ["Platform", worker.platform],
+            ["Vehicle", worker.vehicle_type],
+            [
+              "Shift",
+              worker.shift_active ? <Badge type="ON" /> : <Badge type="OFF" />,
+            ],
+            [
+              "Speed",
+              worker.current_speed != null
+                ? `${worker.current_speed} km/h`
+                : "—",
+            ],
+            [
+              "Location",
+              adminFmtCoords(worker.current_lat, worker.current_lng),
+            ],
+            ["Last seen", adminFmt(worker.last_seen)],
+            ["Joined", adminFmt(worker.created_at)],
+          ].map(([k, v]) => (
+            <div
+              key={k}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px 0",
+                borderBottom: `1px solid ${AD.border}`,
+              }}
+            >
+              <span style={{ fontSize: "11px", color: AD.text2 }}>{k}</span>
+              <span
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  textAlign: "right",
+                }}
+              >
+                {v || "—"}
+              </span>
             </div>
           ))}
         </div>
         {scores.length > 1 && (
           <div>
-            <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '2px', color: AD.text3, marginBottom: '8px' }}>SHIFT HISTORY (LAST {scores.length})</div>
+            <div
+              style={{
+                fontSize: "9px",
+                fontWeight: 700,
+                letterSpacing: "2px",
+                color: AD.text3,
+                marginBottom: "8px",
+              }}
+            >
+              SHIFT HISTORY (LAST {scores.length})
+            </div>
             {scores.map((s, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: `1px solid ${AD.border}` }}>
-                <span style={{ fontSize: '10px', color: AD.text2 }}>{adminFmt(s.shift_end)}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ color: scColor(s.score), fontWeight: 800 }}>{s.score}</span>
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px 0",
+                  borderBottom: `1px solid ${AD.border}`,
+                }}
+              >
+                <span style={{ fontSize: "10px", color: AD.text2 }}>
+                  {adminFmt(s.shift_end)}
+                </span>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  <span style={{ color: scColor(s.score), fontWeight: 800 }}>
+                    {s.score}
+                  </span>
                   {s.rating && <Badge type={s.rating} />}
                 </div>
               </div>
@@ -1481,56 +3788,224 @@ function WorkerPanel({ worker, onClose }) {
 
 // ── Admin Auth Screen ─────────────────────────────────────────────────────────
 function AdminAuth({ onLogin }) {
-  const [code, setCode] = useState('');
-  const [pass, setPass] = useState('');
-  const [err, setErr]   = useState('');
+  const [code, setCode] = useState("");
+  const [pass, setPass] = useState("");
+  const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
   const doLogin = async () => {
-    setErr(''); 
-    if (!code || !pass) { setErr('Enter employer code and password.'); return; }
+    setErr("");
+    if (!code || !pass) {
+      setErr("Enter employer code and password.");
+      return;
+    }
     setLoading(true);
     try {
-      const res = await fetch(`${ADMIN_SB_URL}/rest/v1/admin_accounts?employer_id=eq.${encodeURIComponent(code.trim().toLowerCase())}&password_hash=eq.${encodeURIComponent(pass)}&select=*`, {
-        headers: { apikey: ADMIN_SB_KEY, Authorization: `Bearer ${ADMIN_SB_KEY}` },
-      });
+      const res = await fetch(
+        `${ADMIN_SB_URL}/rest/v1/admin_accounts?employer_id=eq.${encodeURIComponent(code.trim().toLowerCase())}&password_hash=eq.${encodeURIComponent(pass)}&select=*`,
+        {
+          headers: {
+            apikey: ADMIN_SB_KEY,
+            Authorization: `Bearer ${ADMIN_SB_KEY}`,
+          },
+        },
+      );
       const data = await res.json();
-      if (!data?.length) { setErr('Incorrect employer code or password.'); setLoading(false); return; }
-      await adminUpdate('admin_accounts', data[0].id, { last_login: new Date().toISOString() });
-      sessionStorage.setItem('sentinel_admin', JSON.stringify(data[0]));
+      if (!data?.length) {
+        setErr("Incorrect employer code or password.");
+        setLoading(false);
+        return;
+      }
+      await adminUpdate("admin_accounts", data[0].id, {
+        last_login: new Date().toISOString(),
+      });
+      sessionStorage.setItem("sentinel_admin", JSON.stringify(data[0]));
       onLogin(data[0]);
     } catch {
-      setErr('Connection error. Try again.');
+      setErr("Connection error. Try again.");
     }
     setLoading(false);
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: AD.bg, zIndex: 999, padding: '20px', fontFamily: "'Inter', sans-serif" }}>
-      <div style={{ width: '100%', maxWidth: '380px', padding: '36px 32px', background: AD.surface, border: `1px solid ${AD.border}`, borderRadius: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
-          <svg width="40" height="40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect x="9" y="7" width="8" height="23" rx="2.5" fill="white"/><rect x="21" y="15" width="8" height="15" rx="2.5" fill="white"/></svg>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: AD.bg,
+        zIndex: 999,
+        padding: "20px",
+        fontFamily: "'Inter', sans-serif",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "380px",
+          padding: "36px 32px",
+          background: AD.surface,
+          border: `1px solid ${AD.border}`,
+          borderRadius: "20px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            marginBottom: "32px",
+          }}
+        >
+          <svg
+            width="40"
+            height="40"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 40 40"
+          >
+            <rect x="9" y="7" width="8" height="23" rx="2.5" fill="white" />
+            <rect x="21" y="15" width="8" height="15" rx="2.5" fill="white" />
+          </svg>
           <div>
-            <div style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.3px' }}>Sentinel</div>
-            <div style={{ fontSize: '10px', color: AD.text2, letterSpacing: '2px', fontWeight: 600 }}>FLEET INTELLIGENCE</div>
+            <div
+              style={{
+                fontSize: "16px",
+                fontWeight: 700,
+                letterSpacing: "0.3px",
+              }}
+            >
+              Sentinel
+            </div>
+            <div
+              style={{
+                fontSize: "10px",
+                color: AD.text2,
+                letterSpacing: "2px",
+                fontWeight: 600,
+              }}
+            >
+              FLEET INTELLIGENCE
+            </div>
           </div>
         </div>
-        <div style={{ fontSize: '22px', fontWeight: 800, marginBottom: '4px' }}>Admin Portal</div>
-        <div style={{ fontSize: '12px', color: AD.text2, marginBottom: '28px', lineHeight: 1.5 }}>Secured Systems Technologies Pvt. Ltd.<br/>Sign in with your fleet management account.</div>
+        <div style={{ fontSize: "22px", fontWeight: 800, marginBottom: "4px" }}>
+          Admin Portal
+        </div>
+        <div
+          style={{
+            fontSize: "12px",
+            color: AD.text2,
+            marginBottom: "28px",
+            lineHeight: 1.5,
+          }}
+        >
+          Secured Systems Technologies Pvt. Ltd.
+          <br />
+          Sign in with your fleet management account.
+        </div>
 
-        <label style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '1.5px', color: AD.text2, marginBottom: '6px', display: 'block' }}>EMPLOYER CODE</label>
-        <input value={code} onChange={e => setCode(e.target.value)} onKeyDown={e => e.key === 'Enter' && document.getElementById('admin-pass-input').focus()}
-          placeholder="e.g. sentinel001-work" autoComplete="off"
-          style={{ width: '100%', padding: '12px 14px', marginBottom: '14px', background: AD.card, border: `1px solid ${AD.border}`, borderRadius: '10px', color: AD.text1, fontSize: '14px', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }} />
-        <label style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '1.5px', color: AD.text2, marginBottom: '6px', display: 'block' }}>PASSWORD</label>
-        <input id="admin-pass-input" type="password" value={pass} onChange={e => setPass(e.target.value)} onKeyDown={e => e.key === 'Enter' && doLogin()}
+        <label
+          style={{
+            fontSize: "10px",
+            fontWeight: 700,
+            letterSpacing: "1.5px",
+            color: AD.text2,
+            marginBottom: "6px",
+            display: "block",
+          }}
+        >
+          EMPLOYER CODE
+        </label>
+        <input
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          onKeyDown={(e) =>
+            e.key === "Enter" &&
+            document.getElementById("admin-pass-input").focus()
+          }
+          placeholder="e.g. sentinel001-work"
+          autoComplete="off"
+          style={{
+            width: "100%",
+            padding: "12px 14px",
+            marginBottom: "14px",
+            background: AD.card,
+            border: `1px solid ${AD.border}`,
+            borderRadius: "10px",
+            color: AD.text1,
+            fontSize: "14px",
+            fontFamily: "inherit",
+            outline: "none",
+            boxSizing: "border-box",
+          }}
+        />
+        <label
+          style={{
+            fontSize: "10px",
+            fontWeight: 700,
+            letterSpacing: "1.5px",
+            color: AD.text2,
+            marginBottom: "6px",
+            display: "block",
+          }}
+        >
+          PASSWORD
+        </label>
+        <input
+          id="admin-pass-input"
+          type="password"
+          value={pass}
+          onChange={(e) => setPass(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && doLogin()}
           placeholder="Your admin password"
-          style={{ width: '100%', padding: '12px 14px', marginBottom: '14px', background: AD.card, border: `1px solid ${AD.border}`, borderRadius: '10px', color: AD.text1, fontSize: '14px', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }} />
-        <button onClick={doLogin} disabled={loading}
-          style={{ width: '100%', padding: '13px', marginTop: '4px', background: AD.amber, border: 'none', borderRadius: '10px', color: '#000', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', opacity: loading ? 0.7 : 1 }}>
-          {loading ? 'Verifying...' : 'Access Dashboard →'}
+          style={{
+            width: "100%",
+            padding: "12px 14px",
+            marginBottom: "14px",
+            background: AD.card,
+            border: `1px solid ${AD.border}`,
+            borderRadius: "10px",
+            color: AD.text1,
+            fontSize: "14px",
+            fontFamily: "inherit",
+            outline: "none",
+            boxSizing: "border-box",
+          }}
+        />
+        <button
+          onClick={doLogin}
+          disabled={loading}
+          style={{
+            width: "100%",
+            padding: "13px",
+            marginTop: "4px",
+            background: AD.amber,
+            border: "none",
+            borderRadius: "10px",
+            color: "#000",
+            fontSize: "14px",
+            fontWeight: 700,
+            cursor: loading ? "not-allowed" : "pointer",
+            fontFamily: "inherit",
+            opacity: loading ? 0.7 : 1,
+          }}
+        >
+          {loading ? "Verifying..." : "Access Dashboard →"}
         </button>
-        {err && <div style={{ color: AD.red, fontSize: '12px', marginTop: '10px', textAlign: 'center' }}>{err}</div>}
+        {err && (
+          <div
+            style={{
+              color: AD.red,
+              fontSize: "12px",
+              marginTop: "10px",
+              textAlign: "center",
+            }}
+          >
+            {err}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1539,32 +4014,44 @@ function AdminAuth({ onLogin }) {
 // ── Main Admin Page ──────────────────────────────────────────────────────────
 function AdminPage() {
   const [admin, setAdmin] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem('sentinel_admin')); } catch { return null; }
+    try {
+      return JSON.parse(sessionStorage.getItem("sentinel_admin"));
+    } catch {
+      return null;
+    }
   });
-  const [tab, setTab]         = useState('overview');
-  const [panel, setPanel]     = useState(null);
+  const [tab, setTab] = useState("overview");
+  const [panel, setPanel] = useState(null);
 
   const tabs = [
-    { id: 'overview',  icon: '📊', label: 'Overview'  },
-    { id: 'drivers',   icon: '👤', label: 'Drivers'   },
-    { id: 'tracking',  icon: '📍', label: 'Tracking'  },
-    { id: 'scores',    icon: '📈', label: 'Scores'    },
-    { id: 'sos',       icon: '🆘', label: 'SOS'       },
-    { id: 'surveys',   icon: '📋', label: 'Surveys'   },
-    { id: 'incidents', icon: '⚠️', label: 'Incidents' },
+    { id: "overview", icon: "📊", label: "Overview" },
+    { id: "drivers", icon: "👤", label: "Drivers" },
+    { id: "tracking", icon: "📍", label: "Tracking" },
+    { id: "scores", icon: "📈", label: "Scores" },
+    { id: "sos", icon: "🆘", label: "SOS" },
+    { id: "surveys", icon: "📋", label: "Surveys" },
+    { id: "incidents", icon: "⚠️", label: "Incidents" },
   ];
 
   if (!admin) return <AdminAuth onLogin={setAdmin} />;
 
   const logout = () => {
-    sessionStorage.removeItem('sentinel_admin');
+    sessionStorage.removeItem("sentinel_admin");
     setAdmin(null);
   };
 
   const eid = admin.employer_id;
 
   return (
-    <div style={{ background: AD.bg, minHeight: '100vh', color: AD.text1, fontFamily: "'Inter', sans-serif", paddingBottom: '80px' }}>
+    <div
+      style={{
+        background: AD.bg,
+        minHeight: "100vh",
+        color: AD.text1,
+        fontFamily: "'Inter', sans-serif",
+        paddingBottom: "80px",
+      }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
         @media(min-width:768px){ .admin-bnav{ display:none !important; } .admin-sidenav{ display:flex !important; } .admin-main{ padding-bottom:0 !important; } }
@@ -1574,54 +4061,214 @@ function AdminPage() {
       `}</style>
 
       {/* Topbar */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: '52px', background: 'rgba(8,13,24,0.95)', backdropFilter: 'blur(12px)', borderBottom: `1px solid ${AD.border}` }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect x="9" y="7" width="8" height="23" rx="2.5" fill="white"/><rect x="21" y="15" width="8" height="15" rx="2.5" fill="white"/></svg>
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 16px",
+          height: "52px",
+          background: "rgba(8,13,24,0.95)",
+          backdropFilter: "blur(12px)",
+          borderBottom: `1px solid ${AD.border}`,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <svg
+            width="28"
+            height="28"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 40 40"
+          >
+            <rect x="9" y="7" width="8" height="23" rx="2.5" fill="white" />
+            <rect x="21" y="15" width="8" height="15" rx="2.5" fill="white" />
+          </svg>
           <div>
-            <div style={{ fontSize: '13px', fontWeight: 700 }}>Sentinel Admin</div>
-            <div style={{ fontSize: '9px', color: AD.text2, letterSpacing: '1.5px', fontWeight: 600 }}>FLEET INTELLIGENCE</div>
+            <div style={{ fontSize: "13px", fontWeight: 700 }}>
+              Sentinel Admin
+            </div>
+            <div
+              style={{
+                fontSize: "9px",
+                color: AD.text2,
+                letterSpacing: "1.5px",
+                fontWeight: 600,
+              }}
+            >
+              FLEET INTELLIGENCE
+            </div>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '4px 9px', borderRadius: '20px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', fontSize: '9px', fontWeight: 700, letterSpacing: '1px', color: AD.green }}>
-            <div style={{ width: '5px', height: '5px', background: AD.green, borderRadius: '50%', animation: 'pulse 1.5s infinite' }} />LIVE
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              padding: "4px 9px",
+              borderRadius: "20px",
+              background: "rgba(34,197,94,0.1)",
+              border: "1px solid rgba(34,197,94,0.2)",
+              fontSize: "9px",
+              fontWeight: 700,
+              letterSpacing: "1px",
+              color: AD.green,
+            }}
+          >
+            <div
+              style={{
+                width: "5px",
+                height: "5px",
+                background: AD.green,
+                borderRadius: "50%",
+                animation: "pulse 1.5s infinite",
+              }}
+            />
+            LIVE
           </div>
-          <span style={{ fontSize: '11px', color: AD.text2, fontWeight: 600 }}>{admin.name || ''}</span>
-          <button onClick={logout} style={{ padding: '5px 10px', borderRadius: '7px', background: 'transparent', border: `1px solid ${AD.border}`, color: AD.text2, fontSize: '11px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Sign out</button>
+          <span style={{ fontSize: "11px", color: AD.text2, fontWeight: 600 }}>
+            {admin.name || ""}
+          </span>
+          <button
+            onClick={logout}
+            style={{
+              padding: "5px 10px",
+              borderRadius: "7px",
+              background: "transparent",
+              border: `1px solid ${AD.border}`,
+              color: AD.text2,
+              fontSize: "11px",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "inherit",
+            }}
+          >
+            Sign out
+          </button>
         </div>
       </div>
 
       {/* Layout */}
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: "flex" }}>
         {/* Side nav (desktop) */}
-        <nav className="admin-sidenav" style={{ display: 'none', flexDirection: 'column', width: '200px', minHeight: 'calc(100vh - 52px)', background: AD.surface, borderRight: `1px solid ${AD.border}`, padding: '16px 10px', position: 'sticky', top: '52px', height: 'calc(100vh - 52px)', overflowY: 'auto' }}>
-          {tabs.map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)} style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '9px 12px', borderRadius: '9px', border: tab === t.id ? `1px solid ${AD.border}` : '1px solid transparent', background: tab === t.id ? AD.card : 'transparent', color: tab === t.id ? AD.text1 : AD.text2, fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left', marginBottom: '2px', transition: 'all 0.15s' }}>
-              <span style={{ fontSize: '14px', width: '18px', textAlign: 'center' }}>{t.icon}</span>{t.label}
+        <nav
+          className="admin-sidenav"
+          style={{
+            display: "none",
+            flexDirection: "column",
+            width: "200px",
+            minHeight: "calc(100vh - 52px)",
+            background: AD.surface,
+            borderRight: `1px solid ${AD.border}`,
+            padding: "16px 10px",
+            position: "sticky",
+            top: "52px",
+            height: "calc(100vh - 52px)",
+            overflowY: "auto",
+          }}
+        >
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                width: "100%",
+                padding: "9px 12px",
+                borderRadius: "9px",
+                border:
+                  tab === t.id
+                    ? `1px solid ${AD.border}`
+                    : "1px solid transparent",
+                background: tab === t.id ? AD.card : "transparent",
+                color: tab === t.id ? AD.text1 : AD.text2,
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                fontFamily: "inherit",
+                textAlign: "left",
+                marginBottom: "2px",
+                transition: "all 0.15s",
+              }}
+            >
+              <span
+                style={{ fontSize: "14px", width: "18px", textAlign: "center" }}
+              >
+                {t.icon}
+              </span>
+              {t.label}
             </button>
           ))}
         </nav>
 
         {/* Content */}
-        <div style={{ flex: 1, overflowX: 'hidden' }}>
-          <div style={{ padding: '16px', maxWidth: '1200px', margin: '0 auto' }}>
-            {tab === 'overview'  && <OverviewTab  eid={eid} />}
-            {tab === 'drivers'   && <DriversTab   eid={eid} onOpenPanel={setPanel} />}
-            {tab === 'tracking'  && <TrackingTab  eid={eid} />}
-            {tab === 'scores'    && <ScoresTab    eid={eid} />}
-            {tab === 'sos'       && <SOSTab />}
-            {tab === 'surveys'   && <SurveysTab />}
-            {tab === 'incidents' && <IncidentsTab />}
+        <div style={{ flex: 1, overflowX: "hidden" }}>
+          <div
+            style={{ padding: "16px", maxWidth: "1200px", margin: "0 auto" }}
+          >
+            {tab === "overview" && <OverviewTab eid={eid} />}
+            {tab === "drivers" && (
+              <DriversTab eid={eid} onOpenPanel={setPanel} />
+            )}
+            {tab === "tracking" && <TrackingTab eid={eid} />}
+            {tab === "scores" && <ScoresTab eid={eid} />}
+            {tab === "sos" && <SOSTab />}
+            {tab === "surveys" && <SurveysTab />}
+            {tab === "incidents" && <IncidentsTab />}
           </div>
         </div>
       </div>
 
       {/* Mobile bottom nav */}
-      <nav className="admin-bnav" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100, display: 'flex', background: 'rgba(8,13,24,0.97)', backdropFilter: 'blur(12px)', borderTop: `1px solid ${AD.border}` }}>
-        {tabs.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '10px 4px 8px', gap: '3px', cursor: 'pointer', border: 'none', background: 'transparent', color: tab === t.id ? AD.amber : AD.text3, fontFamily: 'inherit', transition: 'color 0.15s' }}>
-            <span style={{ fontSize: '18px', lineHeight: 1 }}>{t.icon}</span>
-            <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.5px' }}>{t.label}</span>
+      <nav
+        className="admin-bnav"
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          display: "flex",
+          background: "rgba(8,13,24,0.97)",
+          backdropFilter: "blur(12px)",
+          borderTop: `1px solid ${AD.border}`,
+        }}
+      >
+        {tabs.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "10px 4px 8px",
+              gap: "3px",
+              cursor: "pointer",
+              border: "none",
+              background: "transparent",
+              color: tab === t.id ? AD.amber : AD.text3,
+              fontFamily: "inherit",
+              transition: "color 0.15s",
+            }}
+          >
+            <span style={{ fontSize: "18px", lineHeight: 1 }}>{t.icon}</span>
+            <span
+              style={{
+                fontSize: "9px",
+                fontWeight: 700,
+                letterSpacing: "0.5px",
+              }}
+            >
+              {t.label}
+            </span>
           </button>
         ))}
       </nav>
@@ -1632,18 +4279,36 @@ function AdminPage() {
   );
 }
 
-
-
 // ─── ABOUT PAGE ───────────────────────────────────────────────────────────────
 function AboutPage({ setPage }) {
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "80px 24px" }}>
-      <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: "#888", marginBottom: "24px" }}>// ABOUT</div>
-      <h1 style={{ fontSize: "42px", fontWeight: 800, marginBottom: "24px" }}>Secured Systems Technologies</h1>
-      <p style={{ fontSize: "16px", lineHeight: 1.8, color: "#666", marginBottom: "16px" }}>
-        Sentinel is India's first passive safety intelligence platform built for gig workers.
-        We combine real-time risk mapping, crash detection, and peer mesh alerts to protect
-        the 12 million gig workers operating without any safety net.
+      <div
+        style={{
+          fontSize: "11px",
+          fontWeight: 700,
+          letterSpacing: "2px",
+          color: "#888",
+          marginBottom: "24px",
+        }}
+      >
+        // ABOUT
+      </div>
+      <h1 style={{ fontSize: "42px", fontWeight: 800, marginBottom: "24px" }}>
+        Secured Systems Technologies
+      </h1>
+      <p
+        style={{
+          fontSize: "16px",
+          lineHeight: 1.8,
+          color: "#666",
+          marginBottom: "16px",
+        }}
+      >
+        Sentinel is India's first passive safety intelligence platform built for
+        gig workers. We combine real-time risk mapping, crash detection, and
+        peer mesh alerts to protect the 12 million gig workers operating without
+        any safety net.
       </p>
       <p style={{ fontSize: "16px", lineHeight: 1.8, color: "#666" }}>
         Founded by Arav Misra and Ashutosh Trivedi. Based in Kanpur, India.
@@ -1665,7 +4330,7 @@ export default function App() {
   // Keep global C in sync so all components pick it up on re-render
   C = isDark ? THEMES.dark : THEMES.light;
 
-  const toggleTheme = () => setIsDark(d => !d);
+  const toggleTheme = () => setIsDark((d) => !d);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -1673,7 +4338,10 @@ export default function App() {
 
   useEffect(() => {
     // Show site immediately with seed data, hydrate from Supabase in background
-    setStats(SEED_STATS); setCases(SEED_CASES); setNews(SEED_NEWS); setBlogs(SEED_BLOGS);
+    setStats(SEED_STATS);
+    setCases(SEED_CASES);
+    setNews(SEED_NEWS);
+    setBlogs(SEED_BLOGS);
     setTimeout(() => setLoaded(true), 1000);
     (async () => {
       const [s, c, n, b] = await Promise.all([
@@ -1682,7 +4350,10 @@ export default function App() {
         loadData("news", SEED_NEWS),
         loadData("blogs", SEED_BLOGS),
       ]);
-      setStats(s); setCases(c); setNews(n); setBlogs(b);
+      setStats(s);
+      setCases(c);
+      setNews(n);
+      setBlogs(b);
     })();
   }, []);
 
@@ -1695,15 +4366,22 @@ export default function App() {
     }
   }, [loaded]);
 
-  if (!loaded || splashVisible) return (
-    <div style={{
-      background: "#06090F", minHeight: "100vh",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      flexDirection: "column", gap: "32px",
-      opacity: loaded ? 0 : 1,
-      transition: "opacity 0.4s ease",
-    }}>
-      <style>{`
+  if (!loaded || splashVisible)
+    return (
+      <div
+        style={{
+          background: "#06090F",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: "32px",
+          opacity: loaded ? 0 : 1,
+          transition: "opacity 0.4s ease",
+        }}
+      >
+        <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(12px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -1713,37 +4391,103 @@ export default function App() {
           50%       { opacity: 0.4; }
         }
       `}</style>
-      {/* Logo SVG */}
-      <div style={{ animation: "fadeUp 0.6s ease forwards" }}>
-        <svg width="280" height="72" viewBox="0 0 280 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Icon: two bars */}
-          <rect x="0" y="18" width="14" height="36" rx="3" fill="white"/>
-          <rect x="20" y="8"  width="14" height="46" rx="3" fill="white"/>
-          {/* Divider */}
-          <line x1="48" y1="10" x2="48" y2="62" stroke="#4A5568" strokeWidth="1.2"/>
-          {/* SENTINEL */}
-          <text x="62" y="44" fontFamily="'IBM Plex Sans', sans-serif" fontWeight="600" fontSize="28" letterSpacing="6" fill="white">SENTINEL</text>
-          {/* BY SECURED SYSTEMS */}
-          <text x="63" y="60" fontFamily="'IBM Plex Sans', sans-serif" fontWeight="400" fontSize="10" letterSpacing="5" fill="#6B7280">BY SECURED SYSTEMS</text>
-        </svg>
+        {/* Logo SVG */}
+        <div style={{ animation: "fadeUp 0.6s ease forwards" }}>
+          <svg
+            width="280"
+            height="72"
+            viewBox="0 0 280 72"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {/* Icon: two bars */}
+            <rect x="0" y="18" width="14" height="36" rx="3" fill="white" />
+            <rect x="20" y="8" width="14" height="46" rx="3" fill="white" />
+            {/* Divider */}
+            <line
+              x1="48"
+              y1="10"
+              x2="48"
+              y2="62"
+              stroke="#4A5568"
+              strokeWidth="1.2"
+            />
+            {/* SENTINEL */}
+            <text
+              x="62"
+              y="44"
+              fontFamily="'IBM Plex Sans', sans-serif"
+              fontWeight="600"
+              fontSize="28"
+              letterSpacing="6"
+              fill="white"
+            >
+              SENTINEL
+            </text>
+            {/* BY SECURED SYSTEMS */}
+            <text
+              x="63"
+              y="60"
+              fontFamily="'IBM Plex Sans', sans-serif"
+              fontWeight="400"
+              fontSize="10"
+              letterSpacing="5"
+              fill="#6B7280"
+            >
+              BY SECURED SYSTEMS
+            </text>
+          </svg>
+        </div>
+        {/* Pulse dot */}
+        <div
+          style={{
+            width: "6px",
+            height: "6px",
+            borderRadius: "50%",
+            background: "#3B82F6",
+            animation: "pulse 1.2s ease-in-out infinite",
+          }}
+        />
       </div>
-      {/* Pulse dot */}
-      <div style={{
-        width: "6px", height: "6px", borderRadius: "50%",
-        background: "#3B82F6",
-        animation: "pulse 1.2s ease-in-out infinite",
-      }} />
-    </div>
-  );
+    );
 
   return (
-    <div style={{ background: C.bg, minHeight: "100vh", transition: "background 0.3s", animation: "fadeUp 0.5s ease forwards" }}>
+    <div
+      style={{
+        background: C.bg,
+        minHeight: "100vh",
+        transition: "background 0.3s",
+        animation: "fadeUp 0.5s ease forwards",
+      }}
+    >
       <style>{makeCss(C)}</style>
-      <Nav page={page} setPage={setPage} isDark={isDark} toggleTheme={toggleTheme} />
+      <Nav
+        page={page}
+        setPage={setPage}
+        isDark={isDark}
+        toggleTheme={toggleTheme}
+      />
       <PageTransition page={page}>
-        {page === "home" && <HomePage stats={stats} cases={cases} news={news} blogs={blogs} setPage={setPage} setActiveBlog={setActiveBlog} />}
-        {page === "blogs" && <BlogsPage blogs={blogs} setPage={setPage} setActiveBlog={setActiveBlog} />}
-        {page === "blog" && activeBlog && <BlogPage blog={activeBlog} setPage={setPage} />}
+        {page === "home" && (
+          <HomePage
+            stats={stats}
+            cases={cases}
+            news={news}
+            blogs={blogs}
+            setPage={setPage}
+            setActiveBlog={setActiveBlog}
+          />
+        )}
+        {page === "blogs" && (
+          <BlogsPage
+            blogs={blogs}
+            setPage={setPage}
+            setActiveBlog={setActiveBlog}
+          />
+        )}
+        {page === "blog" && activeBlog && (
+          <BlogPage blog={activeBlog} setPage={setPage} />
+        )}
         {page === "sentinel" && <SentinelPage />}
         {page === "about" && <AboutPage setPage={setPage} />}
         {page === "admin" && <AdminPage />}
