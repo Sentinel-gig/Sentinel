@@ -181,7 +181,12 @@
     .b-on{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2);}
     .b-off,.b-inactive{background:rgba(74,85,104,.2);color:var(--text2);border:1px solid var(--border);}
     .b-pending{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
-    .b-approved{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+    .b-approved,.b-acknowledged{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+    .btn-approve-muted{background:transparent;color:var(--text3);border:1px solid var(--border);opacity:0.6;}
+    .community-tag{font-size:9px;font-weight:700;margin-left:6px;}
+    .ct-verified{color:var(--green);}
+    .ct-disputed{color:var(--red);}
+    .surveys-subtitle{font-size:11px;color:var(--text3);margin-bottom:12px;font-style:italic;padding-left:2px;}
 
     /* ── Buttons ────────────────────────────────────────────────────── */
     .btn{
@@ -371,9 +376,10 @@
         <!-- Surveys -->
         <div class="section" id="tab-surveys">
           <div class="sec-header"><div class="sec-title">COMMUNITY SURVEYS</div><button class="refresh-btn" onclick="loadSurveys()">↻</button></div>
+          <div class="surveys-subtitle">Incidents are community-validated by riders before admin review.</div>
           <div class="table-wrap"><table>
-            <thead><tr><th>TYPE</th><th>LOCATION</th><th>CITY</th><th>BY</th><th>STATUS</th><th>TIME</th><th>ACTION</th></tr></thead>
-            <tbody id="surveys-body"><tr><td colspan="7" class="loading">Loading...</td></tr></tbody>
+            <thead><tr><th>TYPE</th><th>LOCATION</th><th>CITY</th><th>BY</th><th>STATUS</th><th>👍 VOTES</th><th>👎 VOTES</th><th>TIME</th><th>ACTION</th></tr></thead>
+            <tbody id="surveys-body"><tr><td colspan="9" class="loading">Loading...</td></tr></tbody>
           </table></div>
         </div>
 
@@ -605,19 +611,31 @@ async function loadSOS() {
 async function loadSurveys() {
   const {data} = await sb.from('surveys').select('*').order('created_at',{ascending:false}).limit(40);
   const tb = document.getElementById('surveys-body');
-  if(!data?.length){tb.innerHTML='<tr><td colspan="7" class="empty"><div class="empty-icon">📋</div>No surveys yet</td></tr>';return;}
-  tb.innerHTML = data.map(s=>`<tr>
+  if(!data?.length){tb.innerHTML='<tr><td colspan="9" class="empty"><div class="empty-icon">📋</div>No surveys yet</td></tr>';return;}
+  tb.innerHTML = data.map(s=>{
+    const up = s.upvotes ?? 0;
+    const dn = s.downvotes ?? 0;
+    const communityVerified = up >= 3;
+    const statusBadgeClass = s.status==='approved'||s.status==='acknowledged'?'b-acknowledged':s.status==='pending'?'b-pending':'b-inactive';
+    let communityTag = '';
+    if(up > dn) communityTag = '<span class="community-tag ct-verified">✓ Community verified</span>';
+    else if(dn > up) communityTag = '<span class="community-tag ct-disputed">⚠ Disputed</span>';
+    const approveClass = communityVerified ? 'btn btn-approve' : 'btn btn-approve-muted';
+    return `<tr>
     <td><b>${s.type||'—'}</b></td>
     <td style="color:var(--text2)">${s.location||'—'}</td>
     <td>${s.city||'—'}</td>
     <td style="font-size:11px;color:var(--text2)">${s.reported_by_name||'—'}</td>
-    <td><span class="badge ${s.status==='approved'?'b-approved':s.status==='pending'?'b-pending':'b-inactive'}">${s.status||'—'}</span></td>
+    <td><span class="badge ${statusBadgeClass}">${s.status||'—'}</span>${communityTag}</td>
+    <td style="font-weight:600;color:${up>3?'var(--green)':'inherit'}">${up}</td>
+    <td style="font-weight:600;color:${dn>3?'var(--red)':'inherit'}">${dn}</td>
     <td style="color:var(--text2);font-size:11px">${fmt(s.created_at)}</td>
     <td style="display:flex;gap:5px">${s.status==='pending'?`
-      <button class="btn btn-approve" onclick="updateSurvey('${s.id}','approved')">✓</button>
+      <button class="${approveClass}" onclick="updateSurvey('${s.id}','acknowledged')">✓</button>
       <button class="btn btn-reject"  onclick="updateSurvey('${s.id}','rejected')">✕</button>
     `:'—'}</td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 }
 async function updateSurvey(id,status){await sb.from('surveys').update({status}).eq('id',id);loadSurveys();}
 
